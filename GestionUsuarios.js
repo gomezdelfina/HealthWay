@@ -29,7 +29,7 @@ const generateUniqueId = () => {
 };
 
 
-// --- OPERACIONES CRUD LOCALES ---
+
 
 const addUser = (event) => {
     event.preventDefault();
@@ -127,7 +127,7 @@ const toggleUserStatus = (id, currentStatus, name) => {
 };
 
 
-// --- FUNCIONES DE INTERFAZ DE USUARIO (UI) ---
+
 
 const applySearchFilter = () => {
     const searchTerm = document.getElementById('userSearch').value.toLowerCase();
@@ -162,7 +162,7 @@ const displayUsers = (usersToDisplay) => {
         const toggleBtnClass = user.estado === 'Activo' ? 'btn-outline-danger' : 'btn-outline-success';
         const toggleBtnTooltip = user.estado === 'Activo' ? 'Desactivar Usuario' : 'Activar Usuario';
 
-        // Determinar el contenido de la columna de Contrasena
+       
         const passwordIndicator = user.passwordSet 
             ? '<span class="badge bg-secondary" title="Contrasena establecida">***</span>'
             : '<span class="badge bg-warning text-dark" title="Contrasena temporal no establecida">Pendiente</span>';
@@ -208,7 +208,7 @@ const openEditModal = (id) => {
 };
 
 
-// --- DIALOGOS PERSONALIZADOS (MODALS) ---
+
 
 const setupCustomModal = () => {
     const modalHtml = `
@@ -297,7 +297,7 @@ const confirmCustom = (message, title = 'Confirmacion') => {
 };
 
 
-// --- ASIGNACION DE EVENT LISTENERS Y HANDLERS GLOBALES ---
+
 
 window.deleteUserHandler = deleteUser;
 window.toggleUserStatusHandler = toggleUserStatus;
