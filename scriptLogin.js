@@ -60,15 +60,15 @@ function validateLoginForm(event){
                 loginForm.reset();
                 break;
             case "admin1":
-                goApp("./DashboardAdmin.html", "loginBtn");
+                goApp("./admin-dashboard.html", "loginBtn");
                 loginForm.reset();
                 break;
             case "paciente1":
-
+                goApp("./paciente.html", "loginBtn");
+                loginForm.reset();
                 break;
-
             case "jefe1":
-
+                goApp("./DashboardJefeInternaciones.html", "loginBtn")
                 break;
             default: 
                     prevenirSubmit(event);
