@@ -131,6 +131,17 @@ div.card-header-color {
     color: white;
 }
 
+/**** paciente ****/
+.paciente-background {
+    background-image: url(./imgs/fondo.jpg);
+    background-position: center center;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+.icon-text{
+    height: 1rem;
+}
 /**** Utilities ****/
 .visibility-hidden{
     visibility: hidden;

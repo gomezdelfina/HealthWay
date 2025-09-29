@@ -64,7 +64,8 @@ function validateLoginForm(event){
                 loginForm.reset();
                 break;
             case "paciente1":
-
+                goApp("./paciente.html", "loginBtn");
+                loginForm.reset();
                 break;
 
             case "jefe1":
