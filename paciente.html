@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="estilo.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="img-background background">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">HealthWay</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="Inicion.html">Inicio</a>
+                                
+                            </li>
+                            <li class="nav-item">
+                                  <button id="btnHoras" type="button" class="btn btn-link nav-link active">Horas de internación</button>
+                            </li>
+                            <li>
+                                <button id="btnRevisiones" type="button" class="btn btn-link nav-link active">Revisiones</button>
+                            </li>
+                        </ul>
+                        <div class="d-flex align-items-center">
+                            <button type="button" class="btn p-0 border-0 bg-transparent"><img src="imgs/campana.png" alt="notificacion" class="icon-text me-2" id="notificacion"></button>
+                            <button type="button" class="btn p-0 border-0 bg-transparent"><img src="imgs/camara.png" alt="camara" class="icon-text me-2" id="camara"></button>
+                            <span class="me-3 text-secondary">Paciente</span>
+                            <a href="#" class="btn btn-outline-danger">Cerrar Sesión <i class="bi bi-box-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+            </nav>
+        </header>
+        <main class="container-fluid py-4">
+            <div class="card shadow p-4 d-none" id="tablaInternacion">
+                 <h3 class="text-center mb-4">Control de horas de internación</h3>
+                      <div class="table-responsive">
+                            <table class="table table-bordered text-center align-middle">
+                               <thead class="table-light">
+                                     <tr>
+                                        <th>Horas cubiertas por el seguro</th>
+                                        <th>Horas utilizadas</th>
+                                        <th>Horas a pagar</th>
+                                        <th>Dinero a pagar</th>
+                                     </tr>
+                               </thead>
+                             <tbody>
+                                     <tr>
+                                         <td id="cubiertas">48</td>
+                                         <td>
+                                             <input type="number" id="utilizadas" value="0" min="0" class="form-control">
+                                         </td>
+                                         <td id="aPagar">—</td>
+                                         <td id="dinero" class="text-danger fw-bold">—</td>
+                                     </tr>
+                             </tbody>
+                             </table>
+        <!-- Botón calcular -->
+        <div class="text-center mt-3">
+            <button id="btnCalcular" class="btn btn-primary">Calcular</button>
+        </div>
+            </div>
+</div>
+
+<div class="card shadow p-4 d-none mt-4" id="tablaRevisiones">
+    <h3 class="text-center mb-4">Revision</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Datos de la Revision</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Médico que atendió</td><td>Profesional responsable</td></tr>
+                <tr><td>Tipo de revisión</td><td>Signos vitales, alimentación, higienización, medicación, intervención</td></tr>
+                <tr><td>Estado de revisión</td><td>De rutina, de alta, de urgencia, de fallecimiento</td></tr>
+                <tr><td>Medición de signos vitales</td><td>Registro clínico del paciente</td></tr>
+                <tr><td>Síntomas</td><td>Manifestaciones observadas</td></tr>
+                <tr><td>Diagnóstico posible</td><td>Hipótesis médica</td></tr>
+                <tr><td>Tratamiento</td><td>Procedimientos e indicaciones</td></tr>
+                <tr><td>Resumen de lo realizado</td><td>Informe de la atención</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+        </main>
+    </div>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="./script.js"></script>
+</body>
+</html>
