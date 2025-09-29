@@ -49,59 +49,68 @@
         </header>
 
         <main class="container-fluid py-4">
-            <div class="card shadow p-4 d-none" id="tablaInternacion">
-                <h3 class="text-center mb-4">Control de horas de internación</h3>
-                <div class="table-responsive">
-                    <table class="table table-bordered text-center align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Horas cubiertas por el seguro</th>
-                                <th>Horas utilizadas</th>
-                                <th>Horas a pagar</th>
-                                <th>Dinero a pagar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td id="cubiertas">48</td>
-                                <td>
-                                    <input type="number" id="utilizadas" value="0" min="0" class="form-control">
-                                </td>
-                                <td id="aPagar">—</td>
-                                <td id="dinero" class="text-danger fw-bold">—</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Botón calcular -->
-                    <div class="text-center mt-3">
-                        <button id="btnCalcular" class="btn btn-primary">Calcular</button>
-                    </div>
-                </div>
-            </div>
+            <div class="card shadow-sm d-none" id="tablaInternacion">
+    <div class="card-header text-white card-header-color">
+        <i class="bi bi-clock-history me-2"></i>Control de horas de internación
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Horas cubiertas por el seguro</th>
+                        <th>Horas utilizadas</th>
+                        <th>Horas a pagar</th>
+                        <th>Dinero a pagar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="cubiertas">48</td>
+                        <td>
+                            <input type="number" id="utilizadas" value="0" min="0" class="form-control">
+                        </td>
+                        <td id="aPagar">—</td>
+                        <td id="dinero" class="text-danger fw-bold">—</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-3">
+            <button id="btnCalcular" class="btn btn-primary">Calcular</button>
+        </div>
+    </div>
+</div>
 
-            <div class="card shadow p-4 d-none mt-4" id="tablaRevisiones">
-                <h3 class="text-center mb-4">Revisión</h3>
-                <div class="table-responsive">
-                    <table class="table table-bordered text-center align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Datos de la Revisión</th>
-                                <th>Descripción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Médico que atendió</td><td>Profesional responsable</td></tr>
-                            <tr><td>Tipo de revisión</td><td>Signos vitales, alimentación, higienización, medicación, intervención</td></tr>
-                            <tr><td>Estado de revisión</td><td>De rutina, de alta, de urgencia, de fallecimiento</td></tr>
-                            <tr><td>Medición de signos vitales</td><td>Registro clínico del paciente</td></tr>
-                            <tr><td>Síntomas</td><td>Manifestaciones observadas</td></tr>
-                            <tr><td>Diagnóstico posible</td><td>Hipótesis médica</td></tr>
-                            <tr><td>Tratamiento</td><td>Procedimientos e indicaciones</td></tr>
-                            <tr><td>Resumen de lo realizado</td><td>Informe de la atención</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+
+            <div class="card shadow-sm d-none mt-4" id="tablaRevisiones">
+    <div class="card-header text-white card-header-color">
+        <i class="bi bi-clipboard2-pulse me-2"></i>Revisiones
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Datos de la Revisión</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Médico que atendió</td><td>Profesional responsable</td></tr>
+                    <tr><td>Tipo de revisión</td><td>Signos vitales, alimentación, higienización, medicación, intervención</td></tr>
+                    <tr><td>Estado de revisión</td><td>De rutina, de alta, de urgencia, de fallecimiento</td></tr>
+                    <tr><td>Medición de signos vitales</td><td>Registro clínico del paciente</td></tr>
+                    <tr><td>Síntomas</td><td>Manifestaciones observadas</td></tr>
+                    <tr><td>Diagnóstico posible</td><td>Hipótesis médica</td></tr>
+                    <tr><td>Tratamiento</td><td>Procedimientos e indicaciones</td></tr>
+                    <tr><td>Resumen de lo realizado</td><td>Informe de la atención</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
         </main>
     </div>
 </body>
