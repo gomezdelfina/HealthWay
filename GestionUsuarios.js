@@ -1,4 +1,4 @@
-// --- CONFIGURACION E INICIALIZACION LOCAL ---
+
 
 const STORAGE_KEY = 'hospitalUsersData'; 
 let hospitalUsers = []; 
