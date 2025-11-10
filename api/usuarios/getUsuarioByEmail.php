@@ -1,7 +1,11 @@
 <?php
+    require_once(__DIR__ . '/../../includes/globals.php');
+    require_once($dirBaseFile . '/dataAccess/usuarios.php');
+
+    $response = [];
+    $emailRecovery = '';
 
     $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
-
     if (strpos($contentType, 'application/json') !== false) {
         $rawInput = file_get_contents('php://input');
         $data = json_decode($rawInput, true);
@@ -9,23 +13,45 @@
         $data = $_POST;
     }
 
-    // Verificar si se recibieron datos
     if (empty($data)) {
-        header('Content-Type: application/json');
-        http_response_code(400);
-        echo json_encode([
-            'error' => 'No se recibieron datos',
-        ]);
-        exit;
+        $response['code'] = 400;
+        $response['msg'] = 'No se recibieron datos';
     }else{
-        require_once(__DIR__ . '/includes/globals.php');
-        require_once($dirBaseFile . '/entidades/usuarios.php');
 
-        $email = $data['email'];
+        // VALIDACIONES
+        if (!isset($data['email'])) {
+            $response['code'] = 400;
+            $response['msg'] = 'No se recibieron datos';
+        } else {
+            $emailRecovery = $data['email'];
 
-        $response = Usuarios::getUsuarioByEmail($email);
-        header('Content-Type: application/json');
-        echo json_encode($response);
+            if (trim($emailRecovery) == 'nombre@ejemplo.com') {
+                $response['code'] = 400;
+                $response['msg'] = 'No se recibieron datos';
+            } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/', $emailRecovery)) {
+                $response['code'] = 400;
+                $response['msg'] = 'El parámetro no tiene el formato correcto';
+            } else {
+
+                try{
+                    $user = Usuarios::getUsuarioByEmail($emailRecovery);
+                    $response['code'] = 200;
+                }catch(Exception $e){
+                    $response['code'] = 500;
+                    $response['msg'] = 'Error interno de aplicacion';
+                }
+            }
+        }
+    }
+    
+    header('Content-Type: application/json');
+    http_response_code($response['code']);
+    if($response['code'] != 200){
+        echo json_encode([
+            'error' => $response['msg'], 
+        ]);
+    }else{
+        echo json_encode($user);
     }
     
 ?>

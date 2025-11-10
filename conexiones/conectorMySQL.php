@@ -1,5 +1,4 @@
 <?php
-    
     global $dirBaseFile;
     require_once($dirBaseFile . '/includes/db/dbConfig.php');
 
@@ -31,17 +30,27 @@
             try{
                 $smtm = $conn->prepare($query);
 
-                foreach ($params as $param){
-                    $smtm->bindparam($param["clave"], $param["valor"]);
-                }
+                if ($params !== NULL && is_array($params)) {
+                    foreach ($params as $param){
+                        $clave = $param["clave"];
+                        $valor = $param["valor"];
 
+                        $smtm->bindValue($clave, $valor);
+                    }
+                }else if($params !== NULL && !is_array($params)){
+                    $clave = $params["clave"];
+                    $valor = $params["valor"];
+
+                    $smtm->bindParam($clave, $valor);
+                }
+                
                 $smtm->execute();
 
                 $response = $smtm->fetchAll(PDO::FETCH_ASSOC);
 
                 return $response;
                 
-            } catch (PDOException $e) {
+            } catch (Exception $e) {
                 throw new Exception("Error al consultar a la BD: (" . $query . "): " . $e);
             }
         }

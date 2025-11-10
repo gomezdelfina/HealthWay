@@ -1,11 +1,11 @@
 <?php
-
     session_start();
 
     // url frontend
     $dirBaseUrl = '/2025/HeathWay/Codigo/HealthWay';
-    $dirBaseFile = realpath(__DIR__ . '/..');
+    $dirBaseFile = realpath($_SERVER['DOCUMENT_ROOT'] . $dirBaseUrl);
 
-    // var errores
+    // var 
     $errors = [];
+    $module = '';
 ?>

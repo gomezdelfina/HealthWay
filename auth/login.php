@@ -30,12 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnLoginForm'])) {
 
     // PROCESAR
     if (empty($errors)) {
-        require_once($dirBaseFile . '/conexiones/conectorMySQL.php');
+        require_once( $dirBaseFile . '/conexiones/conectorMySQL.php');
 
         try {
             ConexionDb::connect();
 
-            $query = "SELECT IdUsuario, IdRol FROM usuarios WHERE Usuario = :user AND Clave = :psw; AND Habilitado = 1";
+            $query = "SELECT IdUsuario FROM usuarios WHERE Usuario = :user AND Clave = :psw AND Habilitado = 1";
             $params = [
                 ["clave" => ":user", "valor" => $userLogin],
                 ["clave" => ":psw", "valor" => $claveLogin]
@@ -48,10 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btnLoginForm'])) {
             if (!$data){
                 $errors['process'] = "Usuario o clave incorrecta";
             } else {
-                $_SESSION['usuario']['id'] = $data['IdUsuario'];
-                $_SESSION['usuario']['rol'] = $data['IdRol'];
-
-                header('Location: ' . $dirBaseUrl . '/dashboard.php');
+                foreach($data as $row){
+                    $_SESSION['usuario'] = $row['IdUsuario'];
+                }
+                
+                header('Location: ' . $dirBaseUrl . '/dashboards/dashboard_layout.php');
             }
         } catch (Exception $e) {
             $errors['process'] = "Problemas para ingresar al sistema";

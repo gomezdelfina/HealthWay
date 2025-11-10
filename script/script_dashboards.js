@@ -1,7 +1,31 @@
-document.addEventListener('DOMContentLoaded', function() {
+async function getPermisos(){
+    const baseUrl = window.location.origin;
+    
+     try {
+        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/permisos/getPermisosByUser.php', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
 
-    const kpiData = {
+            return result;
+        }
+    }catch (error){
+        console.error("Error al obtener permisos del usuario:", error);
+        return [];
+    }
+}
+
+function loadAdminDash(){
+
+        const kpiData = {
         totalCamas: 150,
         camasOcupadas: 125,
         medicosGuardia: 3,
@@ -118,4 +142,50 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     loadCriticalAlerts();
-});
+}
+
+function loadJefeDash(){
+
+}
+
+function loadPMedicoDash(){
+
+}
+
+function loadPacienteDash(){
+
+}
+
+async function loadDashData(){
+    response = await getPermisos();
+    
+    if(response){
+        permisos = response.map(permiso => permiso.IdPermiso);
+
+        if (permisos.includes(1)) { //Visualizar dashboard personal medico
+            document.getElementById("dashboardPersMedico").classList.add('visibility-show');
+            document.getElementById("dashboardPersMedico").classList.remove('visibility-remove');
+
+            loadPMedicoDash();
+        } else if (permisos.includes(5)) { //Visualizar dashboard administrador
+            document.getElementById("dashboardAdmin").classList.add('visibility-show');
+            document.getElementById("dashboardAdmin").classList.remove('visibility-remove');
+
+            loadAdminDash();
+        } else if (permisos.includes(6)) { //Visualizar dashboard paciente
+            document.getElementById("dashboardPaciente").classList.add('visibility-show');
+            document.getElementById("dashboardPaciente").classList.remove('visibility-remove');
+
+            loadPacienteDash();
+        } else if (permisos.includes(7)) { //Visualizar dashboard jefe internaciones
+            document.getElementById("dashboardPersMedico").classList.add('visibility-show');
+            document.getElementById("dashboardPersMedico").classList.remove('visibility-remove');
+
+            loadJefeDash();
+        }
+    }
+}
+
+window.onload = function() {
+    document.addEventListener('DOMContentLoaded', loadDashData());
+}

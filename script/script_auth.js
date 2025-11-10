@@ -24,7 +24,7 @@ async function getEmail(element) {
         }else{      
             result = await response.json(); 
 
-            if (result) {
+            if (result.length > 0) {
                 return true;
             } else {
                 return false;
@@ -68,9 +68,9 @@ function validarString(element, regexp) {
     }
 }
 
-function validarEmailGuardado(element) {
+async function validarEmailGuardado(element) {
 
-    existeEmail = getEmail(element);
+    existeEmail = await getEmail(element);
     
     if(!existeEmail){
         element.classList.add("is-invalid");
@@ -99,20 +99,29 @@ function validateLoginForm(event){
     }
 }
 
-function validateRecoveryForm(event){
+async function validateRecoveryForm(event){
     let formIsValid = 0;
     prevenirSubmit(event);
 
     if(!validarValorVacio(document.getElementById("inputEmail"))){
         document.getElementById("email-error").textContent = 'El campo email no puede ser vacío';
+        formIsValid++;
     }else if (!validarString(document.getElementById("inputEmail"), /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{3,}$/)){
         document.getElementById("email-error").textContent = 'El campo email no tiene el formato correcto';
-    }else if (!validarEmailGuardado(document.getElementById("inputEmail"))){
-        document.getElementById("email-error").textContent = 'El email no se encuentra cargado en el sistema';
+        formIsValid++;
+    }else{
+        emailExist = await validarEmailGuardado(document.getElementById("inputEmail"));
+        
+        if(!emailExist){
+            document.getElementById("email-error").textContent = 'El email no se encuentra cargado en el sistema';
+            formIsValid++;
+        }
     };
 
     if (formIsValid == 0) {
-        //enviarEmail();
+        document.getElementById("validEmail").classList.add('visibility-show');
+        document.getElementById("validEmail").classList.remove('visibility-remove');
+        event.currentTarget.reset();
     }
 }
 

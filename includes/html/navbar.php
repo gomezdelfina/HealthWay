@@ -1,27 +1,33 @@
 <?php
-
+    
     $idUser = '';
+    $user = '';
+    $nombreUser = '';
+    $apellidoUser = '';
+    $emailUser = '';
+    $telUser = '';
 
-    if (isset($_SESSION["idUsuario"])) {
+    if (isset($_SESSION['usuario'])) {
         
-        $idUser = $_SESSION["idUsuario"];
+        $idUser = $_SESSION['usuario'];
 
-        require_once($dirBaseUrl . '/entidades/usuarios.php');
+        require_once($dirBaseFile . '/dataAccess/usuarios.php');
 
         try {
-            $data = Usuarios::getUsuario($idUser);
+            $data = Usuarios::getUsuarioById($idUser);
 
             if (!$data){
                 throw new Exception();
             } else {
-                $idRol = $data['IdRol'];
-                $rol = $data['DescRol'];
-                $user = $data['Usuario'];
-                $nombreUser = $data['Nombre'];
-                $apellidoUser = $data['Apellido'];
-                $emailUser = $data['Email'];
-                $telUser = $data['Telefono'];
+                foreach($data as $row){
+                    $user = $row['Usuario'];
+                    $nombreUser = $row['Nombre'];
+                    $apellidoUser = $row['Apellido'];
+                    $emailUser = $row['Email'];
+                    $telUser = $row['Telefono'];
+                }
             }
+
         } catch (Exception) {
             $errors['process'] = "Problemas para ingresar al sistema";
 
@@ -34,38 +40,55 @@
         header('Location: ' . $dirBaseUrl . '/auth/logout.php');
     }
 
+    function userTienePermiso($permiso, $user)
+    {
+        global $dirBaseFile, $dirBaseUrl;
+        require_once($dirBaseFile . '/dataAccess/permisos.php');
+
+        try {
+            $dataPermiso = Permisos::tienePermiso($permiso, $user);
+
+            if (!$dataPermiso){
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception) {
+            $errors['process'] = "Problemas para verificar los permisos";
+
+            header('Location: ' . $dirBaseUrl . '/auth/logout.php');
+        }
+    }
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <a class="navbar-brand" href="#">HealthWay</a>
     <div class="collapse navbar-collapse " id="navbarNav">
         <ul class="navbar-nav menu-3 me-auto mb-2 mb-lg-0 ">
-            <?php if ($idRol == 1 || $idRol == 2 || $idRol == 3){ ?>
+            <li class="nav-item">
+                <a class="nav-link <?php if ($module == 'dashboards') {echo 'active';} ?>" 
+                    href="<?php echo $dirBaseUrl ?>/dashboards/dashboard_layout.php" 
+                    id="gestionDash">Inicio</a>
+            </li>
+            <?php if (userTienePermiso(2, $idUser)) { ?>
                 <li class="nav-item">
-                    <a class="nav-link <?php if ($page == 'dashboardPersMedico') {
-                                            echo 'active';
-                                        } ?>" href="../GestionDashboards/DashboardPersMedico.php" id="gestionDashBtn">Inicio</a>
+                    <a class="nav-link <?php if ($module == 'internaciones') {echo 'active';} ?>" 
+                        href="<?php echo $dirBaseUrl ?>/internaciones/internaciones.php" 
+                        id="gestionInter">Internaciones</a>
                 </li>
             <?php } ?>
-            <?php if ($idRol == 1 || $idRol == 2 || $idRol == 3){ ?>
+            <?php if (userTienePermiso(3, $idUser)) { ?>
                 <li class="nav-item">
-                    <a class="nav-link <?php if ($page == 'gestionInternaciones') {
-                                            echo 'active';
-                                        } ?>" href="../GestionInternaciones/GestionInternaciones.php" id="gestionInterBtn">Internaciones</a>
+                    <a class="nav-link <?php if ($module == 'revisiones') {echo 'active';} ?>" 
+                        href="<?php echo $dirBaseUrl ?>/revisiones/revisiones_layout.php" 
+                        id="gestionRevis">Revisiones</a>
                 </li>
             <?php } ?>
-            <?php if ($idRol == 1 || $idRol == 2 || $idRol == 3){ ?>
+            <?php if (userTienePermiso(4, $idUser)) { ?>
                 <li class="nav-item">
-                    <a class="nav-link <?php if ($page == 'gestionRevisiones') {
-                                            echo 'active';
-                                        } ?>" href="../GestionRevisiones/GestionRevisiones.php" id="gestionRevisBtn">Revisiones</a>
-                </li>
-            <?php } ?>
-            <?php if ($idRol == 1 || $idRol == 2 || $idRol == 3){ ?>
-                <li class="nav-item">
-                    <a class="nav-link <?php if ($page == 'gestionHistoriasClinicas') {
-                                            echo 'active';
-                                        } ?>" href="../GestionHistoriasClinicas/GestionHistoriasClinicas.php" id="gestionHCBtn">Historias clinicas</a>
+                    <a class="nav-link <?php if ($module == 'historiasClinicas') {echo 'active';} ?>" 
+                        href="<?php echo $dirBaseUrl ?>/historiasClinicas/historiasClinicas.php" 
+                        id="gestionHC">Historias clinicas</a>
                 </li>
             <?php } ?>
         </ul>
@@ -86,7 +109,7 @@
                                 </div>
                                 <div>
                                     <h6 class="mb-0"><?php echo $user ?></h6> 
-                                    <small class="text-muted"><?php echo $rol ?></small>
+                                    <!--<small class="text-muted"><?php //echo $rol ?></small>-->
                                 </div>
                             </div>
                         </li>
