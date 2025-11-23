@@ -3,7 +3,6 @@
     require_once($dirBaseFile . '/dataAccess/revisiones.php');
 
     $response = [];
-    $userId = '';
 
     try{
         $revs = Revisiones::getRevisiones();

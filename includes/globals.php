@@ -6,6 +6,5 @@
     $dirBaseFile = realpath($_SERVER['DOCUMENT_ROOT'] . $dirBaseUrl);
 
     // var 
-    $errors = [];
     $module = '';
 ?>

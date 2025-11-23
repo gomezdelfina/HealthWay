@@ -20,16 +20,13 @@
             <h1 class="mb-4 dashboard-title">Gestion de Revisiones</h1>
 
             <div class="row mb-4 align-items-center">
-                <div id="createRev" class="col-md-2 visibility-remove">
-                    <button class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#modalRevision">
-                        <i class="bi bi bi-pencil-square me-2"></i>Añadir Nueva Revision
-                    </button>
-                </div>
-                <div id="createRec" class="col-md-2 visibility-remove">
-                    <button class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#modalRecordatorio">
-                        <i class="bi bi-calendar-event me-2"></i>Crear Recordatorio
-                    </button>
-                </div>
+                <?php if (userTienePermiso(8, $idUser)) { ?>
+                    <div id="createRev" class="col-md-2">
+                        <button id="btnCrearRev" class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#modalRevision">
+                            <i class="bi bi bi-card-list me-2"></i>Crear Revision
+                        </button>
+                    </div>
+                <?php } ?>
                 <div class="col-md-8">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Buscar por Paciente, Cama o Habitacion">
@@ -41,31 +38,24 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header text-white card-header-color">
-                        <i class="bi bi bi-card-list me-2"></i>Lista de Revisiones
+                        Lista de Revisiones
                     </div>
                     <div>
-                        <div id="tablaRevs" class="card-body"></div>
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-end">
-                                <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
-                            </ul>
-                        </nav>
+                        <div id="divTablaRevs" class="card-body"></div>
                     </div>
                 </div>
             </div>
-
-            <!-- Modal Recordatorio -->
-            <?php
-                require_once($dirBaseFile . '/revisiones/recordatorio.php');
-            ?>
 
             <!-- Modal Revisión -->
             <?php
                 require_once($dirBaseFile . '/revisiones/revision.php');
             ?>
+
+            <!-- Live Toast -->
+            <?php
+                require_once($dirBaseFile . '/includes/html/notification.php');
+            ?>
     </main>
+
 </body>
 </html>

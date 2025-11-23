@@ -6,6 +6,6 @@
 
     session_destroy();
 
-    header('Location: ' . $dirBaseFile . '/index.php');
+    header('Location: ' . $dirBaseUrl . '/index.php');
 
 ?>

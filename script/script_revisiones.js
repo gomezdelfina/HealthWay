@@ -1,30 +1,34 @@
-//--AJAX
+// -- Inicialización
+document.addEventListener('DOMContentLoaded', function(){
+    loadRevData();
 
-async function getPermisos(){
-    const baseUrl = window.location.origin;
-    
-     try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/permisos/getPermisosByUser.php', {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+    /*Revisiones*/
+    document.getElementById('modalRevision').addEventListener('hidden.bs.modal', function (){
+        resetForm(document.getElementById('revisionForm')); 
+        createTableRev();
+    });  
+    document.getElementById('revisionForm').addEventListener('submit', validarCamposRevision);
 
-        if (!response.ok) {
-            errorText = await response.text();
-            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
-        }else{      
-            result = await response.json(); 
+    document.getElementById('btnCrearRev').addEventListener('click', function(){
+        document.getElementById("btnCreateRev").classList.add("visibility-show");
+        document.getElementById("btnCreateRev").classList.remove("visibility-remove");
 
-            return result;
-        }
-    }catch (error){
-        console.error("Error al obtener permisos del usuario:", error);
-        return [];
-    }
-}
+        document.getElementById("btnActualizarRev").classList.add("visibility-remove");
+        document.getElementById("btnActualizarRev").classList.remove("visibility-show");
 
+        document.getElementById("btnEditarRev").classList.add("visibility-hidden");
+        document.getElementById("btnEditarRev").classList.remove("visibility-show");
+        activarDatosModal(true);
+    });
+    document.getElementById('btnEditarRev').addEventListener('click', function(){
+        document.getElementById("btnActualizarRev").classList.add("visibility-show");
+        document.getElementById("btnActualizarRev").classList.remove("visibility-remove");
+        activarDatosModal(true);
+    });
+});
+
+// -- AJAX
+//Consulta revisiones a la BD
 async function getRevisiones(){
     const baseUrl = window.location.origin;
     
@@ -45,47 +49,217 @@ async function getRevisiones(){
             return result;
         }
     }catch (error){
-        console.error("Error al obtener revisiones:", error);
-        return [];
+        throw new Error("Problema de conexión con la API: " + error.message);
     }
 }
 
+//Consulta revision a la BD segun ID
+async function getRevision(idRev){
+    const baseUrl = window.location.origin;
+    
+     try {
+        data = {
+            'idRevision': idRev
+        }
+
+        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/getRevisionById.php', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Consulta pacientes habilitados de internaciones activas a la BD
+async function getPacientes(){
+    const baseUrl = window.location.origin;
+    
+     try {
+        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/pacientes/getPacientesInterAct.php', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Consulta tipos de revision a la BD según el usuario
+async function getTiposRev(){
+    const baseUrl = window.location.origin;
+    
+    try {
+        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/getTiposRevByUser.php', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Consulta estados de revision a la BD segun el usuario
+async function getEstadosRev(){
+    const baseUrl = window.location.origin;
+    
+    try {
+        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/getEstadosRevByUser.php', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Genera revision en la BD
+async function createRevision(){
+    const baseUrl = window.location.origin;
+    
+    let data = {
+            'IdPaciente': document.getElementById("revPac").value,
+            'FechaCreacion': document.getElementById("fechaRevis").value,
+            'HoraCreacion': document.getElementById("horaRevis").value,
+            'TipoRev': document.getElementById("tipoRevis").value,
+            'EstadoRev': document.getElementById("estadoRevis").value,
+            'Sintomas': document.getElementById("sintomaRevi").value,
+            'Diagnostico': document.getElementById("diagRevi").value,
+            'Tratamiento': document.getElementById("tratamRevi").value,
+            'Notas': document.getElementById("notasRevi").value
+        };
+
+    try {
+        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/createRevision.php', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Actualiza revision en la BD
+async function editRevision(idRev){
+    const baseUrl = window.location.origin;
+    
+    let data = {
+            'IdRevision': idRev,
+            'TipoRev': document.getElementById("tipoRevis").value,
+            'EstadoRev': document.getElementById("estadoRevis").value,
+            'Sintomas': document.getElementById("sintomaRevi").value,
+            'Diagnostico': document.getElementById("diagRevi").value,
+            'Tratamiento': document.getElementById("tratamRevi").value,
+            'Notas': document.getElementById("notasRevi").value
+        };
+
+    try {
+        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/editRevision.php', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
 //--
 
-function prevenirSubmit(event){
-    event.preventDefault();
-    event.stopPropagation();
-}
+function showOkMsg(msgOk){
+    resultMsgElement = document.getElementById('resultMsg');
+    toast = new bootstrap.Toast(resultMsg);
 
-function resetearForm(form) {
-    form.reset();
-}
+    resultMsgHeader = resultMsgElement.querySelector('.toast-header strong');
+    resultMsgBody = resultMsgElement.querySelector('.toast-body');
 
-function validarOpSelect(element) {
-    if (element.value === '-1') {
-        element.classList.add("is-invalid");
-        return false;
-    } else {
-        element.classList.remove("is-invalid");
-        return true;
+    if(msgOk){
+        resultMsgHeader.textContent = 'Felicitaciones!';
+        resultMsgBody.textContent = 'Se cargó una nueva revisión correctamente.';
+        resultMsgElement.classList.remove('text-bg-danger');
+        resultMsgElement.classList.add('text-bg-success'); 
+    }else{
+        resultMsgHeader.textContent = 'Error!';
+        resultMsgBody.textContent = 'Problemas al ingresar la revisión.';
+        resultMsgElement.classList.add('text-bg-danger');
+        resultMsgElement.classList.remove('text-bg-success'); 
     }
+
+    toast.show();
 }
 
-function validarValorVacio(element) {
-    if (element.value === '') {
-        element.classList.add("is-invalid");
-        return false;
-    } else {
-        element.classList.remove("is-invalid");
-        return true;
-    }
-}
-
-function validarCamposRevision(event) {
-    let formIsValid = 0;
+async function validarCamposRevision(event) {
     prevenirSubmit(event);
+    let formIsValid = 0;
 
-    if(!validarOpSelect(document.getElementById("interPac"))){
+    if(!validarOpSelect(document.getElementById("revPac"))){
         document.getElementById("valPac").classList.add("visibility-show");
         formIsValid++;
     }else{
@@ -128,175 +302,205 @@ function validarCamposRevision(event) {
     };
 
     if (formIsValid === 0) {
-        //bootstrap.Toast.getOrCreateInstance(document.getElementById('liveToast')).show();
-        event.target.submit(); // Esto enviará el formulario de nuevo.
+        try{
+            btnElement = event.submitter;
+
+            if(btnElement.innerText == 'Crear'){
+                $result = await createRevision();
+
+                document.getElementById("btnCancelRevisionForm").click();
+                showOkMsg(true);
+            }else if(btnElement.innerText == 'Actualizar'){
+                idRevision = event.currentTarget.parentNode.dataset.id;
+                $result = await editRevision(idRevision);
+
+                document.getElementById("btnCancelRevisionForm").click();
+                showOkMsg(true);
+            } 
+        }catch(error){
+            console.log("Problemas al crear la Revision: " + error.message);
+            showOkMsg(false);
+        }
     }
 };
 
-function validarCamposRecordatorio(event) {
-    
-};
+//Carga datos de Modal Revision con Revision
+async function cargarDatosRev(idRev){
+    try{
+        response = await getRevision(idRev);
 
-function handleRadioChange(id){
-    if(id === "opUnaVez"){
-        document.getElementById("divFrecDiasRep").classList.add("visibility-remove");
-        document.getElementById("divFrecSemRep").classList.add("visibility-remove");
-        document.getElementById("divDiasCheck").classList.add("visibility-remove");
-    }else if(id === "opDiariamente"){
-        document.getElementById("divFrecDiasRep").classList.remove("visibility-remove");
-
-        document.getElementById("divFrecDiasRep").classList.add("visibility-show");
-        document.getElementById("divFrecSemRep").classList.add("visibility-remove");
-        document.getElementById("divDiasCheck").classList.add("visibility-remove");
-    }else if(id === "opSemanalmente"){
-        document.getElementById("divFrecSemRep").classList.remove("visibility-remove");
-        document.getElementById("divDiasCheck").classList.remove("visibility-remove");
-
-        document.getElementById("divFrecDiasRep").classList.add("visibility-remove");
-        document.getElementById("divFrecSemRep").classList.add("visibility-show");
-        document.getElementById("divDiasCheck").classList.add("visibility-show");
+        if(response.length > 0){
+            document.getElementById("revPac").value = response[0].IdPaciente;
+            document.getElementById("fechaRevis").value = response[0].FechaCreacion;
+            document.getElementById("horaRevis").value = response[0].HoraCreacion;
+            document.getElementById("tipoRevis").value = response[0].TipoRevision;
+            document.getElementById("estadoRevis").value = response[0].EstadoRevision;
+            document.getElementById("sintomaRevi").value = response[0].Sintomas;
+            document.getElementById("diagRevi").value = response[0].Diagnostico;
+            document.getElementById("tratamRevi").value = response[0].Tratamiento;
+            document.getElementById("notasRevi").value = response[0].Notas;
+        }
+    } catch(error){
+        console.log("Problemas al cargar los datos de la Revision: " + error.message);  
     }
-
 }
 
+//Carga select Tipo de Modal Revision
+async function loadSelectTiposRev(){    
+    try{
+        response = await getTiposRev();
+
+        if(response.length > 0){
+            selectRevTipos = document.getElementById("tipoRevis");
+            response.forEach (tipoRev => {
+                option = document.createElement('option');
+                option.value = tipoRev.IdTipoRevision;
+                option.textContent = tipoRev.DescTipoRevision;
+                selectRevTipos.appendChild(option);
+            });
+        }
+    } catch(error){
+        console.log("Problemas al cargar el campo Tipos de Revision: " + error.message);  
+    }
+    
+}
+
+//Carga select Estado de Modal Revision
+async function loadSelectEstadosRev(){  
+    try{
+        response = await getEstadosRev();
+
+       if(response.length > 0){
+            selectRevEstados = document.getElementById("estadoRevis");
+            response.forEach (estadoRev => {
+                option = document.createElement('option');
+                option.value = estadoRev.IdEstadoRev;
+                option.textContent = estadoRev.DescEstadoRev;
+                selectRevEstados.appendChild(option);
+            });
+        }
+            
+    } catch(error){
+        console.log("Problemas al cargar el campo Estados de Revision: " + error.message);  
+    }
+}
+
+//Carga select Pacientes de Modal Revision
+async function loadSelectPacientesRev(){
+    try{
+        response = await getPacientes();
+    
+        selectRevPac = document.getElementById("revPac");
+        response.forEach (paciente => {
+            option = document.createElement('option');
+            option.value = paciente.IdPaciente;
+            option.textContent = paciente.Nombre + ' ' + paciente.Apellido;
+            selectRevPac.appendChild(option);
+        });
+    }catch(error){
+        console.log("Problemas al cargar el campo Pacientes: " + error.message); 
+    }
+    
+}
+
+//Carga la tabla Revisiones
 async function createTableRev(){   
-    datos = await getRevisiones();
+    try{
+        //Contenido
+        datos = await getRevisiones();
 
-    tablaRevs = document.getElementById('tablaRevs');
-    tablaRevs.innerHTML = '';
+        divTablaRevs = document.getElementById('divTablaRevs');
+        divTablaRevs.innerHTML = '';
 
-    tabla = document.createElement('table');
-    tabla.classList.add('table', 'table-hover', 'table-striped');
+        let tableHTML = `<table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Paciente</th>
+                                    <th>Habitacion</th>
+                                    <th>Cama</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
 
-    thead = document.createElement('thead');
-    trHead = document.createElement('tr');
+        datos.forEach(rev => {
+            dtRev = new Date(rev.FechaCreacion)
+            let fecha = dtRev.toLocaleDateString();
+            let hora = dtRev.toLocaleTimeString();
 
-    encabezados = [
-        "Paciente", "Habitacion", "Cama", "Tipo", "Estado", "Fecha", "Hora", "Acciones"
-    ];
-    encabezados.forEach(encabezado => {
-        th = document.createElement('th');
-        th.textContent = encabezado;
-        trHead.appendChild(th);
-    });
-
-    thead.appendChild(trHead);
-    tabla.appendChild(thead);
-
-    tbody = document.createElement('tbody');
-    datos.forEach(fila => {
-        //Id
-        trBody = document.createElement('tr');
-        trBody.setAttribute('data-id', fila.IdRevision);
-
-        //Paciente
-        td = document.createElement('td');
-        td.textContent = fila.Nombre + ' ' + fila.Apellido;
-        trBody.appendChild(td);
-
-        //Habitacion
-        td = document.createElement('td');
-        td.textContent = fila.Habitacion;
-        trBody.appendChild(td);
-
-        //Cama
-        td = document.createElement('td');
-        td.textContent = fila.Cama;
-        trBody.appendChild(td);
-
-        ['Paciente', 'Habitacion', 'Cama', 'Tipo', 'Estado', 'Fecha', 'Hora'].forEach(propiedad => {
-            td = document.createElement('td');
-            td.textContent = fila.Nombre + ' ' + fila.Apellido;
-            trBody.appendChild(td);
+            tableHTML += `<tr data-id="${rev.IdRevisiones}">
+                            <td>${rev.Nombre + ' ' + rev.Apellido}</td>
+                            <td>${rev.NumeroHabitacion}</td>
+                            <td>${rev.NumeroCama}</td>
+                            <td>${rev.TipoRevision}</td>
+                            <td>${rev.EstadoRevision}</td>
+                            <td>${fecha}</td>
+                            <td>${hora}</td>
+                            <td>
+                                <div class="d-flex justify-content-end">
+                                    <button id="btnVerRev" class="btn btn-sm btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#modalRevision" data-id="${rev.IdRevisiones}">
+                                        <i class="bi bi-eye-fill me-2"></i>Ver
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>`;
         });
 
-        //Boton Ver
-        tdVer = document.createElement('td');
-        divVer = document.createElement('div');
-        divVer.classList.add('d-flex', 'justify-content-end');
-        btnVer = document.createElement('button');
-        btnVer.classList.add('btn', 'btn-sm', 'btn-outline-dark', 'me-2');
-        btnVer.setAttribute('data-bs-toggle', 'modal');
-        btnVer.setAttribute('data-bs-target', '#modalRevision');
-        btnVer.innerHTML = '<i class="bi bi-eye-fill me-2"></i>Ver';
-        btnVer.addEventListener('click', (event) => {
-            filaActual = event.target.closest('tr');
-            idRevision = filaActual.dataset.idrevision;
-            mostrarDetallesRevision(idRevision);
-        });
-        divVer.appendChild(btnVer);
-        tdVer.appendChild(divVer);
-        trBody.appendChild(tdVer);
+        tableHTML += `</tbody></table>`;
+        divTablaRevs.innerHTML = tableHTML;
 
-        //Boton Editar
-        tdEdit = document.createElement('td');
-        divEdit = document.createElement('div');
-        divEdit.classList.add('d-flex', 'justify-content-end');
-        btnEdit = document.createElement('button');
-        btnEdit.classList.add('btn', 'btn-sm', 'btn-outline-dark', 'me-2');
-        btnEdit.setAttribute('data-bs-toggle', 'modal');
-        btnEdit.setAttribute('data-bs-target', '#modalRevision');
-        btnEdit.innerHTML = '<i class="bi bi-pencil-square me-2"></i>Editar';
-        btnEdit.addEventListener('click', (event) => {
-            filaActual = event.target.closest('tr');
-            idRevision = filaActual.dataset.idrevision;
-            mostrarDetallesRevision(idRevision);
-        });
-        divEdit.appendChild(btnEdit);
-        tdEdit.appendChild(divEdit);
-        trBody.appendChild(tdEdit);
-    });
+        divTablaRevs.querySelectorAll('button[data-bs-target="#modalRevision"]').forEach(button => {
+            button.addEventListener('click', (event) => {
+                idRevision = event.currentTarget.dataset.id;
+                document.getElementById("btnCreateRev").classList.add("visibility-remove");
+                document.getElementById("btnCreateRev").classList.remove("visibility-show");
 
-    tabla.appendChild(tbody);
+                document.getElementById("btnActualizarRev").classList.add("visibility-remove");
+                document.getElementById("btnActualizarRev").classList.remove("visibility-show");
+                
+                document.getElementById("btnEditarRev").classList.add("visibility-show");
+                document.getElementById("btnEditarRev").classList.remove("visibility-hidden");
 
-    tablaRevs.appendChild(tabla);
-}
-
-async function loadPermisos(){
-    response = await getPermisos();
-    
-    if(response){
-        permisos = response.map(permiso => permiso.IdPermiso);
-
-        if (permisos.includes(8)) { //Crear Revision
-            document.getElementById("createRev").classList.add('visibility-show');
-            document.getElementById("createRev").classList.remove('visibility-remove');
-        }
-        
-        if (permisos.includes(11)) { //Crear Recordatorio
-            document.getElementById("createRec").classList.add('visibility-show');
-            document.getElementById("createRec").classList.remove('visibility-remove');
-        }
-    }
-}
-
-async function loadRevData(){
-    await loadPermisos();
-    await createTableRev();
-    //createTableRec();
-}
-
-window.onload = function() {
-    document.addEventListener('DOMContentLoaded', loadRevData());
-
-    /*Revisiones*/
-    document.getElementById('revisionForm').addEventListener('submit', validarCamposRevision);
-    document.getElementById('btnCancelRevisionForm').addEventListener('click', 
-        resetearForm(document.getElementById('revisionForm')));
-    
-    /*Recordatorios*/
-    radios = document.querySelectorAll('input[name="op"]');
-    radios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                handleRadioChange(this.id);
+                activarDatosModal(false);
+                cargarDatosRev(idRevision);
             });
         });
-    if(opCheck = document.querySelector('input[name="op"]:checked')){
-        handleRadioChange(opCheck.id);
-    };
+    }catch(error){
+        console.log("Problemas al cargar la tabla de Revisiones: " + error.message);  
+    }
+}
 
-    document.getElementById('recordatorioForm').addEventListener('submit', validarCamposRecordatorio);
-    document.getElementById('btnCancelRecordatorioForm').addEventListener('click', 
-        resetearForm(document.getElementById('recordatorioForm')));
+//Carga los datos principales del modulo
+function loadRevData(){
+    loadSelectEstadosRev();
+    loadSelectTiposRev();
+    loadSelectPacientesRev();
+
+    createTableRev();
+}
+
+//Habilita y deshabilita la edicion de los elementos del modal
+function activarDatosModal(valid){
+    if(valid){
+        document.getElementById("revPac").removeAttribute('disabled');
+        document.getElementById("tipoRevis").removeAttribute('disabled');
+        document.getElementById("estadoRevis").removeAttribute('disabled');
+        document.getElementById("sintomaRevi").removeAttribute('disabled');
+        document.getElementById("diagRevi").removeAttribute('disabled');
+        document.getElementById("tratamRevi").removeAttribute('disabled');
+        document.getElementById("notasRevi").removeAttribute('disabled');
+    }else{
+        document.getElementById("revPac").setAttribute('disabled','');
+        document.getElementById("tipoRevis").setAttribute('disabled','');
+        document.getElementById("estadoRevis").setAttribute('disabled','');
+        document.getElementById("sintomaRevi").setAttribute('disabled','');
+        document.getElementById("diagRevi").setAttribute('disabled','');
+        document.getElementById("tratamRevi").setAttribute('disabled','');
+        document.getElementById("notasRevi").setAttribute('disabled','');
+    }
 }
 

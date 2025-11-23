@@ -15,7 +15,7 @@
         if (trim($userId) == '') {
             $response['code'] = 404;
             $response['msg'] = 'Error al procesar la solicitud';
-        } elseif (!preg_match('/^[0-9]+$/', $userId)) {
+        } elseif (!preg_match('/^[1-9]+$/', $userId)) {
             $response['code'] = 404;
             $response['msg'] = 'Error al procesar la solicitud';
         } else {

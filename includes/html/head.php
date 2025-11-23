@@ -8,7 +8,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+<!-- librerias -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <!-- javascript -->
 <script defer src="<?php echo $dirBaseUrl ?>/script/script.js"></script>
+<script defer src="<?php echo $dirBaseUrl ?>/script/script_qr.js"></script>
 <script defer src="<?php echo $dirBaseUrl ?>/script/script_<?php echo $module ?>.js"></script>
 <title>HealthWay</title>

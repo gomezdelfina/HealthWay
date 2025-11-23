@@ -14,16 +14,8 @@
                             <label class="form-label" for="inputEmail" required>Correo electrónico</label>
                             <input class="form-control" 
                                 type="email" id="inputEmail" name="inputEmail" placeholder="nombre@ejemplo.com" pattern=/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{3,}$ />
-                            <div id="email-error" class="invalid-feedback">
-                            </div>
-                            <div id="invalidEmail" class="alert alert-danger alert-dismissible fade show mt-3 visibility-remove">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                <strong>Error!</strong> <?php echo $errors['process']; ?>
-                            </div>
-                            <div id="validEmail" class="alert alert-success alert-dismissible fade show mt-3 visibility-remove">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                <strong>Felicidades!</strong> Email enviado correctamente.
-                            </div>
+                            <div id="email-error" class="invalid-feedback"></div>
+                            <div id="validEmail"></div>
                         </div>
                     </div>
                 </form>
