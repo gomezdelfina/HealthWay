@@ -3,7 +3,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/../conexiones/conectorMySQL.php';
+require_once(__DIR__ . '/../../includes/globals.php');
+require_once($dirBaseFile . '/conexiones/conectorMySQL.php');
 
 // ============================
 //  VALIDAR PARAMETRO
@@ -37,8 +38,10 @@ try {
             u.Nombre,
             u.Apellido
         FROM revisiones r
-        LEFT JOIN usuarios u ON u.IdUsuario = r.IdUsuario
-        WHERE r.IdInternacion = :idInternacion
+        INNER JOIN internaciones i ON r.IdInternacion = i.IdInternacion
+        INNER JOIN pacientes p on i.IdPaciente = p.IdPaciente
+        INNER JOIN usuarios u ON p.IdUsuario = u.IdUsuario
+        WHERE u.IdUsuario = :idInternacion
         ORDER BY r.FechaCreacion DESC
     ";
 

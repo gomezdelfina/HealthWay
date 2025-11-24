@@ -6,6 +6,113 @@ document.addEventListener('DOMContentLoaded', function(){
     loadPacienteDash();
 });
 
+// -- AJAX
+//Consulta internaciones activas a la BD
+async function getInternacionesActivas(){
+    const baseUrl = window.location.origin;
+    
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/internaciones/verInternacionesActivas.php', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Consulta recordatorios pendientes a la bd
+async function getRecordatoriosPendientes(){
+    const baseUrl = window.location.origin;
+    
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/getRecordatoriosPendientes.php', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Consulta recordatorios atrasados a la bd
+async function getRecordatoriosAtrasados(){
+    const baseUrl = window.location.origin;
+    
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/getRecordatoriosAtrasados.php', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Actualiza estado de recordatorio en la BD
+async function updateRecordatorioEstado(idrec){
+    const baseUrl = window.location.origin;
+
+    let rec = {
+        'IdRecordatorio' : idrec,
+        'Estado' : 'Hecho'
+    };
+
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/editRecordatorioEstado.php', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(rec),
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
 function loadAdminDash(){
 
 }
@@ -14,8 +121,53 @@ function loadJefeDash(){
 
 }
 
+// -- Pers. Medico
 function loadPMedicoDash(){
+    verInternacionesActivas();
+    verRecordatoriosPend();
+    verRecordatoriosAtras();
+}
 
+async function verInternacionesActivas(){
+    try{
+        let result = await getInternacionesActivas();
+
+        document.getElementById("ocupadasValue").value = result.length;
+        
+    }catch(error){
+        console.log("Problemas al obtener las internaciones activas");
+    }
+}
+
+async function verRecordatoriosPend(){
+    try{
+        let result = await getRecordatoriosPendientes();
+
+        document.getElementById("recPendValue").value = result.length;
+        
+    }catch(error){
+        console.log("Problemas al obtener los recordatorios pendientes");
+    }
+}
+
+async function verRecordatoriosAtras(){
+    try{
+        let result = await getRecordatoriosAtrasados();
+
+        document.getElementById("recAtrasValue").value = result.length;
+        
+    }catch(error){
+        console.log("Problemas al obtener los recordatorios pendientes");
+    }
+}
+
+async function marcarRecordatorioHecho(id){
+    try{
+        let result = await updateRecordatorioEstado(id);
+    }catch(error){
+        console.log("Problemas al actualizar estado de recordatorio");
+        showOkMsg(false, 'Problemas al actualizar el recordatorio');
+    }
 }
 
 // -- Paciente
@@ -26,9 +178,9 @@ function loadPacienteDash(){
 function cargarDatosPaciente(){
     const baseUrl = window.location.origin;
 
-    const idPaciente = 2; // OK
+    const idPaciente = document.getElementById("idUser").value;
 
-    fetch(baseUrl + "/2025/HeathWay/Codigo/HealthWay/api/pacientes/obtener_internacion.php?idPaciente=2")
+    fetch(baseUrl + "/HealthWay/api/pacientes/obtener_internacion.php?idPaciente=" + idPaciente)
         .then(res => res.json())
         .then(data => {
         if (data.error) {
@@ -116,7 +268,9 @@ function calcularHoras(inicio, fin) {
 function fetchRevisiones(idInternacion) {
     const baseUrl = window.location.origin;
 
-    fetch(baseUrl + "/2025/HeathWay/Codigo/HealthWay/api/pacientes/obtener_revisiones.php?idInternacion=${idInternacion}")
+    idInternacion = document.getElementById("idUser").value;
+
+    fetch(baseUrl + `/HealthWay/api/pacientes/obtener_revisiones.php?idInternacion=${idInternacion}`)
         .then(res => res.json())
         .then(data => mostrarRevisiones(data))
         .catch(err => console.error("Error al cargar revisiones:", err));

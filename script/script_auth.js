@@ -22,7 +22,7 @@ async function validateEmailExists(email) {
             'email': email
         };
 
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/auth/validateEmail.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/auth/validateEmail.php', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ async function validateLogin(usuario) {
             'clave': usuario.psw
         };
 
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/auth/validateLogin.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/auth/validateLogin.php', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -86,7 +86,7 @@ async function sendEmail(user) {
             'apellidoUsuario': user.Apellido
         };
 
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/auth/sendEmailRecovery.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/auth/sendEmailRecovery.php', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -162,7 +162,7 @@ async function validateRecoveryForm(event){
 
     if(!validarValorVacio(document.getElementById("inputEmail"))){
         document.getElementById("email-error").textContent = 'El campo email no puede ser vacío.';
-    }else if (!validarString(document.getElementById("inputEmail"), /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{3,}$/)){
+    }else if (!validarString(document.getElementById("inputEmail"), /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/)){
         document.getElementById("email-error").textContent = 'El campo email no tiene el formato correcto.';
     }else{
         let divValidEmail = document.getElementById("validEmail");

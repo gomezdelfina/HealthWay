@@ -33,7 +33,7 @@ async function getRevisiones(){
     const baseUrl = window.location.origin;
     
      try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/getRevisiones.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/revisiones/getRevisiones.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ async function getRevision(idRev){
             'idRevision': idRev
         }
 
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/getRevisionById.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/revisiones/getRevisionById.php', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ async function getPacientes(){
     const baseUrl = window.location.origin;
     
      try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/pacientes/getPacientesInterAct.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/pacientes/getPacientesInterAct.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -113,7 +113,7 @@ async function getTiposRev(){
     const baseUrl = window.location.origin;
     
     try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/getTiposRevByUser.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/revisiones/getTiposRevByUser.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -138,7 +138,7 @@ async function getEstadosRev(){
     const baseUrl = window.location.origin;
     
     try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/getEstadosRevByUser.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/revisiones/getEstadosRevByUser.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -175,7 +175,7 @@ async function createRevision(){
         };
 
     try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/createRevision.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/revisiones/createRevision.php', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -211,7 +211,7 @@ async function editRevision(idRev){
         };
 
     try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/editRevision.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/revisiones/editRevision.php', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -503,4 +503,3 @@ function activarDatosModal(valid){
         document.getElementById("notasRevi").setAttribute('disabled','');
     }
 }
-

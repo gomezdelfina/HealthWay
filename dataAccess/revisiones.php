@@ -44,20 +44,20 @@ use Dba\Connection;
                         WHERE T0.IdTipoRevision IN (
                             SELECT 
                             CASE T.idPermiso 
-                                WHEN 13 THEN 1 
-                                WHEN 19 THEN 1
-                                WHEN 14 THEN 2
-                                WHEN 20 THEN 2
-                                WHEN 15 THEN 3
-                                WHEN 21 THEN 3
-                                WHEN 16 THEN 4
-                                WHEN 22 THEN 4
-                                WHEN 17 THEN 5
-                                WHEN 23 THEN 5
-                                WHEN 18 THEN 6
-                                WHEN 24 THEN 6
-                                WHEN 25 THEN 7
-                                WHEN 26 THEN 7
+                                WHEN 15 THEN 1 
+                                WHEN 16 THEN 2
+                                WHEN 17 THEN 3
+                                WHEN 18 THEN 4
+                                WHEN 19 THEN 5
+                                WHEN 20 THEN 6
+                                WHEN 27 THEN 7
+                                WHEN 21 THEN 1
+                                WHEN 22 THEN 2
+                                WHEN 23 THEN 3
+                                WHEN 24 THEN 4
+                                WHEN 25 THEN 5
+                                WHEN 26 THEN 6
+                                WHEN 28 THEN 7
                             END AS idTipoRevision
                             FROM roles_permisos T
                             INNER JOIN roles_usuarios TT on T.IdRol = TT.IdRol
@@ -87,18 +87,18 @@ use Dba\Connection;
                         WHERE T0.IdEstadoRev IN (
                             SELECT 
                             CASE T.idPermiso 
-                                WHEN 27 THEN 1 
-                                WHEN 38 THEN 1
-                                WHEN 29 THEN 2
-                                WHEN 37 THEN 2
-                                WHEN 28 THEN 3
-                                WHEN 36 THEN 3
-                                WHEN 30 THEN 4
-                                WHEN 35 THEN 4
-                                WHEN 31 THEN 5
-                                WHEN 34 THEN 5
-                                WHEN 32 THEN 6
-                                WHEN 33 THEN 6
+                                WHEN 29 THEN 1 
+                                WHEN 30 THEN 3
+                                WHEN 31 THEN 2
+                                WHEN 32 THEN 4
+                                WHEN 33 THEN 5
+                                WHEN 34 THEN 6
+                                WHEN 35 THEN 6
+                                WHEN 36 THEN 5
+                                WHEN 37 THEN 4
+                                WHEN 38 THEN 3
+                                WHEN 39 THEN 2
+                                WHEN 40 THEN 1
                             END AS idEstadoRev
                             FROM roles_permisos T
                             INNER JOIN roles_usuarios TT on T.IdRol = TT.IdRol

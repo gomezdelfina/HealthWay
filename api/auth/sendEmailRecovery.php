@@ -28,7 +28,7 @@
 
             if ($idUsuario== '') {
                 $errors['idUsuario'] = 'El campo idUsuario no puede ser vacío.';
-            }elseif(!preg_match('/^[1-9]+$/', $idUsuario)){
+            }elseif(!preg_match('/^[0-9]+$/', $idUsuario)){
                 $errors['idUsuario'] = 'El campo idUsuario no contiene el formato correcto.';
             }
         }
@@ -127,8 +127,8 @@
 
                         $asunto = 'Healthway - Recuperacion de contrasenia';
 
-                        $href = $_SERVER['HTTP_ORIGIN'] . $dirBaseUrl . "/resetPass/setPass.php?token=" . $token["token"];
-                        $body = file_get_contents($dirBaseFile . '/resetPass/email_recoveryLogin.php');
+                        $href = $_SERVER['HTTP_ORIGIN'] . $dirBaseUrl . "/modules/resetPass/setPass.php?token=" . $token["token"];
+                        $body = file_get_contents($dirBaseFile . '/modules/resetPass/email_recoveryLogin.php');
                         $body = str_replace(':linkRecuperacion', $href, $body);
 
                         $emailSend = Mailer::enviarEmail($dest, $asunto, $body);

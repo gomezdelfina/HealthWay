@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         contenedor.innerHTML = '<p class="text-center text-muted">Buscando camas...</p>';
 
         try {
-            const res = await fetch('/HTML/Healthway/api/internaciones/BuscarInternacion.php?busqueda=' + encodeURIComponent(termino));
+            const res = await fetch('/Healthway/api/internaciones/BuscarInternacion.php?busqueda=' + encodeURIComponent(termino));
             const data = await res.json();
 
             contenedor.innerHTML = '';
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         contenedor.innerHTML = '<p class="text-center text-muted">Cargando camas...</p>';
 
         try {
-            const res = await fetch(`/HTML/Healthway/api/internaciones/ObtenerCamas.php?pagina=${pagina}`);
+            const res = await fetch(`/Healthway/api/internaciones/ObtenerCamas.php?pagina=${pagina}`);
             const { camas, totalPaginas } = await res.json();
             contenedor.innerHTML = "";
 

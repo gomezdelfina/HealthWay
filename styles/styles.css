@@ -359,3 +359,10 @@ body .containerEmail {
     justify-content: space-between;
     align-items: center;
 }
+
+div.div-ul {
+    max-height: 125px; 
+    overflow-y: auto;
+}
+
+/*** ADMINISTRADOR ***/
