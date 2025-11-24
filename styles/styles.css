@@ -1,0 +1,361 @@
+/**** Utils ****/
+.visibility-hidden{
+    visibility: hidden;
+}
+
+.visibility-remove{
+    display: none;
+}
+
+.visibility-add{
+    display: '';
+}
+
+.visibility-show {
+    visibility: visible;
+}
+
+/**** Background ****/
+body div.background, div.modal, nav, main{
+  font-family: "Manrope", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.background{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/**** Login ****/
+.img-background{
+    background-image: url(../imgs/fondo.jpg);
+    background-position: center center;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px 20px 20px 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-title {
+    color: #1B244F;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.login-subtitle {
+    color: #6c757d;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.hospital-logo img{
+    margin-bottom: 20px;
+    width: 75px;
+}
+
+button.btn-login {
+    background: #3498db;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 30px;
+    width: 100%;
+}
+
+.btn-login{
+    text-decoration: none;
+    color: white;
+}
+
+button.btn-forgotPsw {
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 30px;
+    width: 100%;
+}
+
+button.btn-sendEmail {
+    background: #3498db;
+    text-align: center;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px;
+    width: 13%;
+}
+
+button.btn-cancelEmail {
+    background: #6c757d;
+    text-align: center;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px;
+    width: 13%;
+}
+
+button.btn-submit {
+    background: #3498db;
+    text-align: center;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px;
+    width: 13%;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+}
+
+.btn-forgotPsw:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+}
+
+div.card-header-color {
+    background-color: #3498db;
+    color: white;
+}
+
+/**** Nav ****/
+.navbar-nav a{
+    position: relative;
+}
+
+.navbar-nav a::before{
+    content: "";
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transition: 0.5s transform ease;
+    transform: scale3d(0,1,1);
+    transform-origin: 0 50%;
+    background: #1B244F;
+}
+
+.navbar-nav a:hover::before{
+    transform: scale3d(1,1,1);
+}
+
+li .active{
+    font-weight: bolder;
+}
+
+.span-notif:hover {
+  animation: tilt-shaking 0.30s infinite;
+}
+
+.dropdown-menu {
+    min-width: max-content;
+}
+
+.dropdown-menu .info-label {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.dropdown-menu .info-value {
+    flex-grow: 1;
+    word-break: break-all;
+    min-width: 0;      
+}
+
+.dropdown-menu .user-info-section {
+    width: auto;
+}
+
+@keyframes tilt-shaking {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  50% { transform: rotate(0eg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+div .text-danger{
+    font-size: small;
+}
+
+/**** Paciente ****/
+.paciente-background {
+    background-image: url(../imgs/fondo.jpg);
+    background-position: center center;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+.icon-text{
+    height: 1rem;
+}
+
+/**** Revisiones ****/
+#divTablaRevs {
+    height: 550px;
+    overflow-y: auto;
+}
+
+#divTablaRevs .table{
+    width: 100%;
+    margin-bottom: 0;
+}
+
+#divTablaRecs {
+    height: 550px;
+    overflow-y: auto;
+}
+
+#divTablaRecs .table{
+    width: 100%;
+    margin-bottom: 0;
+}
+
+#modalRecordatorio .btn-group label {
+    font-size: 0.9rem;
+}
+
+#modalRecordatorio .form-check {
+    padding: 0.25rem 0.5rem;
+}
+
+/**** Email ****/
+body .containerEmail {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.containerEmail {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.headerEmail {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.contentEmail {
+    padding: 20px 0;
+    line-height: 1.6;
+    color: #333333;
+}
+
+.btn-containerEmail {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.btn-containerEmail a {
+    display: inline-block;
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footerEmail {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #eeeeee;
+    font-size: 12px;
+    color: #777777;
+}
+        
+/**** MediaQuerys ****/
+@media only screen and (max-width: 706px) {
+    button.btn-sendEmail {
+        width: 100%;
+    }
+
+    button.btn-cancelEmail {
+        width: 100%;
+    }
+}
+
+/*** Camas y habitaciones  ***/
+#DivComp {
+    display : none;
+}
+
+#DivInd {
+    display : none;
+}
+
+#DivCama {
+    display : none;
+}
+
+/*** Historial Medico ***/
+.doc-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.doc-container .section-title {
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: #0d6efd;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+}
+
+.doc-container .label-text {
+    color: #6c757d;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.doc-container .value-text {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.doc-container .revision-card {
+    border-left: 4px solid #198754;
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+}
+
+.revision-header {
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
