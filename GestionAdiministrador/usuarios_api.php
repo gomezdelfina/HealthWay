@@ -3,7 +3,7 @@
  * API RESTful para la gestion de usuarios (CRUD) por el Administrador.
  * Implementa GET, POST, PUT, DELETE (Baja Logica) usando AJAX.
  */
-require_once 'config.php';
+require_once 'conexion.php';
 
 // Establecer la cabecera para que el cliente sepa que esperamos JSON
 header('Content-Type: application/json');

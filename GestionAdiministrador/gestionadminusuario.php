@@ -18,22 +18,19 @@ require_once 'conexion.php';
 <body class="bg-light">
 
     <div class="container-fluid">
-        <!-- Titulo del Modulo -->
         <h1 class="text-primary fw-bold mb-4 border-bottom border-primary pb-2">
             <i class="bi bi-person-gear me-2"></i> Modulo Administrador: Gestion de Usuarios
         </h1>
 
-        <!-- Controles y Busqueda -->
         <div class="row mb-4 align-items-center">
             <div class="col-md-4 mb-3 mb-md-0">
-                <!-- Boton de Alta (Anadir Nuevo Usuario) -->
                 <button id="btn-add-user" onclick="openUserModal('add')" 
                         class="btn btn-success w-100 shadow rounded-pill">
                     <i class="bi bi-person-plus-fill me-2"></i> Anadir Nuevo Usuario
                 </button>
             </div>
 
-            <!-- Campo de Busqueda -->
+            
             <div class="col-md-6 offset-md-2">
                 <div class="input-group shadow rounded-pill overflow-hidden">
                     <input type="text" placeholder="Buscar por Nombre, Email, Usuario o Rol"
@@ -46,7 +43,7 @@ require_once 'conexion.php';
             </div>
         </div>
 
-        <!-- Tabla de Listado de Usuarios -->
+        
         <div class="card shadow-lg border-0 rounded-3">
             <div class="card-header bg-primary text-white fw-medium rounded-top-3">
                 Lista de Usuarios Registrados
@@ -72,13 +69,13 @@ require_once 'conexion.php';
                 </div>
             </div>
             <div class="card-footer bg-white text-muted text-end rounded-bottom-3">
-                <small>Datos de la tabla Usuarios - Base de Datos HealthWay</small>
+                <small>Datos de la tabla Usuarios </small>
             </div>
         </div>
     </div>
 
 
-    <!-- Modal de Gestion de Usuarios (ABM) -->
+    
     <div class="modal fade" id="user-modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content shadow-lg border-0">
@@ -88,7 +85,7 @@ require_once 'conexion.php';
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 
-                <!-- Modal Body (Formulario) -->
+                
                 <form id="user-form">
                     <div class="modal-body row g-3">
                         <input type="hidden" id="user-id" name="id">
@@ -100,52 +97,52 @@ require_once 'conexion.php';
                                    class="form-control rounded-pill">
                         </div>
                         
-                        <!-- Campo Apellido -->
+                        
                         <div class="col-md-6">
                             <label for="user-lastname" class="form-label">Apellido</label>
                             <input type="text" id="user-lastname" name="lastname" required
                                    class="form-control rounded-pill">
                         </div>
                         
-                        <!-- Campo Usuario (Login) -->
+                        
                         <div class="col-md-6">
                             <label for="user-username" class="form-label">Nombre de Usuario (Login)</label>
                             <input type="text" id="user-username" name="username" required
                                    class="form-control rounded-pill">
                         </div>
 
-                        <!-- Campo Email -->
+                        
                         <div class="col-md-6">
                             <label for="user-email" class="form-label">Correo Electronico</label>
                             <input type="email" id="user-email" name="email" required
                                    class="form-control rounded-pill">
                         </div>
                         
-                        <!-- Campo Telefono -->
+                        
                         <div class="col-md-6">
                             <label for="user-phone" class="form-label">Telefono (ej: 1112345678)</label>
                             <input type="tel" id="user-phone" name="phone" required
                                    class="form-control rounded-pill">
                         </div>
 
-                        <!-- Campo Contrasena (para Alta o Cambio Opcional en Edicion) -->
+                        
                         <div class="col-md-6" id="password-group">
                             <label for="user-password" class="form-label" id="password-label">Contrasena</label>
                             <input type="password" id="user-password" name="password" required
                                    class="form-control rounded-pill">
                         </div>
                         
-                        <!-- Campo Rol -->
+                        
                         <div class="col-md-6">
                             <label for="user-role" class="form-label">Rol de Usuario</label>
-                            <!-- El contenido de este select se llena via AJAX en script.js -->
+                            
                             <select id="user-role" name="role" required
                                     class="form-select rounded-pill">
                                 <option value="" disabled>Cargando roles...</option>
                             </select>
                         </div>
                         
-                        <!-- Campo Habilitado (solo para Edicion) -->
+                        
                         <div class="col-md-6 d-none align-self-center" id="habilitado-group">
                             <div class="form-check pt-4">
                                 <input class="form-check-input" type="checkbox" id="user-habilitado" name="habilitado" checked>
@@ -156,7 +153,7 @@ require_once 'conexion.php';
                         </div>
                     </div>
 
-                    <!-- Modal Footer -->
+                    
                     <div class="modal-footer bg-light border-0">
                         <button type="button" class="btn btn-secondary rounded-pill shadow-sm" onclick="closeUserModal()">
                             Cancelar
