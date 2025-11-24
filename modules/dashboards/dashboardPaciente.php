@@ -1,6 +1,15 @@
-<div class="container-fluid py-4">
-    <button id="btnHoras" type="button" class="btn btn-link nav-link active">Horas de internación</button>
-    <button id="btnRevisiones" type="button" class="btn btn-link nav-link active">Revisiones</button>
+<div class="container-fluid py-4" id="dashboardPacienteContainer">
+    <input type="hidden" id="idUser" name="idUser" value="<?php echo $idUser ?>">
+    
+    <div class="d-flex gap-2 mb-3">
+        <button id="btnHoras" type="button" class="btn btn-primary shadow-sm">
+            <i class="bi bi-clock-history me-2"></i>Horas de internación
+        </button>
+        <button id="btnRevisiones" type="button" class="btn btn-outline-secondary shadow-sm">
+            <i class="bi bi-clipboard2-pulse me-2"></i>Revisiones
+        </button>
+    </div>
+
     <!-- TABLA DE INTERNACIÓN -->
     <div class="card shadow-sm" id="tablaInternacion">
         <div class="card-header text-white card-header-color">

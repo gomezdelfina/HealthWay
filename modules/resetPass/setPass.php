@@ -1,5 +1,5 @@
 <?php
-    require_once(__DIR__ . '/../includes/globals.php');
+    require_once(__DIR__ . '/../../includes/globals.php');
 
     $token = isset($_GET['token']) ? $_GET['token'] : '';
 ?>

@@ -73,20 +73,20 @@
                 <!-- Fila 1 Paciente -->
                 <div class="col-md-4">
                     <div class="label-text">Paciente</div>
-                    <div class="value-text"><?php if(isset($paciente['Nombre'])) { $paciente['Nombre']; } ?></div>
+                    <div class="value-text"><?php if(isset($paciente[0]['Nombre'])) { echo $paciente[0]['Nombre']; } ?></div>
                 </div>
                 <div class="col-md-4">
                     <div class="label-text">DNI</div>
-                    <div class="value-text"><?php if(isset($paciente['DNI'])) {$paciente['DNI']; } ?></div>
+                    <div class="value-text"><?php if(isset($paciente[0]['DNI'])) { echo $paciente[0]['DNI']; } ?></div>
                 </div>
                 <div class="col-md-4">
                     <div class="label-text">Fecha Nacimiento / Edad</div>
                     <div class="value-text">
-                        <?php if(isset($paciente['FechaNacimiento'])) {$paciente['FechaNacimiento'];} ?>
+                        <?php if(isset($paciente[0]['FechaNacimiento'])) { echo $paciente[0]['FechaNacimiento'];} ?>
                         <!-- Calculo simple de edad opcional -->
                         <small class="text-muted">(<?php
-                            if(isset($paciente['FechaNacimiento'])) { 
-                                date_diff(date_create($paciente['FechaNacimiento']), date_create('today'))->y ; 
+                            if(isset($paciente[0]['FechaNacimiento'])) { 
+                                date_diff(date_create($paciente[0]['FechaNacimiento']), date_create('today'))->y ; 
                             } ?> años)</small>
                     </div>
                 </div>
@@ -94,18 +94,18 @@
                 <!-- Fila 2 Paciente -->
                 <div class="col-md-4">
                     <div class="label-text">Género</div>
-                    <div class="value-text"><?php if(isset($paciente['Genero'])) {$paciente['Genero'];} ?></div>
+                    <div class="value-text"><?php if(isset($paciente[0]['Genero'])) { echo $paciente[0]['Genero'];} ?></div>
                 </div>
                 <div class="col-md-4">
                     <div class="label-text">Obra Social</div>
                     <div class="value-text">
-                        <?php if(isset($paciente['ObraSocial'])) {$paciente['ObraSocial'];} ?> 
-                        <span class="badge bg-secondary"><?php if(isset($paciente['Plan'])) {$paciente['Plan'];} ?></span>
+                        <?php if(isset($paciente[0]['ObraSocial'])) { echo $paciente[0]['ObraSocial'];} ?> 
+                        <span class="badge bg-secondary"><?php if(isset($paciente[0]['Plan'])) { echo $paciente[0]['Plan'];} ?></span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="label-text">Dirección</div>
-                    <div class="value-text"><?php if(isset($paciente['Direccion'])) {$paciente['Direccion'];} ?></div>
+                    <div class="value-text"><?php if(isset($paciente[0]['Direccion'])) { echo $paciente[0]['Direccion'];} ?></div>
                 </div>
             </div>
 
@@ -198,7 +198,7 @@
 
             <!-- Footer del documento -->
             <div class="text-center mt-5 pt-3 border-top text-muted small">
-                <p>Healthway Medical Systems - Documento de Consulta Exclusiva</p>
+                <p>Healthway SA - Documento de Consulta Exclusiva</p>
             </div>
 
         </div>

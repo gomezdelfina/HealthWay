@@ -30,12 +30,12 @@
         } catch (Exception) {
             $errors['process'] = "Problemas para ingresar al sistema";
 
-            header('Location: ' . $dirBaseUrl . '/auth/logout.php');
+            header('Location: ' . $dirBaseUrl . '/modules/auth/logout.php');
         }
     }else{
         $errors['process'] = "Problemas para ingresar al sistema";
 
-        header('Location: ' . $dirBaseUrl . '/auth/logout.php');
+        header('Location: ' . $dirBaseUrl . '/modules/auth/logout.php');
     }
 
     function userTienePermiso($permiso, $user)
@@ -54,7 +54,7 @@
         } catch (Exception) {
             $errors['process'] = "Problemas para verificar los permisos";
 
-            header('Location: ' . $dirBaseUrl . '/auth/logout.php');
+            header('Location: ' . $dirBaseUrl . '/modules/auth/logout.php');
         }
     }
 ?>
@@ -68,21 +68,28 @@
                     href="<?php echo $dirBaseUrl ?>/modules/dashboards/dashboard_layout.php" 
                     id="gestionDash">Inicio</a>
             </li>
-            <?php if (userTienePermiso(30, $idUser)) { //Visualizar internaciones?>
+            <?php if (userTienePermiso(6, $idUser)) { //Visualizar internaciones?>
                 <li class="nav-item">
                     <a class="nav-link <?php if ($module == 'internaciones') {echo 'active';} ?>" 
                         href="<?php echo $dirBaseUrl ?>/modules/internaciones/internaciones.php" 
                         id="gestionInter">Internaciones</a>
                 </li>
             <?php } ?>
-            <?php if (userTienePermiso(30, $idUser)) { //Visualizar revisiones?>
+            <?php if (userTienePermiso(1, $idUser)) { //Visualizar internaciones?>
+                <li class="nav-item">
+                    <a class="nav-link <?php if ($module == 'administrador') {echo 'active';} ?>" 
+                        href="<?php echo $dirBaseUrl ?>/modules/administrador/gestionadminusuario.php" 
+                        id="gestionUsu">Gestion Usuarios</a>
+                </li>
+            <?php } ?>
+            <?php if (userTienePermiso(9, $idUser)) { //Visualizar revisiones?>
                 <li class="nav-item">
                     <a class="nav-link <?php if ($module == 'revisiones') {echo 'active';} ?>" 
                         href="<?php echo $dirBaseUrl ?>/modules/revisiones/revisiones_layout.php" 
                         id="gestionRevis">Revisiones</a>
                 </li>
             <?php } ?>
-            <?php if (userTienePermiso(30, $idUser)) { //Visualizar Recordatorios de revisiones ?>
+            <?php if (userTienePermiso(12, $idUser)) { //Visualizar Recordatorios de revisiones ?>
                 <li class="nav-item">
                     <a class="nav-link <?php if ($module == 'recordatorios') {echo 'active';} ?>" 
                         href="<?php echo $dirBaseUrl ?>/modules/recordatorios/recordatorios_layout.php" 
@@ -147,7 +154,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center text-danger" href="<?php echo $dirBaseUrl ?>/auth/logout.php">
+                            <a class="dropdown-item d-flex align-items-center text-danger" href="<?php echo $dirBaseUrl ?>/modules/auth/logout.php">
                                 <i class="bi bi-box-arrow-right me-2"></i>
                                 Cerrar Sesión
                             </a>

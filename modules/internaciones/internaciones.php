@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../includes/globals.php');
+require_once(__DIR__ . '/../../includes/globals.php');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -8,6 +8,7 @@ require_once(__DIR__ . '/../includes/globals.php');
         $module = 'internaciones';
         require_once($dirBaseFile . '/includes/html/head.php');
         echo '<script src="' . $dirBaseUrl . '/script/script_camas.js"></script>';
+        echo '<script src="' . $dirBaseUrl . '/script/script_internaciones.js"></script>';
     ?>
 </head>
 <body>
@@ -21,11 +22,13 @@ require_once(__DIR__ . '/../includes/globals.php');
             <h1 class="mb-4 dashboard-title">Gestion de Internaciones</h1>
 
             <div class="row mb-4 align-items-center">
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                        <i class="bi bi-person-plus-fill me-2"></i>Añadir Nueva Internacion
-                    </button>
-                </div>
+                <?php if (userTienePermiso(7, $idUser)) { //Crear internaciones?>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                            <i class="bi bi-person-plus-fill me-2"></i>Añadir Nueva Internacion
+                        </button>
+                    </div>
+                <?php } ?>
                 <div class="col-md-8">
                     <div class="input-group">
                         <input type="text" id="buscarInput" class="form-control" placeholder="Buscar por Paciente, Cama o Habitación" title="buscar">
