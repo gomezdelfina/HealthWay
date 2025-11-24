@@ -11,10 +11,10 @@
 </head>
 <body>
     <?php
-        require_once($dirBaseFile . '/auth/login.php');
+        require_once($dirBaseFile . '/modules/auth/login.php');
     ?>
     <?php
-        require_once($dirBaseFile . '/auth/recoveryLogin.php');
+        require_once($dirBaseFile . '/modules/auth/recoveryLogin.php');
     ?>
 </body>
 </html>

@@ -193,4 +193,32 @@ function showPassword(element){
         inputPass.type = "password"
     }
 }
+
+// Actualizar estado del escáner QR
+function actualizarEstadoQR(tipo, mensaje) {
+    let statusDiv = document.getElementById('qr-status');
+    let statusText = document.getElementById('qr-status-text');
+    
+    // Remover clases anteriores
+    statusDiv.classList.remove('alert-info', 'alert-success', 'alert-danger', 'alert-warning');
+    
+    // Agregar nueva clase según tipo
+    switch(tipo) {
+        case 'success':
+            statusDiv.classList.add('alert-success');
+            statusText.innerHTML = '<i class="bi bi-check-circle me-2"></i>' + mensaje;
+            break;
+        case 'error':
+            statusDiv.classList.add('alert-danger');
+            statusText.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>' + mensaje;
+            break;
+        case 'warning':
+            statusDiv.classList.add('alert-warning');
+            statusText.innerHTML = '<i class="bi bi-exclamation-circle me-2"></i>' + mensaje;
+            break;
+        default:
+            statusDiv.classList.add('alert-info');
+            statusText.innerHTML = '<i class="bi bi-info-circle me-2"></i>' + mensaje;
+    }
+}
 // --

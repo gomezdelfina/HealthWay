@@ -64,38 +64,40 @@
     <div class="collapse navbar-collapse " id="navbarNav">
         <ul class="navbar-nav menu-3 me-auto mb-2 mb-lg-0 ">
             <li class="nav-item">
-                <a class="nav-link <?php if ($module == 'dashboards') {echo 'active';} //Visualizar dashboard personal medico?>" 
-                    href="<?php echo $dirBaseUrl ?>/dashboards/dashboard_layout.php" 
+                <a class="nav-link <?php if ($module == 'dashboards') {echo 'active';}?>" 
+                    href="<?php echo $dirBaseUrl ?>/modules/dashboards/dashboard_layout.php" 
                     id="gestionDash">Inicio</a>
             </li>
-            <?php if (userTienePermiso(2, $idUser)) { //Visualizar internaciones?>
+            <?php if (userTienePermiso(30, $idUser)) { //Visualizar internaciones?>
                 <li class="nav-item">
                     <a class="nav-link <?php if ($module == 'internaciones') {echo 'active';} ?>" 
-                        href="<?php echo $dirBaseUrl ?>/internaciones/internaciones.php" 
+                        href="<?php echo $dirBaseUrl ?>/modules/internaciones/internaciones.php" 
                         id="gestionInter">Internaciones</a>
                 </li>
             <?php } ?>
-            <?php if (userTienePermiso(3, $idUser)) { //Visualizar revisiones?>
+            <?php if (userTienePermiso(30, $idUser)) { //Visualizar revisiones?>
                 <li class="nav-item">
                     <a class="nav-link <?php if ($module == 'revisiones') {echo 'active';} ?>" 
-                        href="<?php echo $dirBaseUrl ?>/revisiones/revisiones_layout.php" 
+                        href="<?php echo $dirBaseUrl ?>/modules/revisiones/revisiones_layout.php" 
                         id="gestionRevis">Revisiones</a>
                 </li>
             <?php } ?>
-            <?php if (userTienePermiso(42, $idUser)) { //Visualizar Recordatorios de revisiones ?>
+            <?php if (userTienePermiso(30, $idUser)) { //Visualizar Recordatorios de revisiones ?>
                 <li class="nav-item">
                     <a class="nav-link <?php if ($module == 'recordatorios') {echo 'active';} ?>" 
-                        href="<?php echo $dirBaseUrl ?>/recordatorios/recordatorios_layout.php" 
+                        href="<?php echo $dirBaseUrl ?>/modules/recordatorios/recordatorios_layout.php" 
                         id="gestionHC">Recordatorios</a>
                 </li>
             <?php } ?>
         </ul>
 
         <div class="d-flex align-items-center">
-            <button class="btn btn-outline-secondary mx-2" type="button" id="btnEscanearQR" title="Escanear código QR">
-                <i class="bi bi-qr-code-scan"></i>
-                <span class="d-none d-md-inline ms-2">Escanear QR</span>
-            </button>
+            <?php if (userTienePermiso(5, $idUser)) { //Escanear QR ?>
+                <button class="btn btn-outline-secondary mx-2" type="button" id="btnEscanearQR">
+                    <i class="bi bi-qr-code-scan"></i>
+                    <span class="d-none d-md-inline ms-2">Escanear QR</span>
+                </button>
+            <?php } ?>
             <span class="span-notif"><i class="bi bi-bell-fill mx-1 me-3"></i></span>
             <span class="span-user">
                 <div class="dropdown">

@@ -185,6 +185,38 @@ use Dba\Connection;
             }
         }
 
+        public static function getRevisionByInter($idInt)
+        {
+            try{
+                if(is_null($idInt)){
+                    throw new Exception("El campo Id Internacion no puede estar vacío");
+                }
+
+                ConexionDb::connect();
+
+                $sql = "SELECT T0.IdRevisiones, T0.FechaCreacion, T1.DescTipoRevision as Tipo,
+                        T2.DescEstadoRev as Estado, T0.Sintomas, T0.Diagnostico, T0.Tratamiento, T0.Observaciones,
+                        CONCAT(T3.Nombre, ' ', T3.Apellido) as UsuarioCreador
+                        FROM revisiones T0 
+                        INNER JOIN tiporevisiones T1 ON T0.TipoRevision = T1.idTipoRevision
+                        INNER JOIN estadorevisiones T2 ON T0.EstadoRevision = T2.idEstadoRev
+                        INNER JOIN usuarios T3 ON T0.IdUsuario = T3.idUsuario
+                        WHERE T0.IdInternacion = :idInt
+                        ORDER BY T0.FechaCreacion DESC;";
+                $params = [
+                    ['clave' => ':idInt', 'valor' => $idInt]
+                ];
+
+                $result = ConexionDb::consult($sql, $params);
+
+                ConexionDb::disconnect();
+
+                return $result;
+            }catch(Exception $e){
+                throw new Exception("Problemas al obtener las revisiones por internacion: " . $e);
+            }
+        }
+
         public static function editRevision($revision){
             try{
                 if (is_null($revision)) {

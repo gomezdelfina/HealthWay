@@ -63,13 +63,16 @@
             }
 
             try{
+                $clave_hasheada = hash('sha256', $user['Clave']); 
+
                 ConexionDb::connect();
 
-                $sql = "SELECT IdUsuario FROM usuarios WHERE Usuario = :user AND Clave = :psw AND Habilitado = 1";
+                $sql = "SELECT IdUsuario FROM usuarios WHERE Usuario = :user 
+                        AND Clave = :psw AND Habilitado = 1";
 
                 $params = [
                     ["clave" => ":user", "valor" => $user['Usuario']],
-                    ["clave" => ":psw", "valor" => $user['Clave']]
+                    ["clave" => ":psw", "valor" => $clave_hasheada]
                 ];
 
                 $result = ConexionDb::consult($sql, $params);
@@ -123,7 +126,7 @@
 
                 ConexionDb::connect();
 
-                $sql = "UPDATE usuarios SET Clave = :clave
+                $sql = "UPDATE usuarios SET Clave = SHA2(:clave,256)
                         WHERE token_recuperacion = :token AND token_expiracion > :dateNow";
 
                 $params = [

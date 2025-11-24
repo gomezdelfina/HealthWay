@@ -67,6 +67,7 @@
                 ];
 
                 $userResult = Usuarios::getUsuarioByUserPsw($user);
+
                 $response['code'] = 200;
                 $response['msg'] = $userResult;
 
