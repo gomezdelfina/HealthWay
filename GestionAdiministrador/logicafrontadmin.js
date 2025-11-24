@@ -1,6 +1,10 @@
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
-    
-    const userModal = new bootstrap.Modal(document.getElementById('user-modal'));
+    const userModalEl = document.getElementById('user-modal');
+    const userModal = new bootstrap.Modal(userModalEl);
     const modalTitle = document.getElementById('modal-title');
     const userForm = document.getElementById('user-form');
     const saveUserBtn = document.getElementById('save-user-btn');
@@ -21,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string} type - 'success', 'danger', 'warning', 'info'.
      */
     function showNotification(message, type = 'success') {
-        // Limpia el contenedor de notificaciones para evitar acumular demasiadas
         notificationContainer.innerHTML = '';
         
         const alertHtml = `
@@ -38,46 +41,42 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const alertEl = document.querySelector('.alert');
             if (alertEl) {
-                const alert = bootstrap.Alert.getInstance(alertEl);
-                if (alert) {
-                    alert.dispose();
-                } else {
-                    alertEl.remove();
-                }
+                // Intenta usar la API de Bootstrap para cerrar
+                const alertInstance = bootstrap.Alert.getInstance(alertEl) || new bootstrap.Alert(alertEl);
+                if(alertInstance) alertInstance.dispose(); // Usar dispose para eliminar completamente
             }
+            if(div.parentNode) div.parentNode.removeChild(div);
         }, 5000);
     }
 
     /**
-     * Devuelve la clase de Badge de Bootstrap segun el rol.
+     * Devuelve la clase de Badge de Bootstrap segun el rol y estado.
      * @param {string} role - Rol del usuario.
+     * @param {number} habilitado - 1 (activo) o 0 (inactivo).
      * @returns {string} HTML del Badge.
      */
     function getRoleBadge(role, habilitado) {
-        let badgeClass = 'bg-secondary';
-        if (role === 'Administrador') badgeClass = 'bg-danger';
-        else if (role === 'Medico') badgeClass = 'bg-primary';
-        else if (role === 'Enfermero') badgeClass = 'bg-info';
-        else if (role === 'Personal') badgeClass = 'bg-success';
+        let baseClass = '';
+        if (role === 'Administrador') baseClass = 'bg-danger';
+        else if (role === 'Medico') baseClass = 'bg-primary';
+        else if (role === 'Enfermero') baseClass = 'bg-info';
+        else if (role === 'Personal') baseClass = 'bg-success';
+        else baseClass = 'bg-secondary';
         
-        const statusClass = habilitado == 0 ? 'bg-warning text-dark' : badgeClass;
+        const statusClass = habilitado == 0 ? 'bg-warning text-dark' : baseClass;
         const statusText = habilitado == 0 ? `${role} (Inactivo)` : role;
 
         return `<span class="badge ${statusClass}">${statusText}</span>`;
     }
 
 
-
-    /**
-     * Carga dinamicamente los roles desde el backend y llena el select.
-     */
     async function loadRoles() {
         try {
             const response = await fetch('usuarios_api.php?action=roles');
             const result = await response.json();
 
             if (result.success && result.data) {
-                userRoleSelect.innerHTML = ''; // Limpiar opciones anteriores
+                userRoleSelect.innerHTML = '<option value="" disabled selected>Seleccione un Rol</option>'; // Opcion por defecto
                 result.data.forEach(role => {
                     const option = document.createElement('option');
                     option.value = role;
@@ -85,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     userRoleSelect.appendChild(option);
                 });
             } else {
-                showNotification('Error al cargar la lista de roles: ' + result.message, 'danger');
+                showNotification('Error al cargar la lista de roles: ' + (result.message || 'Desconocido'), 'danger');
             }
         } catch (error) {
             showNotification('Error de conexion al servidor al cargar roles.', 'danger');
@@ -96,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Abre el modal y configura el modo (Alta o Edicion).
+     * SE HACE GLOBAL (window.) PARA SER LLAMADA DESDE EL onclick DEL HTML.
      * @param {string} mode - 'add' o 'edit'.
      * @param {object} userData - Datos del usuario a editar (opcional).
      */
@@ -117,19 +117,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 userPasswordInput.setAttribute('required', 'required');
                 habilitadoGroup.classList.add('d-none'); // Ocultar estado en alta
                 
+                // Mostrar etiqueta estandar
+                document.getElementById('password-label').innerHTML = 'Contrasena <span class="text-danger">*</span>';
+                
                 editingUserId = null;
                 userModal.show();
             } else if (mode === 'edit') {
                 modalTitle.textContent = `Editar Usuario: ${userData.Nombre} ${userData.Apellido}`;
                 saveUserBtn.textContent = 'Actualizar Usuario';
                 
-                // Modo Edicion: Ocultar campo de contrasena, no requerido, mostrar estado
-                passwordGroup.classList.remove('d-none'); // Mantener visible para opcionalmente cambiarla
+                // Modo Edicion: Mantener campo de contrasena visible, pero no requerido
+                passwordGroup.classList.remove('d-none'); 
                 userPasswordInput.removeAttribute('required');
                 habilitadoGroup.classList.remove('d-none'); 
 
                 // Mostrar etiqueta para cambio de clave opcional
-                document.getElementById('password-label').textContent = 'Contrasena (dejar vacio para no cambiar)';
+                document.getElementById('password-label').innerHTML = 'Contrasena (dejar vacio para no cambiar)';
                 
                 // Cargar datos del usuario
                 editingUserId = userData.IdUsuario;
@@ -139,7 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('user-username').value = userData.Usuario || '';
                 document.getElementById('user-email').value = userData.Email || '';
                 document.getElementById('user-phone').value = userData.Telefono || '';
-                document.getElementById('user-role').value = userData.DescRol || 'Personal';
+                
+               
+                setTimeout(() => {
+                    if (userRoleSelect.querySelector(`option[value="${userData.DescRol}"]`)) {
+                        userRoleSelect.value = userData.DescRol;
+                    }
+                }, 100);
+                
                 document.getElementById('user-habilitado').checked = userData.Habilitado == 1;
                 
                 userModal.show();
@@ -147,23 +157,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Cierra el modal de Bootstrap.
-     */
+    
     window.closeUserModal = function() {
         userModal.hide();
         userForm.reset();
         editingUserId = null;
-        // Restaurar estado del campo de contrasena al cerrar
-        document.getElementById('password-label').textContent = 'Contrasena';
+       
+        document.getElementById('password-label').innerHTML = 'Contrasena <span class="text-danger">*</span>';
+        userPasswordInput.setAttribute('required', 'required'); // Restaurar requerido por si se abre en modo 'add'
     }
 
     /**
      * Envia la solicitud DELETE (Baja Logica) al backend.
+     * SE HACE GLOBAL (window.) PARA SER LLAMADA DESDE EL onclick DEL HTML.
      * @param {number} id - ID del usuario a deshabilitar.
      */
     window.deleteUser = async function(id, name, lastname) {
-        if (!confirm(`Esta seguro de que desea deshabilitar (Baja Logica) al usuario ${name} ${lastname} (ID ${id})?`)) {
+        if (!window.confirm(`Esta seguro de que desea deshabilitar (Baja Logica) al usuario ${name} ${lastname} (ID ${id})? Su estado pasara a Inactivo.`)) {
             return;
         }
         
@@ -222,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderUserTable(users) {
         userTableBody.innerHTML = '';
         if (users.length === 0) {
-            userTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4">No se encontraron usuarios.</td></tr>`;
+            userTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4">No se encontraron usuarios que coincidan con la busqueda.</td></tr>`;
             return;
         }
 
@@ -230,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('tr');
             row.id = `user-${user.IdUsuario}`;
             
-            // Crear el objeto de datos completo para pasarlo a la funcion openUserModal
             // Se usa &quot; para evitar problemas de comillas en el atributo onclick
             const userDataString = JSON.stringify({
                 IdUsuario: user.IdUsuario,
@@ -244,7 +253,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }).replace(/"/g, '&quot;'); 
             
             // Parametros para la Baja Logica
-            const deleteParams = `'${user.IdUsuario}', '${user.Nombre.replace(/'/g, "\\'")}', '${user.Apellido.replace(/'/g, "\\'")}'`;
+            const deleteParams = `${user.IdUsuario}, '${user.Nombre.replace(/'/g, "\\'")}', '${user.Apellido.replace(/'/g, "\\'")}'`;
+
+            // Boton de Baja Logica solo si esta Habilitado
+            const deleteButton = user.Habilitado == 1 ? 
+                `<button onclick="window.deleteUser(${deleteParams})" 
+                        class="btn btn-sm btn-outline-danger shadow-sm"
+                        title="Baja Logica: Cambia el estado a Inactivo.">
+                    <i class="bi bi-person-slash"></i> Deshabilitar
+                </button>` : 
+                `<button class="btn btn-sm btn-secondary shadow-sm" disabled title="Usuario ya inactivo.">
+                    <i class="bi bi-person-x"></i> Inactivo
+                </button>`;
 
 
             row.innerHTML = `
@@ -252,27 +272,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td class="align-middle">${user.Nombre} ${user.Apellido}</td>
                 <td class="align-middle">${user.Usuario}</td>
                 <td class="align-middle">${user.Email}</td>
-                <td class="align-middle">${user.Telefono}</td>
+                <td class="align-middle">${user.Telefono || 'N/A'}</td>
                 <td class="align-middle">${getRoleBadge(user.DescRol, user.Habilitado)}</td>
                 <td class="text-end align-middle">
-                    <button onclick='openUserModal("edit", ${userDataString})' 
+                    <button onclick='window.openUserModal("edit", ${userDataString})' 
                             class="btn btn-sm btn-outline-primary me-2 shadow-sm">
                         <i class="bi bi-pencil-square"></i> Editar
                     </button>
-                    <button onclick="deleteUser(${deleteParams})" 
-                            class="btn btn-sm btn-outline-danger shadow-sm"
-                            title="Baja Logica: Cambia el estado a Inactivo.">
-                        <i class="bi bi-trash"></i> Deshabilitar
-                    </button>
+                    ${deleteButton}
                 </td>
             `;
             userTableBody.appendChild(row);
         });
     }
 
-
-
-    // Manejador del formulario para Alta y Modificacion (AJAX)
     userForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -298,14 +311,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 delete userData.password;
             }
         }
-
-        // Validacion de campos
-        if (!userData.name || !userData.lastname || !userData.username || !userData.email || !userData.role || !userData.phone) {
-            showNotification('Por favor, complete todos los campos obligatorios.', 'warning');
-            return;
+        
+        // El campo de telefono es opcional, 
+        if (!userData.phone) {
+            userData.phone = ''; // PHP lo manejara como NULL o cadena vacia
         }
-        if (currentMode === 'add' && !userData.password) {
-            showNotification('Debe ingresar una contrasena para el nuevo usuario.', 'warning');
+
+    
+        if (!userData.name || !userData.lastname || !userData.username || !userData.email || !userData.role || (currentMode === 'add' && !userData.password)) {
+            showNotification('Por favor, complete todos los campos obligatorios (*).', 'warning');
             return;
         }
         
@@ -326,13 +340,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.success) {
                 showNotification(result.message, 'success');
-                closeUserModal();
+                window.closeUserModal();
                 loadUsers(); // Recargar la tabla via AJAX
             } else {
                 showNotification(result.message, 'danger');
             }
         } catch (error) {
-            showNotification('Error de conexion al procesar la solicitud. Verifique el backend.', 'danger');
+            showNotification('Error de conexion al procesar la solicitud. Verifique que el backend (usuarios_api.php) este activo y la conexion a la BD.', 'danger');
             console.error('Error CRUD:', error);
         } finally {
             saveUserBtn.disabled = false;

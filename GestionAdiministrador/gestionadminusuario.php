@@ -1,6 +1,6 @@
 <?php
 
-require_once 'config.php';
+require_once 'conexion.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -10,41 +10,10 @@ require_once 'config.php';
     <title>Gestion de Usuarios - HealthWay</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="estilo.css">
     
-    <style>
-        :root {
-            --bs-primary: #1e3a8a; /* Azul oscuro */
-            --bs-success: #10b981; /* Verde */
-            --bs-danger: #ef4444; /* Rojo */
-        }
-        .container-fluid {
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-        }
-        .table-responsive {
-            max-height: 75vh; /* Altura maxima para la tabla */
-            overflow-y: auto;
-        }
-        /* Estilo para el fondo del modal */
-        .modal-header {
-            background-color: var(--bs-primary);
-            color: white;
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
-        }
-        .modal-content {
-            border-radius: 0.5rem;
-        }
-        /* Contenedor de notificaciones fijo y visible */
-        #notification-container {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            z-index: 1050;
-            max-width: 90%;
-            min-width: 300px;
-        }
-    </style>
+   
+
 </head>
 <body class="bg-light">
 
