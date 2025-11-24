@@ -1,27 +1,23 @@
 <?php
-/**
- * API RESTful para la gestion de usuarios (CRUD) por el Administrador.
- * Implementa GET, POST, PUT, DELETE (Baja Logica) usando AJAX.
- */
+
 require_once 'conexion.php';
 
-// Establecer la cabecera para que el cliente sepa que esperamos JSON
 header('Content-Type: application/json');
 
-// Obtener el metodo de la solicitud y la accion si viene en la URL
+
 $method = $_SERVER['REQUEST_METHOD'];
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 
-// Funcion de respuesta JSON simple
+
 function respond($success, $message, $data = []) {
     echo json_encode(['success' => $success, 'message' => $message, 'data' => $data]);
     exit();
 }
 
-// Funcion auxiliar para obtener el IdRol a partir de la descripcion (Ej: 'Administrador')
+
 
 function getRoleId($conn, $roleDesc) {
-    // Nota: Esta funcion es sensible a mayusculas/minusculas segun la BD
+   
     $stmt = $conn->prepare("SELECT IdRol FROM Roles WHERE DescRol = ?");
     $stmt->bind_param("s", $roleDesc);
     $stmt->execute();
@@ -30,11 +26,11 @@ function getRoleId($conn, $roleDesc) {
         $row = $result->fetch_assoc();
         return $row['IdRol'];
     }
-    return null; // Rol no encontrado
+    return null; 
 }
 
 
-// Accion: OBTENER ROLES (para llenar el select del modal)
+
 
 if ($action === 'roles') {
     $sql = "SELECT DescRol FROM Roles ORDER BY DescRol ASC";
@@ -50,11 +46,9 @@ if ($action === 'roles') {
     }
 }
 
-// -----------------------------------------------------------------------------------
-// Operacion GET (Leer todos los usuarios con su rol y buscar)
-// -----------------------------------------------------------------------------------
+
 if ($method === 'GET' && empty($action)) {
-    // Consulta JOIN para obtener usuarios y su rol
+   
     $sql = "SELECT 
                 u.IdUsuario, u.Nombre, u.Apellido, u.Email, u.Usuario, u.Habilitado, u.Telefono, r.DescRol 
             FROM 
@@ -62,11 +56,9 @@ if ($method === 'GET' && empty($action)) {
             INNER JOIN 
                 Roles r ON u.IdRol = r.IdRol";
     
-    // Aplicar filtro de busqueda si existe
     $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
     if (!empty($searchTerm)) {
         $searchParam = '%' . $searchTerm . '%';
-        // Busqueda en Nombre, Apellido, Email, Usuario o DescRol
         $sql .= " WHERE u.Nombre LIKE ? OR u.Apellido LIKE ? OR u.Email LIKE ? OR u.Usuario LIKE ? OR r.DescRol LIKE ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sssss", $searchParam, $searchParam, $searchParam, $searchParam, $searchParam);
@@ -83,9 +75,7 @@ if ($method === 'GET' && empty($action)) {
     }
 }
 
-// -----------------------------------------------------------------------------------
-// Operacion POST (Crear nuevo usuario - Alta)
-// -----------------------------------------------------------------------------------
+
 if ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -100,7 +90,7 @@ if ($method === 'POST') {
 
     // Hash de la contrasena
     $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
-    $habilitado = 1; // Habilitado por defecto
+    $habilitado = 1; 
 
     $sql = "INSERT INTO Usuarios (IdRol, Usuario, Clave, Habilitado, Nombre, Apellido, Email, Telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
@@ -118,15 +108,12 @@ if ($method === 'POST') {
     if ($stmt->execute()) {
         respond(true, "Usuario creado exitosamente.", ['IdUsuario' => $conn->insert_id]);
     } else {
-        // En caso de error (ej: usuario duplicado), devolver el mensaje de error de MySQL
         $error_message = str_replace(array("\r", "\n"), '', $stmt->error);
         respond(false, "Error al crear el usuario. Verifique si el usuario o email ya existen. Detalle: " . $error_message);
     }
 }
 
-// -----------------------------------------------------------------------------------
-// Operacion PUT (Modificar usuario - Actualizacion)
-// -----------------------------------------------------------------------------------
+
 if ($method === 'PUT') {
     $data = json_decode(file_get_contents("php://input"), true);
     $idUsuario = isset($_GET['id']) ? (int)$_GET['id'] : null;
@@ -135,7 +122,6 @@ if ($method === 'PUT') {
         respond(false, "ID de usuario faltante para la actualizacion.");
     }
 
-    // Validacion basica de campos requeridos
     if (!isset($data['name'], $data['lastname'], $data['username'], $data['email'], $data['role'], $data['phone'], $data['habilitado'])) {
         respond(false, "Faltan datos obligatorios para la modificacion del usuario.");
     }
@@ -145,7 +131,6 @@ if ($method === 'PUT') {
         respond(false, "Rol de usuario no valido.");
     }
     
-    // Si la clave viene definida, la incluimos en la actualizacion
     $updatePassword = !empty($data['password']);
     
     $sql = "UPDATE Usuarios SET 
@@ -161,7 +146,6 @@ if ($method === 'PUT') {
     
     $stmt = $conn->prepare($sql);
     
-    // Construir la lista de parametros para bind_param
     $types = "issssssi"; // idRol(i), Usuario(s), Habilitado(s), Nombre(s), Apellido(s), Email(s), Telefono(s), IdUsuario(i)
     $params = [
         $idRol, 
@@ -179,9 +163,8 @@ if ($method === 'PUT') {
         $params[] = $hashedPassword;
     }
     
-    $params[] = $idUsuario; // IdUsuario siempre al final
+    $params[] = $idUsuario; 
     
-    // Llamar a bind_param dinamicamente
     $stmt->bind_param($types, ...$params);
 
     if ($stmt->execute()) {
@@ -196,9 +179,7 @@ if ($method === 'PUT') {
     }
 }
 
-// -----------------------------------------------------------------------------------
-// Operacion DELETE (Eliminar usuario - Baja Logica)
-// -----------------------------------------------------------------------------------
+
 if ($method === 'DELETE') {
     $idUsuario = isset($_GET['id']) ? (int)$_GET['id'] : null;
     
@@ -206,7 +187,7 @@ if ($method === 'DELETE') {
         respond(false, "ID de usuario faltante para la eliminacion.");
     }
     
-    // Baja Logica (deshabilitar)
+  
     $sql = "UPDATE Usuarios SET Habilitado = 0 WHERE IdUsuario = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $idUsuario);
@@ -222,7 +203,7 @@ if ($method === 'DELETE') {
     }
 }
 
-// Cierre de conexion
+
 $conn->close();
 
 if (!in_array($method, ['GET', 'POST', 'PUT', 'DELETE'])) {
