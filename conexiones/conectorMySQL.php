@@ -30,23 +30,22 @@
             try{
                 $smtm = $conn->prepare($query);
 
-                if ($params !== NULL && is_array($params)) {
+                if ($params !== NULL) {
                     foreach ($params as $param){
                         $clave = $param["clave"];
                         $valor = $param["valor"];
 
                         $smtm->bindValue($clave, $valor);
                     }
-                }else if($params !== NULL && !is_array($params)){
-                    $clave = $params["clave"];
-                    $valor = $params["valor"];
-
-                    $smtm->bindParam($clave, $valor);
                 }
                 
                 $smtm->execute();
 
-                $response = $smtm->fetchAll(PDO::FETCH_ASSOC);
+                if (stripos(trim($query), 'SELECT') === 0) {
+                    $response = $smtm->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $response = $smtm->rowCount(); 
+                }
 
                 return $response;
                 

@@ -1,8 +1,18 @@
-async function getPermisos(){
+// -- Inicializacion
+document.addEventListener('DOMContentLoaded', function(){
+    loadAdminDash();
+    loadJefeDash();
+    loadPMedicoDash();
+    loadPacienteDash();
+});
+
+// -- AJAX
+//Consulta internaciones activas a la BD
+async function getInternacionesActivas(){
     const baseUrl = window.location.origin;
     
-     try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/permisos/getPermisosByUser.php', {
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/internaciones/verInternacionesActivas.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -18,174 +28,286 @@ async function getPermisos(){
             return result;
         }
     }catch (error){
-        console.error("Error al obtener permisos del usuario:", error);
-        return [];
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Consulta recordatorios pendientes a la bd
+async function getRecordatoriosPendientes(){
+    const baseUrl = window.location.origin;
+    
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/getRecordatoriosPendientes.php', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Consulta recordatorios atrasados a la bd
+async function getRecordatoriosAtrasados(){
+    const baseUrl = window.location.origin;
+    
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/getRecordatoriosAtrasados.php', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Actualiza estado de recordatorio en la BD
+async function updateRecordatorioEstado(idrec){
+    const baseUrl = window.location.origin;
+
+    let rec = {
+        'IdRecordatorio' : idrec,
+        'Estado' : 'Hecho'
+    };
+
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/editRecordatorioEstado.php', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(rec),
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
     }
 }
 
 function loadAdminDash(){
 
-        const kpiData = {
-        totalCamas: 150,
-        camasOcupadas: 125,
-        medicosGuardia: 3,
-        enfermerosGuardia: 8,
-        alertasActivas: 3
-    };
-
-    const tasa = ((kpiData.camasOcupadas / kpiData.totalCamas) * 100).toFixed(1);
-
-    const ocupadasValue = document.getElementById('ocupadasValue');
-    if (ocupadasValue) ocupadasValue.textContent = `${kpiData.camasOcupadas} / ${kpiData.totalCamas}`;
-
-    const tasaOcupacionValue = document.getElementById('tasaOcupacionValue');
-    if (tasaOcupacionValue) tasaOcupacionValue.textContent = `${tasa}%`;
-
-    const personalGuardiaValue = document.getElementById('personalGuardiaValue');
-    if (personalGuardiaValue) personalGuardiaValue.textContent = `${kpiData.medicosGuardia} Médicos, ${kpiData.enfermerosGuardia} Enfermeros`;
-
-    const alertasActivasValue = document.getElementById('alertasActivasValue');
-    if (alertasActivasValue) alertasActivasValue.textContent = kpiData.alertasActivas;
-
-
-   
-    const chartElement = document.getElementById('ocupacionChart');
-
-    if (chartElement) {
-    
-        const existingChart = Chart.getChart(chartElement);
-        if (existingChart) {
-            existingChart.destroy();
-        }
-
-        const ctx = chartElement.getContext('2d');
-
-        const ocupacionChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-                datasets: [{
-                    label: 'Camas Ocupadas',
-                    data: [110, 115, 120, 125, 128, 125, 130],
-                    backgroundColor: 'rgba(13, 110, 253, 0.2)',
-                    borderColor: 'rgba(13, 110, 253, 1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        title: {
-                            display: true,
-                            text: 'Nº de Camas'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-    }
-
-
-    function loadCriticalAlerts() {
-        const criticalAlertsList = document.getElementById('criticalAlertsList');
-        if (!criticalAlertsList) return;
-
-        const alertsData = [{
-                ubicacion: 'T.I. - Cama 4',
-                complejidad: 'ALTA (Ventilación Asistida)',
-                alerta: 'Medicación **Ibuprofeno** PENDIENTE (hace 15 min). Dosis: 400mg c/4hs.',
-                urgencia: 'danger'
-            },
-            {
-                ubicacion: 'T.I. - Cama 8',
-                complejidad: 'MEDIA (Post-Operatorio)',
-                alerta: 'Signos Vitales sin registrar hace 30 min.',
-                urgencia: 'warning'
-            },
-            {
-                ubicacion: 'T.I. - Cama 2',
-                complejidad: 'ALTA (Sepsis)',
-                alerta: 'Medicación **Antibiótico X** PENDIENTE (hace 5 min). Dosis: 1g c/6hs.',
-                urgencia: 'danger'
-            }
-        ];
-
-        criticalAlertsList.innerHTML = '';
-
-        alertsData.forEach(alert => {
-            const listItem = document.createElement('li');
-            listItem.classList.add('list-group-item');
-
-            const mainContent = document.createElement('span');
-            mainContent.classList.add('fw-bold', `text-${alert.urgencia}`);
-            mainContent.innerHTML = `${alert.urgencia.toUpperCase()}: ${alert.ubicacion}`;
-
-            const detailContent = document.createElement('small');
-            detailContent.classList.add('d-block', 'text-muted');
-            detailContent.innerHTML = `${alert.alerta} | **Complejidad:** ${alert.complejidad}`;
-
-            listItem.appendChild(mainContent);
-            listItem.appendChild(detailContent);
-
-            criticalAlertsList.appendChild(listItem);
-        });
-    }
-
-    loadCriticalAlerts();
 }
 
 function loadJefeDash(){
 
 }
 
+// -- Pers. Medico
 function loadPMedicoDash(){
-
+    verInternacionesActivas();
+    verRecordatoriosPend();
+    verRecordatoriosAtras();
 }
 
-function loadPacienteDash(){
+async function verInternacionesActivas(){
+    try{
+        let result = await getInternacionesActivas();
 
-}
-
-async function loadDashData(){
-    response = await getPermisos();
-    
-    if(response){
-        permisos = response.map(permiso => permiso.IdPermiso);
-
-        if (permisos.includes(1)) { //Visualizar dashboard personal medico
-            document.getElementById("dashboardPersMedico").classList.add('visibility-show');
-            document.getElementById("dashboardPersMedico").classList.remove('visibility-remove');
-
-            loadPMedicoDash();
-        } else if (permisos.includes(5)) { //Visualizar dashboard administrador
-            document.getElementById("dashboardAdmin").classList.add('visibility-show');
-            document.getElementById("dashboardAdmin").classList.remove('visibility-remove');
-
-            loadAdminDash();
-        } else if (permisos.includes(6)) { //Visualizar dashboard paciente
-            document.getElementById("dashboardPaciente").classList.add('visibility-show');
-            document.getElementById("dashboardPaciente").classList.remove('visibility-remove');
-
-            loadPacienteDash();
-        } else if (permisos.includes(7)) { //Visualizar dashboard jefe internaciones
-            document.getElementById("dashboardPersMedico").classList.add('visibility-show');
-            document.getElementById("dashboardPersMedico").classList.remove('visibility-remove');
-
-            loadJefeDash();
-        }
+        document.getElementById("ocupadasValue").value = result.length;
+        
+    }catch(error){
+        console.log("Problemas al obtener las internaciones activas");
     }
 }
 
-window.onload = function() {
-    document.addEventListener('DOMContentLoaded', loadDashData());
+async function verRecordatoriosPend(){
+    try{
+        let result = await getRecordatoriosPendientes();
+
+        document.getElementById("recPendValue").value = result.length;
+        
+    }catch(error){
+        console.log("Problemas al obtener los recordatorios pendientes");
+    }
+}
+
+async function verRecordatoriosAtras(){
+    try{
+        let result = await getRecordatoriosAtrasados();
+
+        document.getElementById("recAtrasValue").value = result.length;
+        
+    }catch(error){
+        console.log("Problemas al obtener los recordatorios pendientes");
+    }
+}
+
+async function marcarRecordatorioHecho(id){
+    try{
+        let result = await updateRecordatorioEstado(id);
+    }catch(error){
+        console.log("Problemas al actualizar estado de recordatorio");
+        showOkMsg(false, 'Problemas al actualizar el recordatorio');
+    }
+}
+
+// -- Paciente
+function loadPacienteDash(){
+    cargarDatosPaciente();
+}
+
+function cargarDatosPaciente(){
+    const baseUrl = window.location.origin;
+
+    const idPaciente = document.getElementById("idUser").value;
+
+    fetch(baseUrl + "/HealthWay/api/pacientes/obtener_internacion.php?idPaciente=" + idPaciente)
+        .then(res => res.json())
+        .then(data => {
+        if (data.error) {
+            alert("Debe iniciar sesión para acceder.");
+            window.location.href = "index.html";
+            return;
+        }
+        mostrarInternaciones(data);
+        })
+        .catch(err => console.error("Error al cargar internaciones:", err));
+
+    // Botones navegación
+    const btnHoras = document.getElementById("btnHoras");
+    const btnRevisiones = document.getElementById("btnRevisiones");
+    const tablaHoras = document.getElementById("tablaInternacion");
+    const tablaRevisiones = document.getElementById("tablaRevisiones");
+
+    btnHoras.addEventListener("click", () => {
+        tablaHoras.classList.remove("d-none");
+        tablaRevisiones.classList.add("d-none");
+    });
+
+    btnRevisiones.addEventListener("click", () => {
+        tablaRevisiones.classList.remove("d-none");
+        tablaHoras.classList.add("d-none");
+
+        // ⬅️ PEDIMOS LAS REVISIONES (IdInternacion = 1 por ahora)
+        fetchRevisiones(7);
+    });
+}
+
+function mostrarInternaciones(lista) {
+    const contenedor = document.getElementById("contenedorInternaciones");
+    contenedor.innerHTML = "";
+
+    // Normalizar array
+    if (!Array.isArray(lista)) {
+        lista = lista ? [lista] : [];
+    }
+
+    if (!lista.length) {
+        contenedor.innerHTML = `
+        <p class="text-secondary text-center">No hay internaciones registradas.</p>
+        `;
+        return;
+    }
+
+    lista.forEach(p => {
+
+        const fechaInicio = new Date(p.FechaInicio);
+        const fechaFin = new Date(p.FechaFin);
+        const horasTotales = calcularHoras(fechaInicio, fechaFin);
+
+        contenedor.innerHTML += `
+        <div class="border rounded p-3 mb-3 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center">
+            <h5 class="text-primary">
+                <i class="bi bi-clipboard2-pulse"></i>Internación #${p.IdInternacion}
+            </h5>
+            <span class="badge bg-info">${p.EstadoInternacion}</span>
+            </div>
+
+            <small class="text-muted">
+            <i class="bi bi-calendar-event me-1"></i>Desde: ${p.FechaInicio}  
+            <br>
+            <i class="bi bi-calendar-check me-1"></i>Hasta: ${p.FechaFin}
+            </small>
+
+            <div class="mt-3">
+            <p><strong>Paciente:</strong> ${p.Nombre} ${p.Apellido}</p>
+            <p><strong>DNI:</strong> ${p.DNI}</p>
+            <p><strong>Horas Totales:</strong> ${horasTotales}</p>
+            </div>
+        </div>
+        `;
+    });
+}
+
+function calcularHoras(inicio, fin) {
+    const diferenciaMS = fin - inicio;
+    const horas = diferenciaMS / (1000 * 60 * 60);
+    return horas.toFixed(0);
+}
+
+function fetchRevisiones(idInternacion) {
+    const baseUrl = window.location.origin;
+
+    idInternacion = document.getElementById("idUser").value;
+
+    fetch(baseUrl + `/HealthWay/api/pacientes/obtener_revisiones.php?idInternacion=${idInternacion}`)
+        .then(res => res.json())
+        .then(data => mostrarRevisiones(data))
+        .catch(err => console.error("Error al cargar revisiones:", err));
+}
+
+function mostrarRevisiones(lista) {
+    const contenedor = document.querySelector("#tablaRevisiones .card-body");
+    contenedor.innerHTML = "";
+    // Normaliza la respuesta: siempre será un array
+    if (!Array.isArray(lista)) {
+    lista = lista ? [lista] : [];
+    }
+
+    if (!lista.length) {
+        contenedor.innerHTML = `<p class="text-secondary">No hay revisiones registradas.</p>`;
+        return;
+    }
+
+    lista.forEach(r => {
+        contenedor.innerHTML += `
+        <div class="border rounded p-3 mb-3 shadow-sm">
+            <div class="d-flex justify-content-between">
+            <h5 class="text-primary">
+                <i class="bi bi-search me-2"></i>${r.TipoRevision}
+            </h5>
+            <span class="badge bg-info">${r.EstadoRevision}</span>
+            </div>
+
+            <small class="text-muted">${r.FechaCreacion}</small>
+
+            <div class="mt-3">
+            <p><strong>Síntomas:</strong> ${r.Sintomas}</p>
+            <p><strong>Diagnóstico:</strong> ${r.Diagnostico}</p>
+            <p><strong>Tratamiento:</strong> ${r.Tratamiento}</p>
+            <p><strong>Observaciones:</strong> ${r.Observaciones ?? "Sin observaciones"}</p>
+            </div>
+        </div>
+        `;
+    });
 }

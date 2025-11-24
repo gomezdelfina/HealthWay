@@ -1,25 +1,9 @@
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="resultMsg" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
-            <strong class="me-auto">
-                <?php
-                if ($process) {
-                    echo "Felicidades!";
-                } else {
-                    echo "Error!";
-                }
-                ?>
-            </strong>
+            <strong class="me-auto"></strong>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <div class="toast-body">
-            <?php
-            if ($process) {
-                echo "Se cargó una nueva revisión correctamente.";
-            } else {
-                echo "Error al ingresar la revisión.";
-            }
-            ?>
-        </div>
+        <div class="toast-body"></div>
     </div>
 </div>

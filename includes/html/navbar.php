@@ -27,17 +27,15 @@
                     $telUser = $row['Telefono'];
                 }
             }
-
         } catch (Exception) {
             $errors['process'] = "Problemas para ingresar al sistema";
 
-            header('Location: ' . $dirBaseUrl . '/auth/logout.php');
+            header('Location: ' . $dirBaseUrl . '/modules/auth/logout.php');
         }
-
     }else{
         $errors['process'] = "Problemas para ingresar al sistema";
 
-        header('Location: ' . $dirBaseUrl . '/auth/logout.php');
+        header('Location: ' . $dirBaseUrl . '/modules/auth/logout.php');
     }
 
     function userTienePermiso($permiso, $user)
@@ -56,7 +54,7 @@
         } catch (Exception) {
             $errors['process'] = "Problemas para verificar los permisos";
 
-            header('Location: ' . $dirBaseUrl . '/auth/logout.php');
+            header('Location: ' . $dirBaseUrl . '/modules/auth/logout.php');
         }
     }
 ?>
@@ -66,34 +64,47 @@
     <div class="collapse navbar-collapse " id="navbarNav">
         <ul class="navbar-nav menu-3 me-auto mb-2 mb-lg-0 ">
             <li class="nav-item">
-                <a class="nav-link <?php if ($module == 'dashboards') {echo 'active';} ?>" 
-                    href="<?php echo $dirBaseUrl ?>/dashboards/dashboard_layout.php" 
+                <a class="nav-link <?php if ($module == 'dashboards') {echo 'active';}?>" 
+                    href="<?php echo $dirBaseUrl ?>/modules/dashboards/dashboard_layout.php" 
                     id="gestionDash">Inicio</a>
             </li>
-            <?php if (userTienePermiso(2, $idUser)) { ?>
+            <?php if (userTienePermiso(6, $idUser)) { //Visualizar internaciones?>
                 <li class="nav-item">
                     <a class="nav-link <?php if ($module == 'internaciones') {echo 'active';} ?>" 
-                        href="<?php echo $dirBaseUrl ?>/internaciones/internaciones.php" 
+                        href="<?php echo $dirBaseUrl ?>/modules/internaciones/internaciones.php" 
                         id="gestionInter">Internaciones</a>
                 </li>
             <?php } ?>
-            <?php if (userTienePermiso(3, $idUser)) { ?>
+            <?php if (userTienePermiso(1, $idUser)) { //Visualizar internaciones?>
+                <li class="nav-item">
+                    <a class="nav-link <?php if ($module == 'administrador') {echo 'active';} ?>" 
+                        href="<?php echo $dirBaseUrl ?>/modules/administrador/gestionadminusuario.php" 
+                        id="gestionUsu">Gestion Usuarios</a>
+                </li>
+            <?php } ?>
+            <?php if (userTienePermiso(9, $idUser)) { //Visualizar revisiones?>
                 <li class="nav-item">
                     <a class="nav-link <?php if ($module == 'revisiones') {echo 'active';} ?>" 
-                        href="<?php echo $dirBaseUrl ?>/revisiones/revisiones_layout.php" 
+                        href="<?php echo $dirBaseUrl ?>/modules/revisiones/revisiones_layout.php" 
                         id="gestionRevis">Revisiones</a>
                 </li>
             <?php } ?>
-            <?php if (userTienePermiso(4, $idUser)) { ?>
+            <?php if (userTienePermiso(12, $idUser)) { //Visualizar Recordatorios de revisiones ?>
                 <li class="nav-item">
-                    <a class="nav-link <?php if ($module == 'historiasClinicas') {echo 'active';} ?>" 
-                        href="<?php echo $dirBaseUrl ?>/historiasClinicas/historiasClinicas.php" 
-                        id="gestionHC">Historias clinicas</a>
+                    <a class="nav-link <?php if ($module == 'recordatorios') {echo 'active';} ?>" 
+                        href="<?php echo $dirBaseUrl ?>/modules/recordatorios/recordatorios_layout.php" 
+                        id="gestionHC">Recordatorios</a>
                 </li>
             <?php } ?>
         </ul>
 
         <div class="d-flex align-items-center">
+            <?php if (userTienePermiso(5, $idUser)) { //Escanear QR ?>
+                <button class="btn btn-outline-secondary mx-2" type="button" id="btnEscanearQR">
+                    <i class="bi bi-qr-code-scan"></i>
+                    <span class="d-none d-md-inline ms-2">Escanear QR</span>
+                </button>
+            <?php } ?>
             <span class="span-notif"><i class="bi bi-bell-fill mx-1 me-3"></i></span>
             <span class="span-user">
                 <div class="dropdown">
@@ -109,7 +120,6 @@
                                 </div>
                                 <div>
                                     <h6 class="mb-0"><?php echo $user ?></h6> 
-                                    <!--<small class="text-muted"><?php //echo $rol ?></small>-->
                                 </div>
                             </div>
                         </li>
@@ -117,7 +127,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <div class="user-info-section mx-3">
+                            <div class="user-info-section mx-3 text-nowrap">
                                 <div class="text-start mb-2">
                                     <strong>Información del Usuario</strong>
                                     <hr class="dropdown-divider">
@@ -144,7 +154,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center text-danger" href="<?php echo "$dirBaseUrl" ?>/auth/logout.php"">
+                            <a class="dropdown-item d-flex align-items-center text-danger" href="<?php echo $dirBaseUrl ?>/modules/auth/logout.php">
                                 <i class="bi bi-box-arrow-right me-2"></i>
                                 Cerrar Sesión
                             </a>
@@ -155,3 +165,8 @@
         </div>
     </div>
 </nav>
+
+<!-- Modal QR -->
+<?php
+    require_once($dirBaseFile . '/includes/html/qr.php');
+?>
