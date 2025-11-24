@@ -1,5 +1,5 @@
 <?php
-    require_once(__DIR__ . '/../includes/globals.php');
+    require_once(__DIR__ . '/../../includes/globals.php');
 ?>
 <!DOCTYPE html>
 <html lang="es">

@@ -212,32 +212,6 @@ async function editRecordatorio(rec){
     }
 }
 
-/*function mostrarNotificacion(tipo, mensaje) {
-    // Usar tu sistema de notificaciones existente
-    // Ajusta según tu implementación actual
-    if(typeof showNotification !== 'undefined') {
-        showNotification(tipo, mensaje);
-    } else {
-        // Fallback simple
-        const alertClass = tipo === 'success' ? 'alert-success' : 'alert-danger';
-        const icon = tipo === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle';
-        
-        const alert = document.createElement('div');
-        alert.className = `alert ${alertClass} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
-        alert.style.zIndex = '9999';
-        alert.innerHTML = `
-            <i class="bi ${icon} me-2"></i>${mensaje}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        
-        document.body.appendChild(alert);
-        
-        setTimeout(() => {
-            alert.remove();
-        }, 5000);
-    }
-}*/
-
 // -- Utils
 // Manejo de cambios en fecha fin de recordatorio
 function handleCheckBoxChange(element) {

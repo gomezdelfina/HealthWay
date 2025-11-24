@@ -3,7 +3,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/../conexiones/conectorMySQL.php';
+require_once(__DIR__ . '/../../includes/globals.php');
+require_once($dirBaseFile . '/conexiones/conectorMySQL.php');
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -33,9 +34,9 @@ try {
             u.Nombre,
             u.Apellido
         FROM internaciones i
-        LEFT JOIN pacientes p ON p.IdPaciente = i.IdPaciente
-        LEFT JOIN usuarios u ON u.IdUsuario = p.IdUsuario
-        WHERE i.IdPaciente = :idPaciente
+        INNER JOIN pacientes p ON p.IdPaciente = i.IdPaciente
+        INNER JOIN usuarios u ON u.IdUsuario = p.IdUsuario
+        WHERE u.IdUsuario = :idPaciente
         ORDER BY i.FechaInicio DESC
     ";
 

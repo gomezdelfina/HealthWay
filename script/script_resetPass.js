@@ -18,7 +18,7 @@ async function resetPassword(pass) {
     const baseUrl = window.location.origin;
 
     try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/usuarios/resetPassword.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/usuarios/resetPassword.php', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'

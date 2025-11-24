@@ -429,6 +429,36 @@
             }
         }
 
+        public static function VerInternacionesActivas() {
+
+            try {
+                global $conn;
+                ConexionDb::connect();
+
+                $sql = "SELECT * from internaciones i
+                        WHERE i.EstadoInternacion =  'Activa';";
+
+                $result = ConexionDb::consult($sql);
+
+                if ($result)
+                    return $result;
+
+                return [
+                    "status" => "error",
+                    "mensaje" => "Internación no encontrada"
+                ];
+
+            } catch (Exception $e) {
+
+                return [
+                    "status" => "error",
+                    "mensaje" => "Error DB: " . $e->getMessage()
+                ];
+
+            } finally {
+                ConexionDb::disconnect();
+            }
+        }
 
         /* ============================================
             OBTENER INTERNACIÓN
@@ -447,6 +477,7 @@
                         i.FechaInicio,
                         i.FechaFin,
                         i.EstadoInternacion,
+                        p.IdPaciente,
                         CONCAT(u.Nombre, ' ', u.Apellido) AS NombrePaciente
                     FROM internaciones i
                     INNER JOIN pacientes p ON i.IdPaciente = p.IdPaciente

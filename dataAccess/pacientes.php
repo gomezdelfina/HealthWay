@@ -9,12 +9,11 @@
             try{
                 ConexionDb::connect();
 
-                $sql = "SELECT T0.IdPaciente, T1.Nombre, T1.Apellido, T0.Habilitado
+                $sql = "SELECT T0.IdPaciente, T1.Nombre, T1.Apellido
                         FROM pacientes T0 
                         INNER JOIN usuarios T1 ON T0.IdUsuario = T1.IdUsuario
                         INNER JOIN internaciones T2 ON T0.IdPaciente = T2.IdPaciente
                         WHERE 1 = 1
-                        AND T0.Habilitado = 1
                         AND T2.EstadoInternacion = 'Activa';";
 
                 $result = ConexionDb::consult($sql);
@@ -39,12 +38,12 @@
                 $sql = "SELECT T0.IdPaciente, CONCAT(T1.Nombre, ' ', T1.Apellido) as Nombre,
                         T0.DNI, T0.FechaNac, T0.Genero, 
                         CONCAT(T2.Direccion, ' ', T2.Numero, ', ', T2.Ciudad, ', ', T2.Provincia, ', ', T2.Pais) AS Direccion,
-                        T3.NombreOS as ObraSocial, T4.NombrePlan as Plan
+                        T4.NombreOS as ObraSocial, T3.NombrePlan as Plan
                         FROM pacientes T0 
                         INNER JOIN usuarios T1 ON T0.IdUsuario = T1.IdUsuario
                         INNER JOIN direcciones T2 ON T0.IdDireccion = T2.IdDireccion
-                        INNER JOIN obrassociales T3 ON T0.IdOS = T3.IdOS
-                        INNER JOIN planes_obrassociales T4 ON T3.IdOS = T4.IdOS AND T0.IdPlanOS = T4.IdPlan
+                        INNER JOIN planes_obrassociales T3 ON T0.IdPlan_OS = T3.IdPlan
+                        INNER JOIN obrassociales T4 ON T3.IdOS = T4.IdOS
                         WHERE 1 = 1
                         AND T0.IdPaciente = :idPac;";
                 $params = [
