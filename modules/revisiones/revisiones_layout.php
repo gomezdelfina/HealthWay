@@ -48,7 +48,7 @@
 
             <!-- Modal Revisión -->
             <?php
-                require_once($dirBaseFile . '/revisiones/revision.php');
+                require_once($dirBaseFile . '/modules/revisiones/revision.php');
             ?>
 
             <!-- Live Toast -->
