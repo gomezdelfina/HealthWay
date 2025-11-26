@@ -48,7 +48,7 @@
 
             <!-- Modal Revisión -->
             <?php
-                require_once($dirBaseFile . '/recordatorios/recordatorio.php');
+                require_once($dirBaseFile . '/modules/recordatorios/recordatorio.php');
             ?>
 
             <!-- Live Toast -->
