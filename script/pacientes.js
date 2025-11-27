@@ -1,4 +1,4 @@
-const API_BASE = '/HTML/Healthway/api/administrador';
+const API_BASE = '/Healthway/api/administrador';
 
 const modal = document.getElementById('pacienteModal');
 const form = document.getElementById('pacienteForm');

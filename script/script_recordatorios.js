@@ -60,7 +60,7 @@ async function getTiposRev(){
     const baseUrl = window.location.origin;
     
     try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/revisiones/getTiposRevByUser.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/revisiones/getTiposRevByUser.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ async function getPacientes(){
     const baseUrl = window.location.origin;
     
      try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/pacientes/getPacientesInterAct.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/pacientes/getPacientesInterAct.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -114,7 +114,7 @@ async function getRecordatorio(idRec){
             'idRecordatorio': idRec
         }
 
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/recordatorios/getRecordatorioById.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/getRecordatorioById.php', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -140,7 +140,7 @@ async function getRecordatorios(){
     const baseUrl = window.location.origin;
     
      try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/recordatorios/getRecordatorios.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/getRecordatorios.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -165,7 +165,7 @@ async function createRecordatorio(rec){
     const baseUrl = window.location.origin;
 
     try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/recordatorios/createRecordatorio.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/createRecordatorio.php', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -191,7 +191,7 @@ async function editRecordatorio(rec){
     const baseUrl = window.location.origin;
 
     try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/recordatorios/editRecordatorio.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/editRecordatorio.php', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'

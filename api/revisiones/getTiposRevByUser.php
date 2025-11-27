@@ -1,11 +1,12 @@
 <?php
     require_once(__DIR__ . '/../../includes/globals.php');
+    require_once($dirBaseFile . '/dataAccess/permisos.php');
     require_once($dirBaseFile . '/dataAccess/revisiones.php');
 
     $response = [];
 
     try{
-        if(isset($_SESSION['usuario'])){
+        if(isset($_SESSION['usuario']) & Permisos::tienePermiso(9,$_SESSION['usuario'])){
             $idUser = $_SESSION['usuario'];
 
             $tipos = Revisiones::getTiposRevByUser($idUser);
