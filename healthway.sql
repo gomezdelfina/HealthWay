@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-11-2025 a las 15:49:50
+-- Tiempo de generación: 27-11-2025 a las 18:10:20
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -535,7 +535,9 @@ INSERT INTO `permisos` (`IdPermiso`, `DescPermiso`) VALUES
 (37, 'Editar Revision Alta'),
 (38, 'Editar Revision Programada'),
 (39, 'Editar Revision Urgencia'),
-(40, 'Editar Revision Rutina');
+(40, 'Editar Revision Rutina'),
+(43, 'Iniciar sesion'),
+(44, 'Visualizar informacion personal');
 
 -- --------------------------------------------------------
 
@@ -791,7 +793,21 @@ INSERT INTO `roles_permisos` (`IdRoles_Perm`, `IdRol`, `IdPermiso`) VALUES
 (67, 5, 37),
 (68, 5, 38),
 (69, 5, 39),
-(70, 5, 40);
+(70, 5, 40),
+(71, 1, 43),
+(72, 2, 43),
+(73, 3, 43),
+(74, 4, 43),
+(75, 5, 43),
+(76, 6, 43),
+(77, 7, 43),
+(78, 1, 44),
+(79, 2, 44),
+(80, 3, 44),
+(81, 4, 44),
+(82, 5, 44),
+(83, 6, 44),
+(84, 7, 44);
 
 -- --------------------------------------------------------
 
@@ -829,7 +845,15 @@ INSERT INTO `roles_usuarios` (`IdRoles_Usuarios`, `IdRol`, `IdUsuario`) VALUES
 (17, 2, 17),
 (18, 2, 18),
 (19, 2, 19),
-(20, 2, 20);
+(20, 2, 20),
+(37, 5, 3),
+(38, 5, 4),
+(39, 5, 5),
+(40, 5, 6),
+(41, 6, 7),
+(42, 6, 8),
+(43, 7, 9),
+(44, 7, 10);
 
 -- --------------------------------------------------------
 
@@ -913,7 +937,7 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`IdUsuario`, `Usuario`, `Clave`, `Habilitado`, `Nombre`, `Apellido`, `Email`, `Telefono`, `token_recuperacion`, `token_expiracion`) VALUES
 (1, 'agarcia', '3cd6e84a34793dabc32d3748bc890aa88cd1e018d3d86170c0565248f9ab0d49', 1, 'Ana', 'García', 'ana.garcia@mail.com.ar', 5491145678901, NULL, NULL),
 (2, 'cmartinez', '04a61557a469ef923d66fa3b7617212283cd35e59b4bc33ed00975e4d1832e9a', 1, 'Carlos', 'Martínez', 'c.martinez@empresa.com', 5493515550001, NULL, NULL),
-(3, 'vsanchez', '21aaf754ee10f0bfcef7edfd5fef05a38fb00f58649f3012b8f807764ec9b140', 1, 'Valeria', 'Sánchez', 'vale.sanchez@web.net', 5493414445566, NULL, NULL),
+(3, 'vsanchez', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 1, 'Valeria', 'Sánchez', 'gomezdelfina25@gmail.com', 5493414445566, '4ec38108779f378e4ec949f9181c496e', '2025-11-24 23:28:20'),
 (4, 'jdiaz', '629cb398b51eb025476cb4e3176659d8e2e52a8b8cd25b13ee5d55669313d422', 1, 'Jorge', 'Díaz', 'jorge.diaz@mail.com', 5492616667788, NULL, NULL),
 (5, 'csosa', '55885176009fc065a7add27d23a3245d14488922edf068df36afa2e490d83331', 0, 'Camila', 'Sosa', 'cami.sosa@test.ar', 5491122334455, NULL, NULL),
 (6, 'fruiz', 'ca792355c5821ad530003360ac31a982759a4127e67c037c5a353074af36edd1', 1, 'Federico', 'Ruiz', 'fede.ruiz@servidor.com', 5492217778899, NULL, NULL),
@@ -1135,7 +1159,7 @@ ALTER TABLE `pacientes`
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
-  MODIFY `IdPermiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `IdPermiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT de la tabla `personascontacto`
@@ -1177,13 +1201,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `roles_permisos`
 --
 ALTER TABLE `roles_permisos`
-  MODIFY `IdRoles_Perm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `IdRoles_Perm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT de la tabla `roles_usuarios`
 --
 ALTER TABLE `roles_usuarios`
-  MODIFY `IdRoles_Usuarios` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `IdRoles_Usuarios` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitudesinternacion`

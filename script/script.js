@@ -3,7 +3,7 @@ async function getPermisos(){
     const baseUrl = window.location.origin;
     
      try {
-        let response = await fetch(baseUrl + '/2025/HeathWay/Codigo/HealthWay/api/permisos/getPermisosByUser.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/permisos/getPermisosByUser.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -163,7 +163,7 @@ function cerrarModal(modalElement){
 //Muestra un toast con mensaje de status
 function showOkMsg(msgOk, msg){
     resultMsgElement = document.getElementById('resultMsg');
-    toast = new bootstrap.Toast(resultMsg);
+    toast = new bootstrap.Toast(resultMsgElement);
 
     resultMsgHeader = resultMsgElement.querySelector('.toast-header strong');
     resultMsgBody = resultMsgElement.querySelector('.toast-body');

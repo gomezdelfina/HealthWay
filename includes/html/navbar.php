@@ -1,4 +1,6 @@
 <?php
+
+    require_once($dirBaseFile . '/dataAccess/usuarios.php');
     
     $idUser = '';
     $user = '';
@@ -7,17 +9,14 @@
     $emailUser = '';
     $telUser = '';
 
-    if (isset($_SESSION['usuario'])) {
-        
+    if (isset($_SESSION['usuario'])) {   
         $idUser = $_SESSION['usuario'];
-
-        require_once($dirBaseFile . '/dataAccess/usuarios.php');
 
         try {
             $data = Usuarios::getUsuarioById($idUser);
 
             if (!$data){
-                throw new Exception();
+                throw new Exception("No se encontro el usuario en el sistema");
             } else {
                 foreach($data as $row){
                     $user = $row['Usuario'];
@@ -27,13 +26,13 @@
                     $telUser = $row['Telefono'];
                 }
             }
-        } catch (Exception) {
-            $errors['process'] = "Problemas para ingresar al sistema";
+        } catch (Exception $e) {
+            print("Problemas para ingresar al sistema: " + $e);
 
             header('Location: ' . $dirBaseUrl . '/modules/auth/logout.php');
         }
     }else{
-        $errors['process'] = "Problemas para ingresar al sistema";
+        print("Problemas para ingresar al sistema: " + $e);
 
         header('Location: ' . $dirBaseUrl . '/modules/auth/logout.php');
     }
@@ -75,7 +74,7 @@
                         id="gestionInter">Internaciones</a>
                 </li>
             <?php } ?>
-            <?php if (userTienePermiso(1, $idUser)) { //Visualizar internaciones?>
+            <?php if (userTienePermiso(1, $idUser)) { //Visualizar dashboard administrador?>
                 <li class="nav-item">
                     <a class="nav-link <?php if ($module == 'administrador') {echo 'active';} ?>" 
                         href="<?php echo $dirBaseUrl ?>/modules/administrador/gestionadminusuario.php" 
@@ -123,33 +122,35 @@
                                 </div>
                             </div>
                         </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <div class="user-info-section mx-3 text-nowrap">
-                                <div class="text-start mb-2">
-                                    <strong>Información del Usuario</strong>
-                                    <hr class="dropdown-divider">
+                        <?php if (userTienePermiso(44, $idUser)) { //Visualizar informacion personal ?>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <div class="user-info-section mx-3 text-nowrap">
+                                    <div class="text-start mb-2">
+                                        <strong>Información del Usuario</strong>
+                                        <hr class="dropdown-divider">
+                                    </div>
+                                    <div class="d-flex mb-1 align-items-start info-row">
+                                        <p class="text-muted mb-0 me-2 info-label">Nombre:</p>
+                                        <strong class="info-value"><?php echo $nombreUser ?></strong>
+                                    </div>
+                                    <div class="d-flex mb-1 align-items-start info-row">
+                                        <p class="text-muted mb-0 me-2 info-label">Apellido:</p>
+                                        <strong class="info-value"><?php echo $apellidoUser ?></strong>
+                                    </div>
+                                    <div class="d-flex mb-1 align-items-start info-row">
+                                        <p class="text-muted mb-0 me-2 info-label">Email:</p>
+                                        <strong class="info-value"><?php echo $emailUser ?></strong>
+                                    </div>
+                                    <div class="d-flex mb-1 align-items-start info-row">
+                                        <p class="text-muted mb-0 me-2 info-label">Telefono:</p>
+                                        <strong class="info-value"><?php echo $telUser ?></strong>
+                                    </div>
                                 </div>
-                                <div class="d-flex mb-1 align-items-start info-row">
-                                    <p class="text-muted mb-0 me-2 info-label">Nombre:</p>
-                                    <strong class="info-value"><?php echo $nombreUser ?></strong>
-                                </div>
-                                <div class="d-flex mb-1 align-items-start info-row">
-                                    <p class="text-muted mb-0 me-2 info-label">Apellido:</p>
-                                    <strong class="info-value"><?php echo $apellidoUser ?></strong>
-                                </div>
-                                <div class="d-flex mb-1 align-items-start info-row">
-                                    <p class="text-muted mb-0 me-2 info-label">Email:</p>
-                                    <strong class="info-value"><?php echo $emailUser ?></strong>
-                                </div>
-                                <div class="d-flex mb-1 align-items-start info-row">
-                                    <p class="text-muted mb-0 me-2 info-label">Telefono:</p>
-                                    <strong class="info-value"><?php echo $telUser ?></strong>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        <?php } ?>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

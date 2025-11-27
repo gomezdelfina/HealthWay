@@ -20,7 +20,7 @@
             <h1 class="mb-4 dashboard-title">Gestion de Revisiones</h1>
 
             <div class="row mb-4 align-items-center">
-                <?php if (userTienePermiso(8, $idUser)) { ?>
+                <?php if (userTienePermiso(10, $idUser)) { ?>
                     <div id="createRev" class="col-md-2">
                         <button id="btnCrearRev" class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#modalRevision">
                             <i class="bi bi bi-card-list me-2"></i>Crear Revision
@@ -48,7 +48,7 @@
 
             <!-- Modal Revisión -->
             <?php
-                require_once($dirBaseFile . '/revisiones/revision.php');
+                require_once($dirBaseFile . '/modules/revisiones/revision.php');
             ?>
 
             <!-- Live Toast -->

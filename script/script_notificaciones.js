@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         myModal.show();
 
         // Pedimos las notificaciones al servidor
-        fetch("/HTML/Healthway/api/Notificaciones/GetNotificaciones.php")
+        fetch("/Healthway/api/Notificaciones/GetNotificaciones.php")
             .then(res => res.json())
             .then(data => {
 
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function actualizarContador() {
-        fetch("/HTML/Healthway/api/Notificaciones/GetNotificaciones.php")
+        fetch("/Healthway/api/Notificaciones/GetNotificaciones.php")
             .then(res => res.json())
             .then(data => {
                 const notifCount = document.getElementById("notifCount");

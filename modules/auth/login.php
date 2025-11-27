@@ -1,5 +1,7 @@
 <?php
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    require($dirBaseFile . '/dataAccess/permisos.php');
+
+    if (isset($_SESSION['usuario']) & Permisos::tienePermiso(43,$_SESSION['usuario'])) {
         header('Location: ' . $dirBaseUrl . '/modules/dashboards/dashboard_layout.php');
     }
 ?>
