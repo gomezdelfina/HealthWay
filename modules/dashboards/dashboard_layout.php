@@ -7,7 +7,6 @@
     <?php
         $module = 'dashboards';
         require_once($dirBaseFile . '/includes/html/head.php');
-        echo '<script src="' . $dirBaseFile . '/script/script_notificaciones.js"></script>';
     ?>
 </head>
 <body>

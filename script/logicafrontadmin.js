@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadRoles() {
         try {
-            const response = await fetch('/HTML/Healthway/api/administrador/get_roles.php?action=roles');
+            const response = await fetch('/Healthway/api/administrador/get_roles.php?action=roles');
             const result = await response.json();
 
             if (result.success && result.data) {
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             // Utilizamos el metodo DELETE con el ID en el query string para la Baja Logica
-            const response = await fetch(`/HTML/Healthway/api/administrador/eliminar_usuario.php?id=${id}`, {
+            const response = await fetch(`/Healthway/api/administrador/eliminar_usuario.php?id=${id}`, {
                 method: 'DELETE',
             });
             const result = await response.json();
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userTableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></td></tr>`;
         
         try {
-            let url = '/HTML/Healthway/api/administrador/get_usuarios.php';
+            let url = '/Healthway/api/administrador/get_usuarios.php';
             if (searchTerm) {
                 // Busqueda se envia como parametro GET
                 url += `?search=${encodeURIComponent(searchTerm)}`;
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(userForm);
         const userData = Object.fromEntries(formData.entries());
         
-        let url = '/HTML/Healthway/api/administrador';
+        let url = '/Healthway/api/administrador';
         let method = '';
         
         // Alta o Edicion

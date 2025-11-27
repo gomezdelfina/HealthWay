@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         idInternacionActual = btn.dataset.id;
 
-        const response = await fetch('/HTML/Healthway/api/internaciones/VerInternacion.php?id=' + idInternacionActual);
+        const response = await fetch('/Healthway/api/internaciones/VerInternacion.php?id=' + idInternacionActual);
         const data = await response.json();
 
         if (data.error) return alert(data.error);
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (!result.isConfirmed) return;
 
-            fetch(`/HTML/Healthway/api/internaciones/FinalizarInternacion.php?id=${idInternacionActual}`)
+            fetch(`/Healthway/api/internaciones/FinalizarInternacion.php?id=${idInternacionActual}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.ok) {
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Enviar cambios al backend
         try {
-            const res = await fetch("/HTML/Healthway/api/internaciones/ModificarInternacion.php", {
+            const res = await fetch("/Healthway/api/internaciones/ModificarInternacion.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
