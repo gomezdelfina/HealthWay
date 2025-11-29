@@ -5,6 +5,8 @@ use Dba\Connection;
     global $dirBaseFile;
     require_once($dirBaseFile . '/conexiones/conectorMySQL.php');
 
+    date_default_timezone_set('America/Argentina/Buenos_Aires');
+
     class Recordatorio
     {
         public static function getRecordatorios()
@@ -12,8 +14,8 @@ use Dba\Connection;
             try{
                 ConexionDb::connect();
 
-                $sql = "SELECT T0.IdRecordatorio, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
-                    T6.DescTipoRevision, T0.FechaCreacion, T8.Nombre as NombreCreador, T8.Apellido as ApellidoCreador
+                $sql = "SELECT T0.*, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
+                    T6.DescTipoRevision, T8.Nombre as NombreCreador, T8.Apellido as ApellidoCreador
                     FROM recordatorio T0
                     INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
                     INNER JOIN habitaciones T2 ON T1.IdHabitacion = T2.IdHabitacion
@@ -28,8 +30,17 @@ use Dba\Connection;
 
                 $result = ConexionDb::consult($sql);
 
+                foreach ($result as $key => $row) {
+                    $objFecha = self::calcularProximaFecha($row);
+                    
+                    if ($objFecha) {
+                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
+                    } else {
+                        $result[$key]['ProximaEjecucion'] = null;
+                    }
+                }
+
                 ConexionDb::disconnect();
-                
                 
                 return $result;
             } catch (Exception $e) {
@@ -450,7 +461,7 @@ use Dba\Connection;
             try {
                 $ahora = new DateTime(); 
                 $inicio = new DateTime($row['FechaInicioRec']);
-                $fin = $row['FechaFinRec'] ? new DateTime($row['FechaFinRec']) : null;
+                $fin = $row['FechaFinRec'] != '0000-00-00 00:00:00' ? new DateTime($row['FechaFinRec']) : null;
                 $frecuencia = $row['Frecuencia'];
 
                 if ($inicio > $ahora) return $inicio;

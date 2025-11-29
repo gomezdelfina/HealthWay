@@ -10,7 +10,11 @@
     $idRev = '';
 
     if (!isset($_SESSION['usuario'])) {
-        $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
+        $response['code'] = 401;
+        $response['msg'] = 'El Usuario no esta logeado en el sistema';
+    } elseif(!Permisos::tienePermiso(9, $_SESSION['usuario'])){
+        $response['code'] = 401;
+        $response['msg'] = 'El usuario no tiene permiso para la peticion';
     } else {
         $userId = $_SESSION['usuario'];
 
@@ -39,11 +43,6 @@
                     } else if(!preg_match('/^[0-9]+$/', $idRev)){
                         $errors['idRev'] = 'El campo IdRev no contiene un formato correcto';
                     }
-                }
-
-                // IDUSER
-                if(!Permisos::tienePermiso(9, $userId)){
-                    $errors['usuario'] = 'El usuario no tiene permiso para la peticion';
                 }
 
                 if(empty($errors)){

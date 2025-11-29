@@ -11,7 +11,11 @@
         // -- VALIDACIONES
         //ID USER
         if (!isset($_SESSION['usuario'])) {
-            $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
+            $response['code'] = 401;
+            $response['msg'] = 'El Usuario no esta logeado en el sistema';
+        } elseif(!Permisos::tienePermiso(12, $_SESSION['usuario'])){
+            $response['code'] = 401;
+            $response['msg'] = 'El usuario no tiene permiso para la peticion';
         } else {
             $userId = $_SESSION['usuario'];
 
@@ -19,7 +23,7 @@
                 $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
             } elseif (!preg_match('/^[0-9]+$/', $userId)) {
                 $errors['usuario'] = 'El campo Usuario no tiene el formato correcto';
-            } elseif (!Permisos::tienePermiso(9,$_SESSION['usuario'])){
+            } elseif (!Permisos::tienePermiso(12,$_SESSION['usuario'])){
                 $errors['usuario'] = 'El usuario no tiene permiso para la peticion';
             }
 
@@ -27,7 +31,7 @@
                 $recs = Recordatorio::getRecordatorios();
 
                 $response['code'] = 200;
-                $response['msg'] = $revs;
+                $response['msg'] = $recs;
             }else{
                 $msgError = [];
 
@@ -49,6 +53,6 @@
     
     header('Content-Type: application/json');
     http_response_code($response['code']);
-    echo json_encode($response['code']);
+    echo json_encode($response['msg']);
     
 ?>
