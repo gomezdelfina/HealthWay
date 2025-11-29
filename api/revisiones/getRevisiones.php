@@ -11,7 +11,11 @@
         // -- VALIDACIONES
         //ID USER
         if (!isset($_SESSION['usuario'])) {
-            $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
+            $response['code'] = 401;
+            $response['msg'] = 'El Usuario no esta logeado en el sistema';
+        } elseif(!Permisos::tienePermiso(9, $_SESSION['usuario'])){
+            $response['code'] = 401;
+            $response['msg'] = 'El usuario no tiene permiso para la peticion';
         } else {
             $userId = $_SESSION['usuario'];
 
@@ -19,8 +23,6 @@
                 $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
             } elseif (!preg_match('/^[0-9]+$/', $userId)) {
                 $errors['usuario'] = 'El campo Usuario no tiene el formato correcto';
-            } elseif (!Permisos::tienePermiso(9,$_SESSION['usuario'])){
-                $errors['usuario'] = 'El usuario no tiene permiso para la peticion';
             }
 
             if(empty($errors)){

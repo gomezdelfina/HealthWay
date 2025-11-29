@@ -85,7 +85,7 @@ async function getPacientes(){
     const baseUrl = window.location.origin;
     
      try {
-        let response = await fetch(baseUrl + '/HealthWay/api/pacientes/getPacientesInterAct.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/internaciones/getPacientesInterAct.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -152,7 +152,6 @@ async function getRecordatorios(){
             throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
         }else{      
             result = await response.json(); 
-
             return result;
         }
     }catch (error){
@@ -211,6 +210,33 @@ async function editRecordatorio(rec){
         throw new Error("Problema de conexión con la API: " + error.message);
     }
 }
+
+//Actualiza recordatorio en la BD
+async function editActivoRecordatorio(rec){
+    const baseUrl = window.location.origin;
+
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/editActivoRecordatorio.php', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(rec),
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+//--
 
 // -- Utils
 // Manejo de cambios en fecha fin de recordatorio
@@ -344,22 +370,22 @@ function activarDatosModal(type){
         document.getElementById("recordatorioActivo").setAttribute('disabled','');
     }else if (type == 'editar'){
         document.getElementById("recPac").setAttribute('disabled','');
-        document.getElementById("recObs").removeAttribute('disabled');
-        document.getElementById("tipoRevisRec").removeAttribute('disabled');
-        document.getElementById("fechaRecordatorio").removeAttribute('disabled');
-        document.getElementById("horaRecordatorio").removeAttribute('disabled');
+        document.getElementById("recObs").setAttribute('disabled','');
+        document.getElementById("tipoRevisRec").setAttribute('disabled','');
+        document.getElementById("fechaRecordatorio").setAttribute('disabled','');
+        document.getElementById("horaRecordatorio").setAttribute('disabled','');
 
         radios = document.querySelectorAll('input[name="op"]');
         radios.forEach(radio => {
-            radio.removeAttribute('disabled');
+            radio.setAttribute('disabled','');
         });
 
-        document.getElementById("frecDiasRep").removeAttribute('disabled');
-        document.getElementById("frecSemRep").removeAttribute('disabled');
+        document.getElementById("frecDiasRep").setAttribute('disabled','');
+        document.getElementById("frecSemRep").setAttribute('disabled','');
 
         radiosDias = document.querySelectorAll('input[name="diasSemana"]');
         radiosDias.forEach(radio => {
-            radio.removeAttribute('disabled');
+            radio.setAttribute('disabled','');
         });
 
         document.getElementById("recordatorioActivo").removeAttribute('disabled');
@@ -391,191 +417,224 @@ async function validarCamposRecordatorio(event) {
     let Observaciones = '';
     let RecAct = '';
 
-    //Paciente
-    if(!validarOpSelect(document.getElementById("recPac"))){
-        document.getElementById("valPacRec").classList.add("visibility-show");
-        document.getElementById("valPacRec").classList.remove("visibility-hidden");
-        formIsInvalid++;
-    }else{
-        document.getElementById("valPacRec").classList.add("visibility-hidden");
-        document.getElementById("valPacRec").classList.remove("visibility-show");
-        IdPaciente = document.getElementById("recPac").value;
-    };
+    if(event.submitter.id == 'btnActRecordatorio'){
+        IdRecordatorio = document.getElementById("idRecordatorio").value;
 
-    //Tipo Revision
-    if(!validarOpSelect(document.getElementById("tipoRevisRec"))){
-        document.getElementById("valTipoRevisRec").classList.add("visibility-show");
-        document.getElementById("valTipoRevisRec").classList.remove("visibility-hidden");
-        formIsInvalid++;
-    }else{
-        document.getElementById("valTipoRevisRec").classList.add("visibility-hidden");
-        document.getElementById("valTipoRevisRec").classList.remove("visibility-show");
-        TipoRev = document.getElementById("tipoRevisRec").value;
-    };
- 
-    //Fecha recordatorio
-    if(!validarValorVacio(document.getElementById("fechaRecordatorio"))){
-        document.getElementById("valfechaRecordatorio").classList.add("visibility-show");
-        document.getElementById("valfechaRecordatorio").classList.remove("visibility-hidden");
-        formIsInvalid++;
-    }else{
-        document.getElementById("valfechaRecordatorio").classList.add("visibility-hidden");
-        document.getElementById("valfechaRecordatorio").classList.remove("visibility-show");
-        FechaInicio = document.getElementById("fechaRecordatorio").value;
-    };
+        let rec = {
+                    'IdRecordatorio': IdRecordatorio
+                };
 
-    //Hora recordatorio
-    if(!validarValorVacio(document.getElementById("horaRecordatorio"))){
-        document.getElementById("valhoraRecordatorio").classList.add("visibility-show");
-        document.getElementById("valhoraRecordatorio").classList.remove("visibility-hidden");
-        formIsInvalid++;
+        inactivarRecordatorio(rec);
     }else{
-        document.getElementById("valhoraRecordatorio").classList.add("visibility-hidden");
-        document.getElementById("valhoraRecordatorio").classList.remove("visibility-show");
-        HoraInicio = document.getElementById("horaRecordatorio").value;
-    };
-
-    //Tipo de Recordatorio
-    let radioCheck = document.querySelectorAll('input[name="op"]:checked')[0].id;
-
-    if(radioCheck === "opPorHoras"){
-        //Repeticion de horas
-        if(!validarString(document.getElementById("frecHorasRep"), '^[0-9]+$')){
-            document.getElementById("valfrecHorasRep").classList.add("visibility-show");
-            document.getElementById("valfrecHorasRep").classList.remove("visibility-hidden");
-            formIsInvalid++;
-        }else if(!validarRangoNumerico(document.getElementById("frecHorasRep"))){
-            document.getElementById("valfrecHorasRep").classList.add("visibility-show");
-            document.getElementById("valfrecHorasRep").classList.remove("visibility-hidden");
+        //Paciente
+        if(!validarOpSelect(document.getElementById("recPac"))){
+            document.getElementById("valPacRec").classList.add("visibility-show");
+            document.getElementById("valPacRec").classList.remove("visibility-hidden");
             formIsInvalid++;
         }else{
-            document.getElementById("valfrecHorasRep").classList.add("visibility-hidden");
-            document.getElementById("valfrecHorasRep").classList.remove("visibility-show");
-            Frecuencia = 'Horas';
-            FrecuenciaHoras = document.getElementById("frecHorasRep").value;
-        };
-    } else if(radioCheck === "opDiariamente") {
-        //Repeticion de dias
-        if(!validarString(document.getElementById("frecDiasRep"), '^[0-9]+$')){
-            document.getElementById("valfrecDiasRep").classList.add("visibility-show");
-            document.getElementById("valfrecDiasRep").classList.remove("visibility-hidden");
-            formIsInvalid++;
-        }else if(!validarRangoNumerico(document.getElementById("frecDiasRep"))){
-            document.getElementById("valfrecDiasRep").classList.add("visibility-show");
-            document.getElementById("valfrecDiasRep").classList.remove("visibility-hidden");
-            formIsInvalid++;
-        }else{
-            document.getElementById("valfrecDiasRep").classList.add("visibility-hidden");
-            document.getElementById("valfrecDiasRep").classList.remove("visibility-show");
-            Frecuencia = 'Diaria';
-            FrecuenciaDias = document.getElementById("frecDiasRep").value;
-        };
-    } else if(radioCheck === "opSemanalmente") {
-        //Repeticion de semanas
-        if(!validarString(document.getElementById("frecSemRep"), '^[0-9]+$')){
-            document.getElementById("valfrecSemRep").classList.add("visibility-show");
-            document.getElementById("valfrecSemRep").classList.remove("visibility-hidden");
-            formIsInvalid++;
-        }else if(!validarRangoNumerico(document.getElementById("frecSemRep"))){
-            document.getElementById("valfrecSemRep").classList.add("visibility-show");
-            document.getElementById("valfrecSemRep").classList.remove("visibility-hidden");
-            formIsInvalid++;
-        }else{
-            document.getElementById("valfrecSemRep").classList.add("visibility-hidden");
-            document.getElementById("valfrecSemRep").classList.remove("visibility-show");
-            Frecuencia = 'Semanal';
-            FrecuenciaSemanas = document.getElementById("frecSemRep").value;
+            document.getElementById("valPacRec").classList.add("visibility-hidden");
+            document.getElementById("valPacRec").classList.remove("visibility-show");
+            IdPaciente = document.getElementById("recPac").value;
         };
 
-        if(document.querySelectorAll('input[name="diasSemana"]:checked').length === 0){
-            document.getElementById("valDiasCheck").classList.add("visibility-show");
-            document.getElementById("valDiasCheck").classList.remove("visibility-hidden");
+        //Tipo Revision
+        if(!validarOpSelect(document.getElementById("tipoRevisRec"))){
+            document.getElementById("valTipoRevisRec").classList.add("visibility-show");
+            document.getElementById("valTipoRevisRec").classList.remove("visibility-hidden");
             formIsInvalid++;
         }else{
-            document.getElementById("valDiasCheck").classList.add("visibility-hidden");
-            document.getElementById("valDiasCheck").classList.remove("visibility-show");
-            
-            RecordatorioLunes = document.getElementById("diaLunes").checked;
-            RecordatorioMartes = document.getElementById("diaMartes").checked;
-            RecordatorioMiercoles = document.getElementById("diaMiercoles").checked;
-            RecordatorioJueves = document.getElementById("diaJueves").checked;
-            RecordatorioViernes = document.getElementById("diaViernes").checked;
-            RecordatorioSabado = document.getElementById("diaSabado").checked;
-            RecordatorioDomingo = document.getElementById("diaDomingo").checked;
+            document.getElementById("valTipoRevisRec").classList.add("visibility-hidden");
+            document.getElementById("valTipoRevisRec").classList.remove("visibility-show");
+            TipoRev = document.getElementById("tipoRevisRec").value;
         };
-    }else{
-        Frecuencia = 'Unica Vez';
-    };
-
-    //Fecha Fin
-    if(document.getElementById("fechaFinActivo").checked){
+    
         //Fecha recordatorio
-        if(!validarValorVacio(document.getElementById("fechaFinRecordatorio"))){
-            document.getElementById("valfechaFinRecordatorio").classList.add("visibility-show");
-            document.getElementById("valfechaFinRecordatorio").classList.remove("visibility-hidden");
+        if(!validarValorVacio(document.getElementById("fechaRecordatorio"))){
+            document.getElementById("valfechaRecordatorio").classList.add("visibility-show");
+            document.getElementById("valfechaRecordatorio").classList.remove("visibility-hidden");
+
+            document.getElementById("valfechaRecordatorio").innerText = 'Debe seleccionar una fecha de inicio valida';
             formIsInvalid++;
         }else{
-            document.getElementById("valfechaFinRecordatorio").classList.add("visibility-hidden");
-            document.getElementById("valfechaFinRecordatorio").classList.remove("visibility-show");
-            FechaFin = document.getElementById("fechaFinRecordatorio").value;
+            FechaInicio = document.getElementById("fechaRecordatorio").value; 
+            let fechaInicioInput = new Date(FechaInicio + "T00:00:00") ; 
+            fechaInicioInput.setHours(0, 0, 0, 0);
+
+            let fechaHoy = new Date();
+            fechaHoy.setHours(0, 0, 0, 0);
+            
+            if(fechaInicioInput < fechaHoy){
+                document.getElementById("valfechaRecordatorio").classList.add("visibility-show");
+                document.getElementById("valfechaRecordatorio").classList.remove("visibility-hidden");
+
+                document.getElementById("valfechaRecordatorio").innerText = 'Debe seleccionar una fecha de inicio igual o posterior a hoy';
+                formIsInvalid++;
+            }else{
+                document.getElementById("valfechaRecordatorio").classList.add("visibility-hidden");
+                document.getElementById("valfechaRecordatorio").classList.remove("visibility-show");
+            }   
         };
-    };
 
-    if(document.getElementById("recordatorioActivo").checked){
-        RecAct = 1;
-    } else {
-        RecAct = 0;
-    };
+        //Hora recordatorio
+        if(!validarValorVacio(document.getElementById("horaRecordatorio"))){
+            document.getElementById("valhoraRecordatorio").classList.add("visibility-show");
+            document.getElementById("valhoraRecordatorio").classList.remove("visibility-hidden");
 
-    Observaciones = document.getElementById("recObs").value;
+            document.getElementById("valhoraRecordatorio").innerText = 'Debe seleccionar una hora de inicio valida';
+            formIsInvalid++;
+        }else{
+            HoraInicio = document.getElementById("horaRecordatorio").value;
+            let [horas, minutos] = HoraInicio.split(':');
+            let dtInicio = new Date(FechaInicio + "T00:00:00");
+            dtInicio.setHours(horas, minutos, 0, 0); 
 
-    if (formIsInvalid === 0) {
-        if(event.submitter.id == 'btnGuardarRecordatorio'){
-            let rec = {
-                'IdPaciente': IdPaciente,
-                'TipoRev': TipoRev,
-                'FechaInicio': FechaInicio,
-                'HoraInicio': HoraInicio,
-                'FechaFin': FechaFin,
-                'Frecuencia': Frecuencia,
-                'FrecuenciaHoras': FrecuenciaHoras,
-                'FrecuenciaDias': FrecuenciaDias,
-                'FrecuenciaSem': FrecuenciaSemanas,
-                'Observaciones': Observaciones,
-                'RepetirLunes': RecordatorioLunes,
-                'RepetirMartes': RecordatorioMartes,
-                'RepetirMiercoles': RecordatorioMiercoles,
-                'RepetirJueves': RecordatorioJueves,
-                'RepetirViernes': RecordatorioViernes,
-                'RepetirSabado': RecordatorioSabado,
-                'RepetirDomingo': RecordatorioDomingo,
-                'Activo': RecAct
+            let dtAhora = new Date();
+
+            if(dtInicio < dtAhora){
+                document.getElementById("valhoraRecordatorio").classList.add("visibility-show");
+                document.getElementById("valhoraRecordatorio").classList.remove("visibility-hidden");
+
+                document.getElementById("valhoraRecordatorio").innerText = 'Debe seleccionar una hora de inicio posterior a ahora';
+                formIsInvalid++;       
+            }else{
+                document.getElementById("valhoraRecordatorio").classList.add("visibility-hidden");
+                document.getElementById("valhoraRecordatorio").classList.remove("visibility-show");
+            }
+        };
+
+        //Tipo de Recordatorio
+        let radioCheck = document.querySelectorAll('input[name="op"]:checked')[0].id;
+
+        if(radioCheck === "opPorHoras"){
+            //Repeticion de horas
+            if(!validarString(document.getElementById("frecHorasRep"), '^[0-9]+$')){
+                document.getElementById("valfrecHorasRep").classList.add("visibility-show");
+                document.getElementById("valfrecHorasRep").classList.remove("visibility-hidden");
+                formIsInvalid++;
+            }else if(!validarRangoNumerico(document.getElementById("frecHorasRep"))){
+                document.getElementById("valfrecHorasRep").classList.add("visibility-show");
+                document.getElementById("valfrecHorasRep").classList.remove("visibility-hidden");
+                formIsInvalid++;
+            }else{
+                document.getElementById("valfrecHorasRep").classList.add("visibility-hidden");
+                document.getElementById("valfrecHorasRep").classList.remove("visibility-show");
+                Frecuencia = 'Horas';
+                FrecuenciaHoras = document.getElementById("frecHorasRep").value;
             };
-            createRecordatorio(rec);
-        }else if(event.submitter.id == 'btnActRecordatorio'){
-            IdRecordatorio = document.getElementById("idRecordatorio").value;
-
-            let rec = {
-                'IdRecordatorio': IdRecordatorio,
-                'TipoRev': TipoRev,
-                'FechaInicio': FechaInicio,
-                'HoraInicio': HoraInicio,
-                'FechaFin': FechaFin,
-                'Frecuencia': Frecuencia,
-                'FrecuenciaHoras': FrecuenciaHoras,
-                'FrecuenciaDias': FrecuenciaDias,
-                'FrecuenciaSem': FrecuenciaSemanas,
-                'Observaciones': Observaciones,
-                'RepetirLunes': RecordatorioLunes,
-                'RepetirMartes': RecordatorioMartes,
-                'RepetirMiercoles': RecordatorioMiercoles,
-                'RepetirJueves': RecordatorioJueves,
-                'RepetirViernes': RecordatorioViernes,
-                'RepetirSabado': RecordatorioSabado,
-                'RepetirDomingo': RecordatorioDomingo,
-                'Activo': RecAct
+        } else if(radioCheck === "opDiariamente") {
+            //Repeticion de dias
+            if(!validarString(document.getElementById("frecDiasRep"), '^[0-9]+$')){
+                document.getElementById("valfrecDiasRep").classList.add("visibility-show");
+                document.getElementById("valfrecDiasRep").classList.remove("visibility-hidden");
+                formIsInvalid++;
+            }else if(!validarRangoNumerico(document.getElementById("frecDiasRep"))){
+                document.getElementById("valfrecDiasRep").classList.add("visibility-show");
+                document.getElementById("valfrecDiasRep").classList.remove("visibility-hidden");
+                formIsInvalid++;
+            }else{
+                document.getElementById("valfrecDiasRep").classList.add("visibility-hidden");
+                document.getElementById("valfrecDiasRep").classList.remove("visibility-show");
+                Frecuencia = 'Diaria';
+                FrecuenciaDias = document.getElementById("frecDiasRep").value;
             };
-            editarRecordatorio(rec);
+        } else if(radioCheck === "opSemanalmente") {
+            //Repeticion de semanas
+            if(!validarString(document.getElementById("frecSemRep"), '^[0-9]+$')){
+                document.getElementById("valfrecSemRep").classList.add("visibility-show");
+                document.getElementById("valfrecSemRep").classList.remove("visibility-hidden");
+                formIsInvalid++;
+            }else if(!validarRangoNumerico(document.getElementById("frecSemRep"))){
+                document.getElementById("valfrecSemRep").classList.add("visibility-show");
+                document.getElementById("valfrecSemRep").classList.remove("visibility-hidden");
+                formIsInvalid++;
+            }else{
+                document.getElementById("valfrecSemRep").classList.add("visibility-hidden");
+                document.getElementById("valfrecSemRep").classList.remove("visibility-show");
+                Frecuencia = 'Semanal';
+                FrecuenciaSemanas = document.getElementById("frecSemRep").value;
+            };
+
+            if(document.querySelectorAll('input[name="diasSemana"]:checked').length === 0){
+                document.getElementById("valDiasCheck").classList.add("visibility-show");
+                document.getElementById("valDiasCheck").classList.remove("visibility-hidden");
+                formIsInvalid++;
+            }else{
+                document.getElementById("valDiasCheck").classList.add("visibility-hidden");
+                document.getElementById("valDiasCheck").classList.remove("visibility-show");
+                
+                RecordatorioLunes = document.getElementById("diaLunes").checked;
+                RecordatorioMartes = document.getElementById("diaMartes").checked;
+                RecordatorioMiercoles = document.getElementById("diaMiercoles").checked;
+                RecordatorioJueves = document.getElementById("diaJueves").checked;
+                RecordatorioViernes = document.getElementById("diaViernes").checked;
+                RecordatorioSabado = document.getElementById("diaSabado").checked;
+                RecordatorioDomingo = document.getElementById("diaDomingo").checked;
+            };
+        }else{
+            Frecuencia = 'Unica Vez';
+        };
+
+        //Fecha Fin
+        if(document.getElementById("fechaFinActivo").checked){
+            //Fecha recordatorio
+            if(!validarValorVacio(document.getElementById("fechaFinRecordatorio"))){
+                document.getElementById("valfechaFinRecordatorio").classList.add("visibility-show");
+                document.getElementById("valfechaFinRecordatorio").classList.remove("visibility-hidden");
+
+                document.getElementById("valfechaFinRecordatorio").innerText = 'Debe seleccionar una fecha de finalizacion valida';
+                formIsInvalid++;
+            }else{
+                FechaFin = document.getElementById("fechaFinRecordatorio").value;
+                let fechaFinInput = new Date(FechaFin + "T00:00:00"); 
+                fechaFinInput.setHours(0, 0, 0, 0);
+
+                let fechaInicioInput = new Date(FechaInicio + "T00:00:00"); 
+                fechaInicioInput.setHours(0, 0, 0, 0);
+
+                if(fechaFinInput < fechaInicioInput){
+                    document.getElementById("valfechaFinRecordatorio").classList.add("visibility-show");
+                    document.getElementById("valfechaFinRecordatorio").classList.remove("visibility-hidden");
+
+                    document.getElementById("valfechaFinRecordatorio").innerText = 'Debe seleccionar una fecha de finalizacion posterior al inicio';
+                    formIsInvalid++;
+                }else{
+                    document.getElementById("valfechaFinRecordatorio").classList.add("visibility-hidden");
+                    document.getElementById("valfechaFinRecordatorio").classList.remove("visibility-show");
+                };
+            };
+        };
+
+        if(document.getElementById("recordatorioActivo").checked){
+            RecAct = 1;
+        } else {
+            RecAct = 0;
+        };
+
+        Observaciones = document.getElementById("recObs").value;
+
+        if (formIsInvalid === 0) {
+            let rec = {
+                    'IdPaciente': IdPaciente,
+                    'TipoRev': TipoRev,
+                    'FechaInicio': FechaInicio,
+                    'HoraInicio': HoraInicio,
+                    'FechaFin': FechaFin,
+                    'Frecuencia': Frecuencia,
+                    'FrecuenciaHoras': FrecuenciaHoras,
+                    'FrecuenciaDias': FrecuenciaDias,
+                    'FrecuenciaSem': FrecuenciaSemanas,
+                    'Observaciones': Observaciones,
+                    'RepetirLunes': RecordatorioLunes,
+                    'RepetirMartes': RecordatorioMartes,
+                    'RepetirMiercoles': RecordatorioMiercoles,
+                    'RepetirJueves': RecordatorioJueves,
+                    'RepetirViernes': RecordatorioViernes,
+                    'RepetirSabado': RecordatorioSabado,
+                    'RepetirDomingo': RecordatorioDomingo,
+                    'Activo': RecAct
+                };
+            crearRecordatorio(rec);
+            
         }
     }
 }
@@ -641,10 +700,12 @@ async function renderizarTablaRec() {
                     <table id="tablaRecs" class="table table-hover table-striped align-middle">
                         <thead class="table-light">
                             <tr>
+                                <th>Personal medico</th>
                                 <th>Paciente</th>
                                 <th>Habitacion</th>
                                 <th>Cama</th>
                                 <th>Tipo recordatorio</th>
+                                <th>Proxima ejecucion</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -655,10 +716,12 @@ async function renderizarTablaRec() {
             recordatoriosData.forEach(rec => {
                 html += `
                     <tr data-id="${rec.IdRecordatorio}">
+                        <td>${rec.NombreCreador + ' ' + rec.ApellidoCreador}</td>
                         <td>${rec.Nombre + ' ' + rec.Apellido}</td>
                         <td>${rec.NumeroHabitacion}</td>
                         <td>${rec.NumeroCama}</td>
                         <td>${rec.DescTipoRevision}</td>
+                        <th>${rec.ProximaEjecucion}</th>
                         <td class="text-center">
                             <div class="btn-group btn-group-sm" role="group">
                                 <button id="btnVerRec" class="btn btn-sm btn-outline-dark me-2 btn-ver-rec" data-bs-toggle="modal" data-bs-target="#modalRecordatorio" data-id="${rec.IdRecordatorio}">
@@ -742,15 +805,18 @@ async function verRecordatorio(idRec){
             document.getElementById("horaRecordatorio").value = formatearDT(fechaCreacion).hora;
 
             if(response[0].Frecuencia == 'Unica Vez'){
-                document.getElementById("opUnaVez").checked;
+                document.getElementById("opUnaVez").checked = true;
+                handleRadioChange("opUnaVez");
             }else if(response[0].Frecuencia == 'Horas'){
-                document.getElementById("opPorHoras").checked;
+                document.getElementById("opPorHoras").checked  = true;
                 document.getElementById("frecHorasRep").value = response[0].FrecuenciaHoras;
+                handleRadioChange("opPorHoras");
             }else if(response[0].Frecuencia == 'Diaria'){;
-                document.getElementById("opDiariamente").checked;
+                document.getElementById("opDiariamente").checked  = true;
                 document.getElementById("frecDiasRep").value = response[0].FrecuenciaDias;
+                handleRadioChange("opDiariamente");
             }else if(response[0].Frecuencia == 'Semanal'){
-                document.getElementById("opSemanalmente").checked;
+                document.getElementById("opSemanalmente").checked  = true;
                 document.getElementById("frecSemRep").value = response[0].FrecuenciaSem;
 
                 document.getElementById("diaLunes").checked = (response[0].RepetirLunes === 1);
@@ -760,6 +826,7 @@ async function verRecordatorio(idRec){
                 document.getElementById("diaViernes").checked = (response[0].RepetiraViernes === 1);
                 document.getElementById("diaSabado").checked = (response[0].RepetiraSabado === 1);
                 document.getElementById("diaDomingo").checked = (response[0].RepetiraDomingo === 1);
+                handleRadioChange("opSemanalmente");
             };
 
             if(!response[0].FechaFinRec == null){
@@ -812,6 +879,21 @@ async function editarRecordatorio(rec) {
     }
 }
 
+// Inactivar recordatorio
+async function inactivarRecordatorio(rec) {
+    try{
+        $result = await editActivoRecordatorio(rec);
+
+        showOkMsg(true, 'Se inhabilitó recordatorio correctamente');
+
+        cerrarModal(document.getElementById('modalRecordatorio'));
+        renderizarTablaRec();
+    }catch(error){
+        console.log("Problemas al inhabilitar el recordatorio: " + error.message);
+        showOkMsg(false, 'Problemas al inhabilitar el recordatorio');
+    }
+}
+
 function buscarRecordatorio(){
     let input = document.getElementById('buscadorRecs');
     let valor = input.value.toLowerCase();
@@ -823,9 +905,9 @@ function buscarRecordatorio(){
     let result = false;
 
     filas.forEach(fila => {
-        let textoPaciente = fila.cells[0] ? fila.cells[0].textContent.toLowerCase() : '';
-        let textoHab = fila.cells[1] ? fila.cells[1].textContent.toLowerCase() : '';
-        let textoCama = fila.cells[2] ? fila.cells[2].textContent.toLowerCase() : '';
+        let textoPaciente = fila.cells[1] ? fila.cells[1].textContent.toLowerCase() : '';
+        let textoHab = fila.cells[2] ? fila.cells[2].textContent.toLowerCase() : '';
+        let textoCama = fila.cells[3] ? fila.cells[3].textContent.toLowerCase() : '';
 
         // Comparamos
         if (textoPaciente.includes(valor) || textoHab.includes(valor) || textoCama.includes(valor)) {

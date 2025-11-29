@@ -2,8 +2,10 @@
     require_once(__DIR__ . '/../../includes/globals.php');
     require_once($dirBaseFile . '/dataAccess/permisos.php');
 
-    if (isset($_SESSION['usuario']) && Permisos::tienePermiso(43,$_SESSION['usuario'])) {
-        header('Location: ' . $dirBaseUrl . '/modules/dashboards/dashboard_layout.php');
+    if (isset($_SESSION['usuario'])) {
+        if(Permisos::tienePermiso(43,$_SESSION['usuario'])){
+            header('Location: ' . $dirBaseUrl . '/modules/dashboards/dashboard_layout.php');
+        }
     }
 ?>
 <div class="img-background background">
