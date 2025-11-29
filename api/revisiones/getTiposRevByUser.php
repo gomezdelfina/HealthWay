@@ -4,17 +4,44 @@
     require_once($dirBaseFile . '/dataAccess/revisiones.php');
 
     $response = [];
+    $errors = [];
+    $userId = '';
 
     try{
-        if(isset($_SESSION['usuario']) & Permisos::tienePermiso(9,$_SESSION['usuario'])){
-            $idUser = $_SESSION['usuario'];
+        // -- VALIDACIONES
+        //ID USER
+        if (!isset($_SESSION['usuario'])) {
+            $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
+        } else {
+            $userId = $_SESSION['usuario'];
 
-            $tipos = Revisiones::getTiposRevByUser($idUser);
-            $response['code'] = 200;
-        }else{
-            $response['code'] = 500;
-            $response['msg'] = 'Error interno de aplicacion';
-        } 
+            if (trim($userId) == '') {
+                $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
+            } elseif (!preg_match('/^[0-9]+$/', $userId)) {
+                $errors['usuario'] = 'El campo Usuario no tiene el formato correcto';
+            } elseif(!Permisos::tienePermiso(9, $userId)){
+                $errors['usuario'] = 'El usuario no tiene permiso para la peticion';
+            }
+
+            if(empty($errors)){
+                $tipos = Revisiones::getTiposRevByUser($userId);
+
+                $response['code'] = 200;
+                $response['msg'] = $tipos;
+            }else{
+                $msgError = [];
+
+                if(isset($errors['usuario'])){
+                    $msgError[] = [
+                        'campo' => 'usuario',
+                        'error' => $errors['usuario']
+                    ];
+                };
+
+                $response['code'] = 400;
+                $response['msg'] = $msgError;
+            }
+        }
     }catch(Exception $e){
         $response['code'] = 500;
         $response['msg'] = 'Error interno de aplicacion';
@@ -22,12 +49,6 @@
     
     header('Content-Type: application/json');
     http_response_code($response['code']);
-    if($response['code'] != 200){
-        echo json_encode([
-            'error' => $response['msg'], 
-        ]);
-    }else{
-        echo json_encode($tipos);
-    }
+    echo json_encode($response['msg']);
     
 ?>

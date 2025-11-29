@@ -13,7 +13,7 @@ use Dba\Connection;
                 ConexionDb::connect();
 
                 $sql = "SELECT T0.IdRecordatorio, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
-                    T6.DescTipoRevision, T0.FechaCreacion AS ProximaEjecucion
+                    T6.DescTipoRevision, T0.FechaCreacion, T8.Nombre as NombreCreador, T8.Apellido as ApellidoCreador
                     FROM recordatorio T0
                     INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
                     INNER JOIN habitaciones T2 ON T1.IdHabitacion = T2.IdHabitacion
@@ -21,6 +21,7 @@ use Dba\Connection;
                     INNER JOIN pacientes T4 ON T1.IdPaciente = T4.IdPaciente
                     INNER JOIN usuarios T5 on T4.IdUsuario = T5.IdUsuario
                     INNER JOIN tiporevisiones T6 ON T0.TipoRevision = T6.IdTipoRevision
+                    INNER JOIN usuarios T8 ON T0.IdUsuario = T8.IdUsuario
                     ORDER BY T0.IdRecordatorio DESC
                     LIMIT 30;
                 ";
@@ -33,6 +34,44 @@ use Dba\Connection;
                 return $result;
             } catch (Exception $e) {
                 throw new Exception("Problemas al obtener los Recordatorios: " . $e);
+            }
+        }
+
+        public static function getRecordatoriosByInt($idInt)
+        {
+            try{
+                if (is_null($idInt)) {
+                    throw new Exception("El Id Internacion no puede estar vacío");
+                }
+
+                ConexionDb::connect();
+
+                $sql = "SELECT T0.IdRecordatorio, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
+                    T6.DescTipoRevision, T0.FechaCreacion, T8.Nombre as NombreCreador, T8.Apellido as ApellidoCreador
+                    FROM recordatorio T0
+                    INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
+                    INNER JOIN habitaciones T2 ON T1.IdHabitacion = T2.IdHabitacion
+                    INNER JOIN camas T3 ON T1.IdCama = T3.IdCama
+                    INNER JOIN pacientes T4 ON T1.IdPaciente = T4.IdPaciente
+                    INNER JOIN usuarios T5 on T4.IdUsuario = T5.IdUsuario
+                    INNER JOIN tiporevisiones T6 ON T0.TipoRevision = T6.IdTipoRevision
+                    INNER JOIN usuarios T8 ON T0.IdUsuario = T8.IdUsuario
+                    WHERE T0.IdInternacion = :idInt
+                    ORDER BY T0.IdRecordatorio DESC
+                    LIMIT 30;
+                ";
+
+                $params = [
+                    ["clave" => ":idInt", "valor" => $idInt]
+                ];
+
+                $result = ConexionDb::consult($sql, $params);
+
+                ConexionDb::disconnect();
+                
+                return $result;
+            } catch (Exception $e) {
+                throw new Exception("Problemas al obtener los Recordatorios por internacion: " . $e);
             }
         }
 
@@ -196,6 +235,32 @@ use Dba\Connection;
             }
         }
 
+        public static function inactivarRecordatorio($idRec){
+            try{
+                if(is_null($idRec)){
+                    throw new Exception("El Id Recordatorio no puede estar vacío");
+                }
+
+                ConexionDb::connect();
+
+                $sql = "UPDATE `recordatorio` 
+                        SET `activo` = 0
+                        WHERE `IdRecordatorio` = :idRec";
+
+                $params = [
+                    ['clave' => ':idRec', 'valor' => $idRec]
+                ];
+
+                $result = ConexionDb::consult($sql, $params);
+
+                ConexionDb::disconnect();
+
+                return $result;
+            }catch(Exception $e){
+                throw new Exception("Problemas al editar estado de la revision: " . $e);
+            }
+        }
+
         public static function editRecordatorioEstado($recordatorio){
             try{
                 if(is_null($recordatorio)){
@@ -205,7 +270,7 @@ use Dba\Connection;
                 ConexionDb::connect();
 
                 $sql = "UPDATE `recordatorio` 
-                        SET `recordatorio` = :estado
+                        SET `Estado` = :estado
                         WHERE `IdRecordatorio` = :idRec";
 
                 $params = [
@@ -233,7 +298,8 @@ use Dba\Connection;
                 ConexionDb::connect();
 
                 $sql = "SELECT T0.IdRecordatorio, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
-                    T6.DescTipoRevision, T7.DescEstadoRev, T0.Estado, T0.*
+                    T6.DescTipoRevision, T7.DescEstadoRev, T0.Estado, T8.Nombre as NombreCreador, T8.Apellido as ApellidoCreador, 
+                    T0.*
                     FROM recordatorio T0
                     INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
                     INNER JOIN habitaciones T2 ON T1.IdHabitacion = T2.IdHabitacion
@@ -242,6 +308,7 @@ use Dba\Connection;
                     INNER JOIN usuarios T5 on T4.IdUsuario = T5.IdUsuario
                     INNER JOIN tiporevisiones T6 ON T0.TipoRevision = T6.IdTipoRevision
                     INNER JOIN estadorevisiones T7 ON T0.EstadoRevision = T7.IdEstadoRev
+                    INNER JOIN usuarios T8 ON T0.IdUsuario = T8.IdUsuario
                     WHERE T0.Estado = 'Atrasado'
                     AND T0.TipoRevision IN (
                             SELECT 
@@ -315,6 +382,7 @@ use Dba\Connection;
                     INNER JOIN pacientes T4 ON T1.IdPaciente = T4.IdPaciente
                     INNER JOIN usuarios T5 on T4.IdUsuario = T5.IdUsuario
                     INNER JOIN tiporevisiones T6 ON T0.TipoRevision = T6.IdTipoRevision
+                    INNER JOIN usuarios T8 ON T0.IdUsuario = T8.IdUsuario
                     WHERE T0.Estado = 'No Hecho'
                     AND T0.TipoRevision IN (
                             SELECT 

@@ -11,7 +11,8 @@ class UsuariosDataAccess
     public static function getRoles()
     {
         try {
-            $conn = ConexionDb::connect();
+            global $conn;
+            ConexionDb::connect();
 
             $sql = "SELECT DescRol FROM Roles ORDER BY DescRol ASC";
             $stmt = $conn->prepare($sql);
@@ -42,7 +43,8 @@ class UsuariosDataAccess
     public static function getRoleId($desc)
     {
         try {
-            $conn = ConexionDb::connect();
+            global $conn;
+            ConexionDb::connect();
 
             $sql = "SELECT IdRol FROM Roles WHERE DescRol = :desc";
             $stmt = $conn->prepare($sql);
@@ -76,7 +78,8 @@ class UsuariosDataAccess
     public static function getUsuarios($search = null)
     {
         try {
-            $conn = ConexionDb::connect();
+            global $conn;
+            ConexionDb::connect();
 
             $sql = "SELECT 
                 u.IdUsuario,
@@ -131,7 +134,8 @@ class UsuariosDataAccess
     public static function crearUsuario($data)
     {
         try {
-            $conn = ConexionDb::connect();
+            global $conn;
+            ConexionDb::connect();
 
             $sql = "INSERT INTO Usuarios
                     (IdRol, Usuario, Clave, Habilitado, Nombre, Apellido, Email, Telefono)
@@ -174,7 +178,8 @@ class UsuariosDataAccess
     public static function actualizarUsuario($id, $data)
     {
         try {
-            $conn = ConexionDb::connect();
+            global $conn;
+            ConexionDb::connect();
 
             $sql = "UPDATE Usuarios SET
                         IdRol = :rol,
@@ -230,7 +235,8 @@ class UsuariosDataAccess
     public static function eliminarUsuario($id)
     {
         try {
-            $conn = ConexionDb::connect();
+            global $conn;
+            ConexionDb::connect();
 
             $sql = "UPDATE Usuarios SET Habilitado = 0 WHERE IdUsuario = :id";
             $stmt = $conn->prepare($sql);

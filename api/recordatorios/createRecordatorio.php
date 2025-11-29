@@ -292,7 +292,6 @@
                 $response['msg'] = 'Error interno de aplicacion';
             }
         }else{
-            $response['code'] = 400;
             $msgError = [];
             
             if(isset($errors['IdPaciente'])){
@@ -415,6 +414,10 @@
                     'error' => $errors['Activo']
                 ];
             };
+
+            
+            $response['code'] = 400;
+            $response['msg'] = $msgError;
         }
     }
     
