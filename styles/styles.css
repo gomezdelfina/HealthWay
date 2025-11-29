@@ -312,6 +312,24 @@ body .containerEmail {
     display : none;
 }
 
+/*** NOTIFICACIONES 
+
+span {
+
+    width:20px; 
+    height:20px; 
+    display:flex; 
+    justify-content:center; 
+    align-items:center;
+
+}***/
+
+i {
+
+    font-size: 1.5rem;
+
+}
+
 /*** Historial Medico ***/
 .doc-container {
     max-width: 900px;

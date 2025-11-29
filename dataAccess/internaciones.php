@@ -374,7 +374,7 @@
                     WHERE i.IdInternacion = :id
                 ";
 
-                return ConexionDb::consult($sql, [
+                return ConexionDb::consultOne($sql, [
                     [ "clave" => ":id", "valor" => $id ]
                 ]);
 

@@ -81,6 +81,13 @@
                         id="gestionUsu">Gestion Usuarios</a>
                 </li>
             <?php } ?>
+            <?php if (userTienePermiso(45, $idUser)) { //Visualizar dashboard gestion de pacientes?>
+                <li class="nav-item">
+                    <a class="nav-link <?php if ($module == 'administrador') {echo 'active';} ?>" 
+                        href="<?php echo $dirBaseUrl ?>/modules/administrador/pacientes_web_app.php" 
+                        id="gestionUsu">Gestion Usuarios</a>
+                </li>
+            <?php } ?>
             <?php if (userTienePermiso(9, $idUser)) { //Visualizar revisiones?>
                 <li class="nav-item">
                     <a class="nav-link <?php if ($module == 'revisiones') {echo 'active';} ?>" 
@@ -104,7 +111,40 @@
                     <span class="d-none d-md-inline ms-2">Escanear QR</span>
                 </button>
             <?php } ?>
-            <span class="span-notif"><i class="bi bi-bell-fill mx-1 me-3"></i></span>
+            <?php if (userTienePermiso(47, $idUser)) { //Escanear QR ?>
+            <div class="d-flex align-items-center">
+                <button type="button" id="btnNotificaciones" class="btn btn-light position-relative" title="notificacion">
+
+                    <!-- Contador de notificaciones -->
+                    <span id="notifCount" 
+                        class="badge rounded-pill bg-danger me-2">
+                        0
+                    </span>
+
+                    <i class="bi bi-bell"></i>
+
+                </button>
+
+                <div class="modal fade" id="modalNotificaciones" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Notificaciones</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body" id="listaNotificaciones">
+                                Cargando notificaciones...
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
             <span class="span-user">
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary mx-1 me-3" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
