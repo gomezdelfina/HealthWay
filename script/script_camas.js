@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         contenedor.innerHTML = '<p class="text-center text-muted">Buscando camas...</p>';
 
         try {
-            const res = await fetch('/Healthway/api/internaciones/BuscarInternacion.php?busqueda=' + encodeURIComponent(termino));
+            const res = await fetch('/HealthWay/api/internaciones/BuscarInternacion.php?busqueda=' + encodeURIComponent(termino));
             const data = await res.json();
 
             contenedor.innerHTML = '';
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         contenedor.innerHTML = '<p class="text-center text-muted">Cargando camas...</p>';
 
         try {
-            const res = await fetch(`/Healthway/api/internaciones/ObtenerCamas.php?pagina=${pagina}`);
+            const res = await fetch(`/HealthWay/api/internaciones/ObtenerCamas.php?pagina=${pagina}`);
             const { camas, totalPaginas } = await res.json();
             contenedor.innerHTML = "";
 
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         idInternacionActual = btn.dataset.id;
 
-        const response = await fetch('/Healthway/api/internaciones/VerInternacion.php?id=' + idInternacionActual);
+        const response = await fetch('/HealthWay/api/internaciones/verInternacion.php?id=' + idInternacionActual);
         const data = await response.json();
 
         if (data.error) return alert(data.error);
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (!result.isConfirmed) return;
 
-            fetch(`/Healthway/api/internaciones/FinalizarInternacion.php?id=${idInternacionActual}`)
+            fetch(`/HealthWay/api/internaciones/FinalizarInternacion.php?id=${idInternacionActual}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.ok) {
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Enviar cambios al backend
         try {
-            const res = await fetch("/Healthway/api/internaciones/ModificarInternacion.php", {
+            const res = await fetch("/HealthWay/api/internaciones/ModificarInternacion.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

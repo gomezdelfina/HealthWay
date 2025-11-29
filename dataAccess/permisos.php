@@ -28,15 +28,20 @@
 
                 $result = ConexionDb::consult($sql, $params);
 
-                ConexionDb::disconnect();
-
                 if($result){
                     return true;
                 }else{
                     return false;
                 }
+
             } catch (Exception) {
+
                 return false;
+                
+            } finally {
+
+                ConexionDb::disconnect();
+
             }
             
         }
@@ -61,13 +66,15 @@
                     ["clave" => ":idUsuario", "valor" => $idUsuario]
                 ];
 
-                $result = ConexionDb::consult($sql, $params);
-
-                ConexionDb::disconnect();
+                $result = ConexionDb::consult($sql, $params);   
                 
                 return $result;
             } catch (Exception) {
                 return [];
+            } finally {
+
+                ConexionDb::disconnect();
+
             }
         }
     }

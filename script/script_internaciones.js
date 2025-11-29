@@ -62,7 +62,7 @@ function AparecerCamaIndividual() {
 function OpcionPaciente() {
     const selectPacientes = document.getElementById("paciente");
 
-    fetch("/Healthway/api/internaciones/InternacionPaciente.php")
+    fetch("/HealthWay/api/internaciones/InternacionPaciente.php")
         .then(response => response.json())
         .then(data => {
 
@@ -109,7 +109,7 @@ function OpcionSolicitud() {
 
         if (idPaciente === "") return;
 
-        fetch(`/Healthway/api/internaciones/InternacionSolicitud.php?idPaciente=${idPaciente}`)
+        fetch(`/HealthWay/api/internaciones/InternacionSolicitud.php?idPaciente=${idPaciente}`)
             .then(r => r.json())
             .then(data => {
                 data.forEach(item => {
@@ -144,7 +144,7 @@ function OpcionHabitacion() {
 
         if (valor === "") return;
 
-        fetch(`/Healthway/api/internaciones/InternacionHabitacion.php?tipoHab=${valor}`)
+        fetch(`/HealthWay/api/internaciones/InternacionHabitacion.php?tipoHab=${valor}`)
             .then(response => response.json())
             .then(data => {
 
@@ -182,7 +182,7 @@ function OpcionCama() {
 
         selectCama.innerHTML = '<option>Cargando camas...</option>';
 
-        fetch(`/Healthway/api/internaciones/InternacionCama.php?numeroHab=${encodeURIComponent(numeroHab)}`)
+        fetch(`/HealthWay/api/internaciones/InternacionCama.php?numeroHab=${encodeURIComponent(numeroHab)}`)
             .then(r => r.json())
             .then(data => {
                 selectCama.innerHTML = '<option value="">Seleccione una cama</option>';
@@ -224,7 +224,7 @@ async function validarForm() {
     const formulario = document.getElementById("registerform");
     const datos = new FormData(formulario);
 
-    const respuesta = await fetch("/Healthway/api/internaciones/RegistrarInternaciones.php", {
+    const respuesta = await fetch("/HealthWay/api/internaciones/RegistrarInternaciones.php", {
         method: "POST",
         body: datos
     });
