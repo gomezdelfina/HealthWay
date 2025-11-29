@@ -6,6 +6,40 @@ document.addEventListener('DOMContentLoaded', function(){
     loadSelectPacientesRev();
     renderizarTablaRev();
 
+    //Validacion datos formulario
+    document.getElementById('revisionForm').addEventListener('submit', validarCamposRevision);
+
+    //Cancelacion de formulario
+    document.getElementById('btnCancelRevisionForm').addEventListener('click', function() {
+        resetFormRevision();
+    });
+
+    // Event listener para resetear modal al cerrar
+    let modalElement = document.getElementById('modalRevision');
+    modalElement.addEventListener('hidden.bs.modal', function() {
+        resetFormRevision();
+    });
+
+    // Event listener para mostrar el boton crear
+    document.getElementById("createRev").addEventListener('click', (event) => {
+        document.getElementById("btnGuardarRevision").classList.remove("visibility-remove");
+        document.getElementById("btnGuardarRevision").classList.add("visibility-show");
+
+        document.getElementById("btnActRevision").classList.remove("visibility-show");
+        document.getElementById("btnActRevision").classList.add("visibility-remove");
+
+        activarDatosModal('crear');
+    });
+
+    // Busqueda de revisiones por Paciente, Cama, Habitacion
+    let btnBusqueda = document.getElementById('btnBuscarRevs');
+        btnBusqueda.addEventListener('click', (event) => {
+        buscarRevision();
+    });
+    let inputBusqueda = document.getElementById('buscadorRevs');
+    inputBusqueda.addEventListener('keyup', (event) => {
+        buscarRevision();
+    });
 });
 
 // -- AJAX
@@ -22,10 +56,36 @@ async function getRevisiones(){
         });
 
         if (!response.ok) {
-            errorText = await response.text();
+            let errorText = await response.text();
             throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
         }else{      
-            result = await response.json(); 
+            let result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Consulta revision a la BD segun ID
+async function getRevision(data){
+    const baseUrl = window.location.origin;
+    
+     try {
+        let response = await fetch(baseUrl + '/HealthWay/api/revisiones/getRevisionById.php', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            let errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            let result = await response.json(); 
 
             return result;
         }
@@ -47,10 +107,10 @@ async function getTiposRev(){
         });
 
         if (!response.ok) {
-            errorText = await response.text();
+            let errorText = await response.text();
             throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
         }else{      
-            result = await response.json(); 
+            let result = await response.json(); 
 
             return result;
         }
@@ -72,10 +132,10 @@ async function getEstadosRev(){
         });
 
         if (!response.ok) {
-            errorText = await response.text();
+            let errorText = await response.text();
             throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
         }else{      
-            result = await response.json(); 
+            let result = await response.json(); 
 
             return result;
         }
@@ -89,7 +149,7 @@ async function getPacientes(){
     const baseUrl = window.location.origin;
     
      try {
-        let response = await fetch(baseUrl + '/HealthWay/api/pacientes/getPacientesInterAct.php', {
+        let response = await fetch(baseUrl + '/HealthWay/api/internaciones/getPacientesInterAct.php', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'
@@ -97,10 +157,10 @@ async function getPacientes(){
         });
 
         if (!response.ok) {
-            errorText = await response.text();
+            let errorText = await response.text();
             throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
         }else{      
-            result = await response.json(); 
+            let result = await response.json(); 
 
             return result;
         }
@@ -108,6 +168,212 @@ async function getPacientes(){
         throw new Error("Problema de conexión con la API: " + error.message);
     }
 }
+
+//Genera revision en la BD
+async function createRevision(data){
+    const baseUrl = window.location.origin;
+    
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/revisiones/createRevision.php', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            let errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            let result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+
+//Actualiza revision en la BD
+async function editRevision(data){
+    const baseUrl = window.location.origin;
+    
+    try {
+        let response = await fetch(baseUrl + '/HealthWay/api/revisiones/editRevision.php', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            let errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            let result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        throw new Error("Problema de conexión con la API: " + error.message);
+    }
+}
+// --
+
+// --Utils
+//Habilita y deshabilita la edicion de los elementos del modal
+function activarDatosModal(type){
+    if(type == 'crear'){
+        document.getElementById("revPac").disabled = false;
+        document.getElementById("tipoRevis").disabled = false;
+        document.getElementById("estadoRevis").disabled = false;
+        document.getElementById("sintomaRevi").disabled = false;
+        document.getElementById("diagRevi").disabled = false;
+        document.getElementById("tratamRevi").disabled = false;
+        document.getElementById("notasRevi").disabled = false;
+        
+    }else if (type == 'ver'){
+        document.getElementById("revPac").disabled = true;
+        document.getElementById("tipoRevis").disabled = true;
+        document.getElementById("estadoRevis").disabled = true;
+        document.getElementById("sintomaRevi").disabled = true;
+        document.getElementById("diagRevi").disabled = true;
+        document.getElementById("tratamRevi").disabled = true;
+        document.getElementById("notasRevi").disabled = true;
+
+    }else if (type == 'editar'){
+        document.getElementById("revPac").disabled = true;
+        document.getElementById("tipoRevis").disabled = false;
+        document.getElementById("estadoRevis").disabled = false;
+        document.getElementById("sintomaRevi").disabled = false;
+        document.getElementById("diagRevi").disabled = false;
+        document.getElementById("tratamRevi").disabled = false;
+        document.getElementById("notasRevi").disabled = false;
+    }
+}
+
+// Validación de los campos del formulario
+async function validarCamposRevision(event) {
+    prevenirSubmit(event);
+    let formIsValid = 0;
+
+    let IdRevision = '';
+    let IdPaciente = '';
+    let FechaCreacion = '';
+    let HoraCreacion = '';
+    let TipoRev = '';
+    let EstadoRev = '';
+    let Sintomas = '';
+    let Diagnostico = '';
+    let Tratamiento = '';
+    let Notas = '';
+
+    if(!validarOpSelect(document.getElementById("revPac"))){
+        document.getElementById("valPac").classList.add("visibility-show");
+        formIsValid++;
+    }else{
+        document.getElementById("valPac").classList.add("visibility-hidden");
+        IdPaciente = document.getElementById("revPac").value;
+    };
+     
+    if(!validarOpSelect(document.getElementById("tipoRevis"))){
+        document.getElementById("valTipoR").classList.add("visibility-show");
+        formIsValid++;
+    }else{
+        document.getElementById("valTipoR").classList.add("visibility-hidden");
+        TipoRev = document.getElementById("tipoRevis").value;
+    };
+
+    if(!validarOpSelect(document.getElementById("estadoRevis"))){
+        document.getElementById("valEstR").classList.add("visibility-show");
+        formIsValid++;
+    }else{
+        document.getElementById("valEstR").classList.add("visibility-hidden");
+        EstadoRev = document.getElementById("estadoRevis").value;
+    };
+
+    if(!validarValorVacio(document.getElementById("sintomaRevi"))){
+        document.getElementById("valSint").classList.add("visibility-show");
+        formIsValid++;
+    }else{
+        document.getElementById("valSint").classList.add("visibility-hidden");
+        Sintomas = document.getElementById("sintomaRevi").value;
+    };
+    
+    if(!validarValorVacio(document.getElementById("diagRevi"))){
+        document.getElementById("valDiag").classList.add("visibility-show");
+        formIsValid++;
+    }else{
+        document.getElementById("valDiag").classList.add("visibility-hidden");
+        Diagnostico = document.getElementById("diagRevi").value;
+    };
+    
+    if(!validarValorVacio(document.getElementById("tratamRevi"))){
+        document.getElementById("valTratam").classList.add("visibility-show");
+        formIsValid++;
+    }else{
+        document.getElementById("valTratam").classList.add("visibility-hidden");
+        Tratamiento = document.getElementById("tratamRevi").value;
+    };
+
+    Notas = document.getElementById("notasRevi").value;
+    FechaCreacion = document.getElementById("fechaRevis").value;
+    HoraCreacion = document.getElementById("horaRevis").value;
+
+    if (formIsValid === 0) {
+        if(event.submitter.id == 'btnGuardarRevision'){
+            let rev = {
+                'IdPaciente': IdPaciente,
+                'FechaCreacion': FechaCreacion,
+                'HoraCreacion': HoraCreacion,
+                'TipoRev': TipoRev,
+                'EstadoRev': EstadoRev,
+                'Sintomas': Sintomas,
+                'Diagnostico': Diagnostico,
+                'Tratamiento': Tratamiento,
+                'Notas': Notas
+            };
+                
+            crearRevision(rev);
+        }else if(event.submitter.id == 'btnActRevision'){
+            IdRevision = document.getElementById("idRevision").value;
+            let rev = {
+                'IdRevision': IdRevision,
+                'IdPaciente': IdPaciente,
+                'FechaCreacion': FechaCreacion,
+                'HoraCreacion': HoraCreacion,
+                'TipoRev': TipoRev,
+                'EstadoRev': EstadoRev,
+                'Sintomas': Sintomas,
+                'Diagnostico': Diagnostico,
+                'Tratamiento': Tratamiento,
+                'Notas': Notas
+            };
+
+            editarRevision(rev);
+        }
+    }
+};
+
+// Resetear formulario
+function resetFormRevision() {
+    const form = document.getElementById('revisionForm');
+    form.reset();
+
+    let divsError = document.querySelectorAll('div .invalid-feedback');
+    divsError.forEach(div => {
+        div.classList.remove("visibility-show");
+        div.classList.add("visibility-hidden");
+    });
+
+    elemsError = document.querySelectorAll('.is-invalid');
+    elemsError.forEach(elem => {
+        elem.classList.remove("is-invalid");
+    });
+}
+// --
 
 // --Carga elementos
 //Carga select Tipo de Modal Revision
@@ -154,7 +420,7 @@ async function loadSelectEstadosRev(){
 //Carga select Pacientes de Modal Revision
 async function loadSelectPacientesRev(){
     try{
-        response = await getPacientes();
+        let response = await getPacientes();
     
         selectRevPac = document.getElementById("revPac");
         response.forEach (paciente => {
@@ -175,7 +441,7 @@ async function renderizarTablaRev(){
     try{
         divTablaRevs = document.getElementById('divTablaRevs');
 
-        datos = await getRevisiones();
+        let datos = await getRevisiones();
 
         if(datos.length === 0) {
             divTablaRevs.innerHTML = `
@@ -186,8 +452,10 @@ async function renderizarTablaRev(){
                 </div>
             `;
         }else{
-            let tableHTML = `<table class="table table-hover table-striped">
-                                <thead>
+            let tableHTML = `
+                        <div class="table-responsive">
+                            <table id="tablaRevs" class="table table-hover table-striped align-middle">
+                                <thead class="table-light">
                                     <tr>
                                         <th>Paciente</th>
                                         <th>Habitacion</th>
@@ -215,33 +483,62 @@ async function renderizarTablaRev(){
                                 <td>${rev.EstadoRevision}</td>
                                 <td>${fecha}</td>
                                 <td>${hora}</td>
-                                <td>
-                                    <div class="d-flex justify-content-end">
-                                        <button id="btnVerRev" class="btn btn-sm btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#modalRevision" data-id="${rev.IdRevisiones}">
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button id="btnVerRev" class="btn btn-sm btn-outline-dark me-2 btn-ver-rev" data-bs-toggle="modal" data-bs-target="#modalRevision" data-id="${rev.IdRevisiones}">
                                             <i class="bi bi-eye-fill me-2"></i>Ver
+                                        </button>
+                                        <button id="btnEditarRev" class="btn btn-sm btn-outline-dark me-2 btn-editar-rev" data-bs-toggle="modal" data-bs-target="#modalRevision" data-id="${rev.IdRevisiones}">
+                                            <i class="bi bi-pen me-2"></i>Editar
                                         </button>
                                     </div>
                                 </td>
                             </tr>`;
             });
 
-            tableHTML += `</tbody></table>`;
+            tableHTML += `
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="msgSinResultados" class="text-center py-5 visibility-remove">
+                    <i class="bi bi-search display-1 text-muted"></i>
+                    <h5 class="mt-3 text-muted">No se encontraron coincidencias</h5>
+                    <p class="text-muted">Intenta buscar con otros términos</p>
+                </div>
+            `;
+
             divTablaRevs.innerHTML = tableHTML;
 
-            divTablaRevs.querySelectorAll('button[data-bs-target="#modalRevision"]').forEach(button => {
-                button.addEventListener('click', (event) => {
+            let botonesVer = document.querySelectorAll(".btn-ver-rev");
+            botonesVer.forEach(btn => {
+                btn.addEventListener('click', (event) => {
                     idRevision = event.currentTarget.dataset.id;
-                    document.getElementById("btnCreateRev").classList.add("visibility-remove");
-                    document.getElementById("btnCreateRev").classList.remove("visibility-show");
+                    document.getElementById("idRevision").value = idRevision;
 
-                    document.getElementById("btnActualizarRev").classList.add("visibility-remove");
-                    document.getElementById("btnActualizarRev").classList.remove("visibility-show");
-                    
-                    document.getElementById("btnEditarRev").classList.add("visibility-show");
-                    document.getElementById("btnEditarRev").classList.remove("visibility-hidden");
+                    document.getElementById("btnGuardarRevision").classList.add("visibility-remove");
+                    document.getElementById("btnGuardarRevision").classList.remove("visibility-show");
+                    document.getElementById("btnActRevision").classList.add("visibility-remove");
+                    document.getElementById("btnActRevision").classList.remove("visibility-show");
 
-                    activarDatosModal(false);
-                    cargarDatosRev(idRevision);
+                    activarDatosModal('ver');
+                    verRevision(idRevision);
+                });
+            });
+
+            let botonesEditar = document.querySelectorAll(".btn-editar-rev");
+            botonesEditar.forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    idRevision = event.currentTarget.dataset.id;
+                    document.getElementById("idRevision").value = idRevision;
+
+                    document.getElementById("btnGuardarRevision").classList.add("visibility-remove");
+                    document.getElementById("btnGuardarRevision").classList.remove("visibility-show");
+                    document.getElementById("btnActRevision").classList.add("visibility-show");
+                    document.getElementById("btnActRevision").classList.remove("visibility-remove");
+
+                    activarDatosModal('editar');
+                    verRevision(idRevision);
                 });
             });
         }
@@ -250,3 +547,107 @@ async function renderizarTablaRev(){
         showOkMsg(false, "Problemas al cargar la tabla de Revisiones");
     }
 }
+// --
+
+// --Transacciones
+//Carga datos de Modal Revision con Revision
+async function verRevision(idRev){
+    try{
+        let rev = {
+            'idRevision': idRev
+        }
+
+        let response = await getRevision(rev);
+
+        if(response.length > 0){
+            document.getElementById("revPac").value = response[0].IdPaciente;
+            document.getElementById("fechaRevis").value = response[0].FechaCreacion;
+            document.getElementById("horaRevis").value = response[0].HoraCreacion;
+            document.getElementById("tipoRevis").value = response[0].TipoRevision;
+            document.getElementById("estadoRevis").value = response[0].EstadoRevision;
+            document.getElementById("sintomaRevi").value = response[0].Sintomas;
+            document.getElementById("diagRevi").value = response[0].Diagnostico;
+            document.getElementById("tratamRevi").value = response[0].Tratamiento;
+            document.getElementById("notasRevi").value = response[0].Notas || '';
+        }else{
+            throw new Error("No se encontró la revisión en la BD");
+        }
+    } catch(error){
+        console.log("Problemas al cargar los datos de la Revision: " + error.message); 
+        showOkMsg(false, "Problemas al mostrar la revision");
+    }
+}
+
+//Crear revision
+async function crearRevision(rev){
+    try{
+        let $result = await createRevision(rev);
+
+        showOkMsg(true, 'Se cargó una nueva revisión correctamente');
+
+        cerrarModal(document.getElementById('modalRevision'));
+        renderizarTablaRev();
+    }catch(error){
+        console.log("Problemas al crear revision: " + error.message);
+        showOkMsg(false,  'Problemas al generar revision');
+    }
+}
+
+// Editar revision
+async function editarRevision(rev) {
+    try{
+        let $result = await editRevision(rev);
+
+        showOkMsg(true, 'Se actualizó revisión correctamente');
+
+        cerrarModal(document.getElementById('modalRevision'));
+        renderizarTablaRev();
+    }catch(error){
+        console.log("Problemas al actualizar la revision: " + error.message);
+        showOkMsg(false, 'Problemas al actualizar la revision');
+    }
+}
+
+// Buscar revision
+function buscarRevision(){
+    let input = document.getElementById('buscadorRevs');
+    let valor = input.value.toLowerCase();
+                
+    let tabla = document.getElementById('tablaRevs');
+    
+    let filas = tabla.querySelectorAll('tbody tr');
+    let msgDiv = document.getElementById('msgSinResultados');
+    let result = false;
+
+    filas.forEach(fila => {
+        let textoPaciente = fila.cells[0] ? fila.cells[0].textContent.toLowerCase() : '';
+        let textoHab = fila.cells[1] ? fila.cells[1].textContent.toLowerCase() : '';
+        let textoCama = fila.cells[2] ? fila.cells[2].textContent.toLowerCase() : '';
+
+        // Comparamos
+        if (textoPaciente.includes(valor) || textoHab.includes(valor) || textoCama.includes(valor)) {
+            fila.classList.remove("visibility-remove");
+            fila.classList.add("visibility-add");
+            result = true;
+        } else {
+            fila.classList.add("visibility-remove");
+            fila.classList.remove("visibility-add");
+        }
+    });
+
+    // Mostrar u ocultar mensaje y tabla según resultados
+    if (!result) {
+        tabla.classList.add("visibility-remove");
+        tabla.classList.remove("visibility-show");
+
+        msgDiv.classList.remove('visibility-remove');
+        msgDiv.classList.add("visibility-show");
+    } else {
+        tabla.classList.remove("visibility-remove");
+        tabla.classList.add("visibility-show");
+
+        msgDiv.classList.add('visibility-remove');
+        msgDiv.classList.remove('visibility-show');
+    }
+}
+//--

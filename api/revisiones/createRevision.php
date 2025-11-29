@@ -2,13 +2,14 @@
     require_once(__DIR__ . '/../../includes/globals.php');
     require_once($dirBaseFile . '/dataAccess/revisiones.php');
     require_once($dirBaseFile . '/dataAccess/internaciones.php');
+    require_once($dirBaseFile . '/dataAccess/permisos.php');
 
     $response = [];
     $errors = [];
-
+    $userId = '';
+    
     $pac = '';
     $idInter = '';
-    $userId = '';
     $fecha = '';
     $hora = '';
     $tipoRevis = '';
@@ -18,193 +19,247 @@
     $tratamRevi = '';
     $notasRevi = '';
 
-    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
-
-    if (strpos($contentType, 'application/json') !== false) {
-        $rawInput = file_get_contents('php://input');
-        $data = json_decode($rawInput, true);
+    if (!isset($_SESSION['usuario'])) {
+        $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
     } else {
-        $data = $_POST;
-    }
+        $userId = $_SESSION['usuario'];
 
-    if (empty($data)) {
-        $response['code'] = 400;
-        $response['msg'] = 'El contenido de la petición no puede estar vacío';
-    }else{
-        //ID PACIENTE
-        if (!isset($data['IdPaciente'])) {
-            $errors['IdPaciente'] = 'El campo Paciente no puede estar vacío';
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+        if (strpos($contentType, 'application/json') !== false) {
+            $rawInput = file_get_contents('php://input');
+            $data = json_decode($rawInput, true);
         } else {
-            $pac = $data['IdPaciente'];
+            $data = $_POST;
+        }
 
-            if (trim($pac) == '') {
+        if (empty($data)) {
+            $response['code'] = 400;
+            $response['msg'] = 'El contenido de la petición no puede estar vacío';
+        }else{
+            //ID PACIENTE
+            if (!isset($data['IdPaciente'])) {
                 $errors['IdPaciente'] = 'El campo Paciente no puede estar vacío';
-            } elseif (!preg_match('/^[1-9]+$/', $pac)) {
-                $errors['IdPaciente'] = 'El campo Paciente no tiene el formato correcto';
             } else {
-                $inter = Internaciones::getInternacionActivaByPaciente($pac);
+                $pac = $data['IdPaciente'];
 
-                if(empty($inter)){
-                    $errors['IdPaciente'] = 'El Paciente no tiene internaciones activas';
+                if (trim($pac) == '') {
+                    $errors['IdPaciente'] = 'El campo Paciente no puede estar vacío';
+                } elseif (!preg_match('/^[0-9]+$/', $pac)) {
+                    $errors['IdPaciente'] = 'El campo Paciente no tiene el formato correcto';
+                } elseif (!Permisos::tienePermiso(6, $userId)) {
+                    $errors['IdPaciente'] = 'El usuario no tiene permiso para la visualizacion de internaciones';
                 }else{
-                    $idInter = $inter[0]['IdInternacion'];
+                    $inter = Internaciones::VerInternacionActivaByPac($pac);
+
+                    if(empty($inter)){
+                        $errors['IdPaciente'] = 'El Paciente no tiene internaciones activas';
+                    }elseif($inter["status"] != "error"){
+                        $idInter = $inter["data"]['IdInternacion'];
+                    }
                 }
             }
-        }
 
-        //ID USER
-        if (!isset($_SESSION['usuario'])) {
-            $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
-        } else {
-            $userId = $_SESSION['usuario'];
-
+            //ID USER
             if (trim($userId) == '') {
                 $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
-            } elseif (!preg_match('/^[1-9]+$/', $userId)) {
+            } elseif (!preg_match('/^[0-9]+$/', $userId)) {
                 $errors['usuario'] = 'El campo Usuario no tiene el formato correcto';
+            } elseif(!Permisos::tienePermiso(10, $userId)){
+                $errors['usuario'] = 'El usuario no tiene permiso para la peticion';
             }
-        }
 
-        //FECHA CREACION
-        if (!isset($data['FechaCreacion'])) {
-            $errors['FechaCreacion'] = 'El campo FechaCreacion no puede estar vacío';
-        } else {
-           $fecha = $data['FechaCreacion'];
-
-            if (trim($fecha) == '') {
+            //FECHA CREACION
+            if (!isset($data['FechaCreacion'])) {
                 $errors['FechaCreacion'] = 'El campo FechaCreacion no puede estar vacío';
-            } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
-                $errors['FechaCreacion'] = 'El campo FechaCreacion tiene un formato incorrecto';
+            } else {
+                $fecha = $data['FechaCreacion'];
+
+                if (trim($fecha) == '') {
+                    $errors['FechaCreacion'] = 'El campo FechaCreacion no puede estar vacío';
+                } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+                    $errors['FechaCreacion'] = 'El campo FechaCreacion tiene un formato incorrecto';
+                }
             }
-        }
 
-        //HORA CREACION
-        if (!isset($data['HoraCreacion'])) {
-            $errors['HoraCreacion'] = 'El campo HoraCreacion no puede estar vacío';
-        } else {
-            $hora = $data['HoraCreacion'];
-
-            if (trim($hora) == '') {
+            //HORA CREACION
+            if (!isset($data['HoraCreacion'])) {
                 $errors['HoraCreacion'] = 'El campo HoraCreacion no puede estar vacío';
-            } elseif (!preg_match('/^\d{2}:\d{2}$/', $hora)) {
-                $errors['HoraCreacion'] = 'El campo HoraCreacion tiene un formato incorrecto';
+            } else {
+                $hora = $data['HoraCreacion'];
+
+                if (trim($hora) == '') {
+                    $errors['HoraCreacion'] = 'El campo HoraCreacion no puede estar vacío';
+                } elseif (!preg_match('/^\d{2}:\d{2}$/', $hora)) {
+                    $errors['HoraCreacion'] = 'El campo HoraCreacion tiene un formato incorrecto';
+                }
             }
-        }
 
-        //ID TIPO REVISION
-        if (!isset($data['TipoRev'])) {
-            $errors['TipoRev'] = 'El campo TipoRev no puede estar vacío';
-        } else {
-            $tipoRevis = $data['TipoRev'];
-
-            if (trim($tipoRevis) == '') {
+            //ID TIPO REVISION
+            if (!isset($data['TipoRev'])) {
                 $errors['TipoRev'] = 'El campo TipoRev no puede estar vacío';
-            } elseif (!preg_match('/^[1-9]+$/', $tipoRevis)) {
-                $errors['TipoRev'] = 'El campo TipoRev tiene un formato incorrecto';
+            } else {
+                $tipoRevis = $data['TipoRev'];
+
+                if (trim($tipoRevis) == '') {
+                    $errors['TipoRev'] = 'El campo TipoRev no puede estar vacío';
+                } elseif (!preg_match('/^[0-9]+$/', $tipoRevis)) {
+                    $errors['TipoRev'] = 'El campo TipoRev tiene un formato incorrecto';
+                }
             }
-        }
 
-        //ID ESTADO REVISION
-        if (!isset($data['EstadoRev'])) {
-            $errors['EstadoRev'] = 'El campo EstadoRev no puede estar vacío';
-        } else {
-            $estadoRevis = $data['EstadoRev'];
+            //ID ESTADO REVISION
+            if (!isset($data['EstadoRev'])) {
+                $errors['EstadoRev'] = 'El campo EstadoRev no puede estar vacío';
+            } else {
+                $estadoRevis = $data['EstadoRev'];
 
-            if (trim($estadoRevis) == '') {
-                $errors['EstadoRev'] = 'El campo EstadoRev no puede estar vacío';
-            } elseif (!preg_match('/^[1-9]+$/', $estadoRevis)) {
-                $errors['EstadoRev'] = 'El campo EstadoRev no puede estar vacío';
+                if (trim($estadoRevis) == '') {
+                    $errors['EstadoRev'] = 'El campo EstadoRev no puede estar vacío';
+                } elseif (!preg_match('/^[0-9]+$/', $estadoRevis)) {
+                    $errors['EstadoRev'] = 'El campo EstadoRev no puede estar vacío';
+                }
             }
-        }
 
-        //SINTOMAS
-        if (!isset($data['Sintomas'])) {
-            $errors['Sintomas'] = 'El campo Sintomas no puede estar vacío';
-        } else {
-            $sintomaRevi = $data['Sintomas'];
-
-            if (trim($sintomaRevi) == '') {
+            //SINTOMAS
+            if (!isset($data['Sintomas'])) {
                 $errors['Sintomas'] = 'El campo Sintomas no puede estar vacío';
+            } else {
+                $sintomaRevi = $data['Sintomas'];
+
+                if (trim($sintomaRevi) == '') {
+                    $errors['Sintomas'] = 'El campo Sintomas no puede estar vacío';
+                }
             }
-        }
 
-        //DIAGNOSTICO
-        if (!isset($data['Diagnostico'])) {
-            $errors['Diagnostico'] = 'El campo Diagnostico no puede estar vacío';
-        } else {
-            $diagRevi = $data['Diagnostico'];
-
-            if (trim($diagRevi) == '') {
+            //DIAGNOSTICO
+            if (!isset($data['Diagnostico'])) {
                 $errors['Diagnostico'] = 'El campo Diagnostico no puede estar vacío';
+            } else {
+                $diagRevi = $data['Diagnostico'];
+
+                if (trim($diagRevi) == '') {
+                    $errors['Diagnostico'] = 'El campo Diagnostico no puede estar vacío';
+                }
             }
-        }
 
-        //-- TRATAMIENTO
-        if (!isset($data['Tratamiento'])) {
-            $errors['Tratamiento'] = 'El campo Tratamiento no puede estar vacío';
-        } else {
-            $tratamRevi = $data['Tratamiento'];
+            //TRATAMIENTO
+            if (!isset($data['Tratamiento'])) {
+                $errors['Tratamiento'] = 'El campo Tratamiento no puede estar vacío';
+            } else {
+                $tratamRevi = $data['Tratamiento'];
 
-            if (trim($tratamRevi) == '') {
-                $errors['Tratamiento'] = 'El campoTratamiento no puede estar vacío';
+                if (trim($tratamRevi) == '') {
+                    $errors['Tratamiento'] = 'El campoTratamiento no puede estar vacío';
+                }
             }
-        }
 
-        //-- NOTAS
-        if (!isset($data['Notas'])) {
-            $notasRevi = '';
-        } else {
-            $notasRevi = $data['Notas'];
-        }
-
-        if (empty($errors)) {
-            try{
-                $dtString = $fecha . ' ' . $hora . ':00';
-                $dtFormat = 'Y-m-d H:i:s';
-                $dt = DateTime::createFromFormat($dtFormat, $dtString);
-
-                $revision = [
-                    "IdInternacion" => $idInter,
-                    "IdUsuario" => $userId,
-                    "FechaCreacion" => $dt->format('Y-m-d H:i:s'),
-                    "TipoRevision" => $tipoRevis,
-                    "EstadoRevision" => $estadoRevis,
-                    "Sintomas" => $sintomaRevi,
-                    "Diagnostico" => $diagRevi,
-                    "Tratamiento" => $tratamRevi,
-                    "Observaciones" => $notasRevi
-                ];
-
-                $revGenerada = Revisiones::createRevision($revision);
-
-                $response['code'] = 200;
-            }catch(Exception $e){
-                $response['code'] = 500;
-                $response['msg'] = 'Error interno de aplicacion';
+            //NOTAS
+            if (!isset($data['Notas'])) {
+                $notasRevi = '';
+            } else {
+                $notasRevi = $data['Notas'];
             }
-        }else{
-            $response['code'] = 400;
-            $response['msg'] = 'Problemas al validar el formato de los campos: ' .
-                (isset($errors['IdPaciente']) ? $errors['IdPaciente'] : '') . 
-                (isset($errors['usuario']) ? $errors['usuario'] : '') .
-                (isset($errors['FechaCreacion']) ? $errors['FechaCreacion'] : '') . 
-                (isset($errors['HoraCreacion'] ) ? $errors['HoraCreacion']  : '') . 
-                (isset($errors['TipoRev']) ? $errors['TipoRev'] : '') . 
-                (isset($errors['EstadoRev']) ? $errors['EstadoRev'] : '') . 
-                (isset($errors['Sintomas']) ? $errors['Sintomas'] : '') . 
-                (isset($errors['Diagnostico']) ? $errors['Diagnostico'] : '') . 
-                (isset($errors['Tratamiento']) ? $errors['Tratamiento'] : '');
+
+            if (empty($errors)) {
+                try{
+                    $dtString = $fecha . ' ' . $hora . ':00';
+                    $dtFormat = 'Y-m-d H:i:s';
+                    $dt = DateTime::createFromFormat($dtFormat, $dtString);
+
+                    $revision = [
+                        "IdInternacion" => $idInter,
+                        "IdUsuario" => $userId,
+                        "FechaCreacion" => $dt->format('Y-m-d H:i:s'),
+                        "TipoRevision" => $tipoRevis,
+                        "EstadoRevision" => $estadoRevis,
+                        "Sintomas" => $sintomaRevi,
+                        "Diagnostico" => $diagRevi,
+                        "Tratamiento" => $tratamRevi,
+                        "Observaciones" => $notasRevi
+                    ];
+
+                    $revGenerada = Revisiones::createRevision($revision);
+
+                    $response['code'] = 200;
+                    $response['msg'] = $revGenerada;
+                }catch(Exception $e){
+                    $response['code'] = 500;
+                    $response['msg'] = 'Error interno de aplicacion';
+                }
+            }else{
+                $msgError = [];
+
+                if(isset($errors['IdPaciente'])){
+                     $msgError[] = [
+                        'campo' => 'IdPaciente',
+                        'error' => $errors['IdPaciente']
+                    ];
+                };
+
+                if(isset($errors['FechaCreacion'])){
+                     $msgError[] = [
+                        'campo' => 'FechaCreacion',
+                        'error' => $errors['FechaCreacion']
+                    ];
+                };
+
+                if(isset($errors['HoraCreacion'])){
+                     $msgError[] = [
+                        'campo' => 'HoraCreacion',
+                        'error' => $errors['HoraCreacion']
+                    ];
+                };
+
+                if(isset($errors['TipoRev'])){
+                     $msgError[] = [
+                        'campo' => 'TipoRev',
+                        'error' => $errors['TipoRev']
+                    ];
+                };
+
+                if(isset($errors['usuario'])){
+                     $msgError[] = [
+                        'campo' => 'usuario',
+                        'error' => $errors['usuario']
+                    ];
+                };
+
+                if(isset($errors['Tratamiento'])){
+                     $msgError[] = [
+                        'campo' => 'Tratamiento',
+                        'error' => $errors['Tratamiento']
+                    ];
+                };
+
+                if(isset($errors['Diagnostico'])){
+                     $msgError[] = [
+                        'campo' => 'Diagnostico',
+                        'error' => $errors['Diagnostico']
+                    ];
+                };
+
+                if(isset($errors['Sintomas'])){
+                     $msgError[] = [
+                        'campo' => 'Sintomas',
+                        'error' => $errors['Sintomas']
+                    ];
+                };
+
+                if(isset($errors['EstadoRev'])){
+                     $msgError[] = [
+                        'campo' => 'EstadoRev',
+                        'error' => $errors['EstadoRev']
+                    ];
+                };
+
+                $response['code'] = 400;
+                $response['msg'] = $msgError;
+            }
         }
     }
     
     header('Content-Type: application/json');
     http_response_code($response['code']);
-    if($response['code'] != 200){
-        echo json_encode([
-            'error' => $response['msg'], 
-        ]);
-    }else{
-        echo json_encode($revGenerada);
-    }
+    echo json_encode($response['msg']);
     
 ?>

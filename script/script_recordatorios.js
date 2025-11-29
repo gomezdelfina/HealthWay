@@ -43,11 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
         activarDatosModal('crear');
     });
 
+    // Busqueda de recordatorios por Paciente, Cama, Habitacion
     let btnBusqueda = document.getElementById('btnBuscarRecs');
         btnBusqueda.addEventListener('click', (event) => {
         buscarRecordatorio();
     });
-
     let inputBusqueda = document.getElementById('buscadorRecs');
     inputBusqueda.addEventListener('keyup', (event) => {
         buscarRecordatorio();
@@ -366,7 +366,7 @@ function activarDatosModal(type){
     }
 }
 
-// Validación de los campos del formualrio
+// Validación de los campos del formulario
 async function validarCamposRecordatorio(event) {
     prevenirSubmit(event);
     let formIsInvalid = 0;

@@ -429,6 +429,39 @@
             }
         }
 
+        public static function VerInternacionActivaByPac($idPaciente) {
+            try {
+                global $conn;
+                ConexionDb::connect();
+
+                $sql = "SELECT * from internaciones i
+                        WHERE i.EstadoInternacion =  'Activa'
+                        AND i.IdPaciente = :id;";
+
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([":id" => $idPaciente]);
+
+                $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($data)
+                    return [ "status" => "success", "data" => $data ];
+
+                return [
+                    "status" => "error",
+                    "mensaje" => "Internación no encontrada"
+                ];
+            } catch (Exception $e) {
+
+                return [
+                    "status" => "error",
+                    "mensaje" => "Error DB: " . $e->getMessage()
+                ];
+
+            } finally {
+                ConexionDb::disconnect();
+            }
+        }
+
         public static function VerInternacionesActivas() {
 
             try {
