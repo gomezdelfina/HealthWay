@@ -11,6 +11,8 @@
                 if (!isset($conn)) {
                     $conn = new PDO("mysql:host=" . $db_servername . ";dbname=" . $db_name . ";charset=utf8", $db_username, $db_password);
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                    return $conn;
                 }
             } catch (PDOException $e) {
                 throw new Exception("Error en la conexión a la BD: " . $e);
@@ -52,6 +54,26 @@
             } catch (Exception $e) {
                 throw new Exception("Error al consultar a la BD: (" . $query . "): " . $e);
             }
+        }
+
+        public static function consultOne($sql, $params = [])
+        {
+            global $conn;
+
+            if (!isset($conn) || $conn === null) {
+                $conn = self::connect(); // ← aseguro conexión
+            }
+
+            $stmt = $conn->prepare($sql);
+
+            if ($params) {
+                foreach ($params as $p) {
+                    $stmt->bindValue($p["clave"], $p["valor"]);
+                }
+            }
+
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC); 
         }
     }
 

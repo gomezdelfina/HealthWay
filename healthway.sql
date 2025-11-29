@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-11-2025 a las 18:10:20
+-- Tiempo de generación: 29-11-2025 a las 01:36:17
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -40,20 +40,20 @@ CREATE TABLE `camas` (
 --
 
 INSERT INTO `camas` (`IdCama`, `IdHabitacion`, `NumeroCama`, `EstadoCama`, `Habilitada`) VALUES
-(1, 1, 1, 'Disponible', 1),
-(2, 1, 2, 'Disponible', 1),
-(3, 2, 3, 'Disponible', 1),
-(4, 2, 4, 'Disponible', 1),
-(5, 3, 5, 'Disponible', 1),
-(6, 3, 6, 'Disponible', 1),
-(7, 4, 7, 'Disponible', 1),
-(8, 4, 8, 'Disponible', 1),
-(9, 5, 9, 'Disponible', 1),
-(10, 5, 10, 'Disponible', 1),
+(1, 1, 1, 'Ocupada', 0),
+(2, 1, 2, 'Ocupada', 0),
+(3, 2, 3, 'Ocupada', 0),
+(4, 2, 4, 'Ocupada', 0),
+(5, 3, 5, 'Ocupada', 0),
+(6, 3, 6, 'Ocupada', 0),
+(7, 4, 7, 'Ocupada', 0),
+(8, 4, 8, 'Ocupada', 0),
+(9, 5, 9, 'Ocupada', 0),
+(10, 5, 10, 'Ocupada', 0),
 (11, 6, 11, 'Disponible', 1),
 (12, 6, 12, 'Disponible', 1),
 (13, 7, 13, 'Disponible', 1),
-(14, 7, 14, 'Ocupada', 0),
+(14, 7, 14, 'Disponible', 1),
 (15, 8, 15, 'Disponible', 1),
 (16, 8, 16, 'Disponible', 1),
 (17, 9, 17, 'Disponible', 1),
@@ -75,7 +75,7 @@ INSERT INTO `camas` (`IdCama`, `IdHabitacion`, `NumeroCama`, `EstadoCama`, `Habi
 (33, 17, 33, 'Disponible', 1),
 (34, 17, 34, 'Disponible', 1),
 (35, 18, 35, 'Disponible', 1),
-(36, 18, 36, 'Ocupada', 0),
+(36, 18, 36, 'Disponible', 1),
 (37, 19, 37, 'Disponible', 1),
 (38, 19, 38, 'Disponible', 1),
 (39, 20, 39, 'Disponible', 1),
@@ -132,7 +132,7 @@ INSERT INTO `camas` (`IdCama`, `IdHabitacion`, `NumeroCama`, `EstadoCama`, `Habi
 (90, 45, 90, 'Disponible', 1),
 (91, 46, 91, 'Disponible', 1),
 (92, 46, 92, 'Disponible', 1),
-(93, 47, 93, 'Ocupada', 0),
+(93, 47, 93, 'Disponible', 1),
 (94, 47, 94, 'Disponible', 1),
 (95, 48, 95, 'Disponible', 1),
 (96, 48, 96, 'Disponible', 1),
@@ -397,7 +397,8 @@ INSERT INTO `internaciones` (`IdInternacion`, `IdSolicitud`, `IdCama`, `IdHabita
 (10, 7, 7, 4, 7, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Cirugía de rodilla', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3130),
 (11, 8, 8, 4, 8, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Neumonía grave', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3131),
 (12, 9, 9, 5, 9, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Evaluación neurológica', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3132),
-(13, 10, 10, 5, 10, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Terapia de rehabilitación', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3133);
+(13, 10, 10, 5, 10, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Finalizada', 'Terapia de rehabilitación', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3133),
+(16, 10, 10, 5, 10, '2025-11-28 19:46:00', '2025-11-29 19:46:00', 'Activa', NULL, 0x89504e470d0a1a0a0000000d49484452000000cd000000cd01030000002172662a00000006504c5445ffffff00000055c2d37e000000097048597300000ec400000ec401952b0e1b000001b9494441545885ed97318e84300c458d28527284dc64b8181291b818dc8423505220bcff3bc0b0b3b3add3e082c9f028acd8ffc71179e2897fa351d55d3a09bbd4582e7c68f247f879355b5cdba59ec328f59cdf79a341d797f42aada6a86333ccba9742c8304c4b17916b4984ed01c7aac26e954156af61964af56b299d10bb178819e6347f37b6133a03dd2b31e8227fc30321c3b5c51ee90841af955a03f923e951aaa563d1f0111057c91f413a2df4832ab15ef852afddf244d08fd052d8b3d44f84d51640cc105502da046d83a2c97da39c5003054f34921169c25244c2a4fe0805827eba9c1c8fbe5bbd3c91a50411513a1ff5724458a37b6929d08f1d3c7aeda1238291e0c8dd249b0b8f1bfbd21dd59a4791ec2bb4b712886f991cf2b2c1ac93f7e1eb89f2ec11c5548d0c391695406a7dc21398032beba565902efd6ce7ee6acdfc3a2ae98a9204ee8c6939ece6b2efa1dd0f0dd6bda6653abe5d25c41d9dbd739d7a90760174cc877413168d83c0a5654f946824e62bb0f8a38f933f3aae30f6673da6b36248d82c11c9d16a8b21a59631a255a8d75de67e28d92d3bf72c66a35e6f3380233a6f5266ab7cdcaf156ee88927bec60fa2628f119ac4993c0000000049454e44ae426082);
 
 -- --------------------------------------------------------
 
@@ -413,6 +414,14 @@ CREATE TABLE `notificaciones` (
   `fecha` datetime DEFAULT current_timestamp(),
   `leido` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `notificaciones`
+--
+
+INSERT INTO `notificaciones` (`id`, `rol_destino`, `evento`, `mensaje`, `fecha`, `leido`) VALUES
+(9, 'medico', 'Internacion Creada', 'Se creó una internación para el paciente ID: 10', '2025-11-28 19:42:04', 0),
+(10, 'medico', 'Internacion Creada', 'Se creó una internación para el paciente ID: 10', '2025-11-28 19:46:30', 0);
 
 -- --------------------------------------------------------
 
@@ -478,7 +487,7 @@ INSERT INTO `pacientes` (`IdPaciente`, `IdUsuario`, `IdPlan_OS`, `IdDireccion`, 
 (7, 17, 7, 7, '1990-03-12 15:00:00', 'Mujer', 12345689, 'Casado', 'Normal'),
 (8, 18, 8, 8, '1990-01-13 12:30:00', 'Hombre', 12345690, 'Soltero', 'Normal'),
 (9, 19, 9, 9, '1990-02-14 11:00:00', 'Mujer', 12345691, 'Soltero', 'Normal'),
-(10, 20, 10, 10, '1990-04-15 09:00:00', 'Hombre', 12345692, 'Soltero', 'Normal');
+(10, 20, 10, 10, '1990-04-15 09:00:00', 'Hombre', 12345692, 'Soltero', 'Internado');
 
 -- --------------------------------------------------------
 
@@ -537,7 +546,10 @@ INSERT INTO `permisos` (`IdPermiso`, `DescPermiso`) VALUES
 (39, 'Editar Revision Urgencia'),
 (40, 'Editar Revision Rutina'),
 (43, 'Iniciar sesion'),
-(44, 'Visualizar informacion personal');
+(44, 'Visualizar informacion personal'),
+(45, 'Visualizar Gestion de Pacientes'),
+(46, 'Finalizar Internaciones'),
+(47, 'Visualizar Notificaciones');
 
 -- --------------------------------------------------------
 
@@ -807,7 +819,16 @@ INSERT INTO `roles_permisos` (`IdRoles_Perm`, `IdRol`, `IdPermiso`) VALUES
 (81, 4, 44),
 (82, 5, 44),
 (83, 6, 44),
-(84, 7, 44);
+(84, 7, 44),
+(85, 1, 45),
+(86, 4, 46),
+(87, 1, 47),
+(88, 3, 47),
+(89, 4, 47),
+(90, 5, 47),
+(91, 6, 47),
+(92, 7, 47),
+(93, 2, 47);
 
 -- --------------------------------------------------------
 
@@ -885,7 +906,7 @@ INSERT INTO `solicitudesinternacion` (`IdSolicitud`, `IdPaciente`, `TipoSolicitu
 (7, 7, 'Programada', 'Abierta', '2025-10-30 23:29:59', 'Cirugía de rodilla', NULL),
 (8, 8, 'Urgencia', 'Abierta', '2025-10-30 23:29:59', 'Neumonía grave', NULL),
 (9, 9, 'Programada', 'Abierta', '2025-10-30 23:29:59', 'Evaluación neurológica', NULL),
-(10, 10, 'Reprogramada', 'Abierta', '2025-10-30 23:29:59', 'Terapia de rehabilitación', NULL);
+(10, 10, 'Reprogramada', 'Cerrada', '2025-10-30 23:29:59', 'Terapia de rehabilitación', NULL);
 
 -- --------------------------------------------------------
 
@@ -1135,13 +1156,13 @@ ALTER TABLE `habitaciones`
 -- AUTO_INCREMENT de la tabla `internaciones`
 --
 ALTER TABLE `internaciones`
-  MODIFY `IdInternacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `IdInternacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `notificaciones`
 --
 ALTER TABLE `notificaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `obrassociales`
@@ -1159,7 +1180,7 @@ ALTER TABLE `pacientes`
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
-  MODIFY `IdPermiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `IdPermiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT de la tabla `personascontacto`
@@ -1201,7 +1222,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `roles_permisos`
 --
 ALTER TABLE `roles_permisos`
-  MODIFY `IdRoles_Perm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `IdRoles_Perm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT de la tabla `roles_usuarios`

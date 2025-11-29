@@ -4,11 +4,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion de Pacientes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <?php
+        $module = 'administrador';
+        require_once($dirBaseFile . '/includes/html/head.php');
+        echo '<script src="' . $dirBaseUrl . '/script/pacientes.js"></script>';
+    ?>
     <link rel="stylesheet" href="styless.css">
 </head>
 <body class="p-4 md:p-8">

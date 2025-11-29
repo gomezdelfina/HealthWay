@@ -6,7 +6,7 @@
     $response = [];
     $idUser = '';
 
-    if(isset($_SESSION['usuario']) & Permisos::tienePermiso($_SESSION['usuario'],44)){
+    if(isset($_SESSION['usuario']) && Permisos::tienePermiso($_SESSION['usuario'],44)){
         $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
         if (strpos($contentType, 'application/json') !== false) {
             $rawInput = file_get_contents('php://input');

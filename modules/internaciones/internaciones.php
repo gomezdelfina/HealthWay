@@ -115,8 +115,13 @@ require_once(__DIR__ . '/../../includes/globals.php');
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" form="pswRecoveryForm" id="btnPswRecovery" data-bs-dismiss="modal"> Cancelar </button>
-                            <button type="button" class="btn btn-primary" id="modificar"> Modificar </button>
-                            <button type="button" class="btn btn-success" id="finalizar" data-bs-dismiss="modal">Finalizar</button>
+                            <?php if (userTienePermiso(8, $idUser)) { //Crear internaciones?>
+                                <button type="button" class="btn btn-primary" id="modificar"> Modificar </button>
+                            <?php } ?>
+                            <?php if (userTienePermiso(46, $idUser)) { //Crear internaciones?>
+                                <button type="button" class="btn btn-success" id="finalizar" data-bs-dismiss="modal">Finalizar</button>
+                            <?php } ?>
+                            
                         </div>
                     </div>
                 </div>

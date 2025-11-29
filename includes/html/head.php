@@ -14,6 +14,6 @@
 <!-- javascript -->
 <script defer src="<?php echo $dirBaseUrl ?>/script/script.js"></script>
 <script defer src="<?php echo $dirBaseUrl ?>/script/script_qr.js"></script>
-<!-- <script defer src="<?php //echo $dirBaseUrl ?>/script/script_notificaciones.js"></script> -->
+<script defer src="<?php echo $dirBaseUrl ?>/script/script_notificaciones.js"></script>
 <script defer src="<?php echo $dirBaseUrl ?>/script/script_<?php echo $module ?>.js"></script>
 <title>HealthWay</title>
