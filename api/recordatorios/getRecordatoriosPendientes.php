@@ -25,6 +25,7 @@
             try{
                 $recs = Recordatorio::getRecordatoriosPendientes($userId);
                 $response['code'] = 200;
+                $response['msg'] = $recs;
             }catch(Exception $e){
                 $response['code'] = 500;
                 $response['msg'] = 'Error interno de aplicacion';

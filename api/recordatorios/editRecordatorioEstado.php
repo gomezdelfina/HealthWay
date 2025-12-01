@@ -50,8 +50,7 @@
 
                 if ($estado == '') {
                     $errors['Estado'] = 'El campo Estado no puede estar vacío';
-                } elseif ($estado != 'Hecho' & 
-                        $estado != 'No Hecho' &
+                } elseif ($estado != 'Pendiente' & 
                         $estado != 'Atrasado') {
                     $errors['Estado'] = 'El campo Estado tiene un formato incorrecto';
                 }

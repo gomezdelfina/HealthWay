@@ -111,7 +111,7 @@
                     <span class="d-none d-md-inline ms-2">Escanear QR</span>
                 </button>
             <?php } ?>
-            <?php if (userTienePermiso(47, $idUser)) { //Escanear QR ?>
+            <?php if (userTienePermiso(47, $idUser)) {?>
             <div class="d-flex align-items-center">
                 <button type="button" id="btnNotificaciones" class="btn btn-light position-relative" title="notificacion">
 
@@ -210,4 +210,9 @@
 <!-- Modal QR -->
 <?php
     require_once($dirBaseFile . '/includes/html/qr.php');
+?>
+
+<!-- Live Toast -->
+<?php
+    require_once($dirBaseFile . '/includes/html/notification.php');
 ?>

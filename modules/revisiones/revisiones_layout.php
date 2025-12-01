@@ -50,11 +50,6 @@
             <?php
                 require_once($dirBaseFile . '/modules/revisiones/revision.php');
             ?>
-
-            <!-- Live Toast -->
-            <?php
-                require_once($dirBaseFile . '/includes/html/notification.php');
-            ?>
     </main>
 
 </body>

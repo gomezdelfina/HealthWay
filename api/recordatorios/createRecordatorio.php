@@ -285,7 +285,7 @@
                         'IdUsuario' => $userId,
                         'TipoRevision' => $tipoRev,
                         'FechaCreacion' => $dtCreacion,
-                        'Estado' => 'No Hecho',
+                        'Estado' => 'Pendiente',
                         'FechaInicioRec' => $dtInicio,
                         'FechaFinRec' => empty($dtFin) ? null : $dtFin,
                         'Frecuencia' => $frecuencia,
