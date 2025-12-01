@@ -77,5 +77,33 @@
 
             }
         }
+
+        public static function getRolByPermiso($idPermiso)
+        {
+            if (is_null($idPermiso)) {
+                throw new Exception("El campo Id Permiso no puede estar vacío");
+            }
+
+            try{
+                ConexionDb::connect();
+
+                $sql = "SELECT DISTINCT T1.IdRol
+                        FROM roles_permisos T1
+                        WHERE T2.IdPermiso = :idPermiso;
+                ";
+
+                $params = [
+                    ["clave" => ":idPermiso", "valor" => $idPermiso]
+                ];
+
+                $result = ConexionDb::consult($sql, $params);   
+                
+                return $result;
+            } catch (Exception $e) {
+                throw new Exception("Problemas al obtener el rol segun el permiso: " . $e);
+            } finally {
+                ConexionDb::disconnect();
+            }
+        }
     }
 ?>

@@ -48,6 +48,114 @@ use Dba\Connection;
             }
         }
 
+        public static function getRecordatoriosActivos()
+        {
+            try{
+                ConexionDb::connect();
+
+                $sql = "SELECT T0.*, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
+                    T6.DescTipoRevision, T8.Nombre as NombreCreador, T8.Apellido as ApellidoCreador
+                    FROM recordatorio T0
+                    INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
+                    INNER JOIN habitaciones T2 ON T1.IdHabitacion = T2.IdHabitacion
+                    INNER JOIN camas T3 ON T1.IdCama = T3.IdCama
+                    INNER JOIN pacientes T4 ON T1.IdPaciente = T4.IdPaciente
+                    INNER JOIN usuarios T5 on T4.IdUsuario = T5.IdUsuario
+                    INNER JOIN tiporevisiones T6 ON T0.TipoRevision = T6.IdTipoRevision
+                    INNER JOIN usuarios T8 ON T0.IdUsuario = T8.IdUsuario
+                    WHERE activo = 1
+                    ORDER BY T0.IdRecordatorio DESC
+                    LIMIT 30;
+                ";
+
+                $result = ConexionDb::consult($sql);
+
+                foreach ($result as $key => $row) {
+                    $objFecha = self::calcularProximaFecha($row);
+                    
+                    if ($objFecha) {
+                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
+                    } else {
+                        $result[$key]['ProximaEjecucion'] = null;
+                    }
+                }
+
+                ConexionDb::disconnect();
+                
+                return $result;
+            } catch (Exception $e) {
+                throw new Exception("Problemas al obtener los Recordatorios: " . $e);
+            }
+        }
+
+        public static function getRecordatoriosActivosByUser($userId)
+        {
+            try{
+                if (is_null($userId)) {
+                    throw new Exception("El campo Id Usuario no puede estar vacío");
+                }
+
+                ConexionDb::connect();
+
+                $sql = "SELECT T0.*, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
+                    T6.DescTipoRevision, T8.Nombre as NombreCreador, T8.Apellido as ApellidoCreador,T0.Observaciones
+                    FROM recordatorio T0
+                    INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
+                    INNER JOIN habitaciones T2 ON T1.IdHabitacion = T2.IdHabitacion
+                    INNER JOIN camas T3 ON T1.IdCama = T3.IdCama
+                    INNER JOIN pacientes T4 ON T1.IdPaciente = T4.IdPaciente
+                    INNER JOIN usuarios T5 on T4.IdUsuario = T5.IdUsuario
+                    INNER JOIN tiporevisiones T6 ON T0.TipoRevision = T6.IdTipoRevision
+                    INNER JOIN usuarios T8 ON T0.IdUsuario = T8.IdUsuario
+                    AND T0.TipoRevision IN (
+                            SELECT 
+                            CASE T.idPermiso 
+                                WHEN 15 THEN 1 
+                                WHEN 16 THEN 2
+                                WHEN 17 THEN 3
+                                WHEN 18 THEN 4
+                                WHEN 19 THEN 5
+                                WHEN 20 THEN 6
+                                WHEN 27 THEN 7
+                                WHEN 21 THEN 1
+                                WHEN 22 THEN 2
+                                WHEN 23 THEN 3
+                                WHEN 24 THEN 4
+                                WHEN 25 THEN 5
+                                WHEN 26 THEN 6
+                                WHEN 28 THEN 7
+                            END AS idTipoRevision
+                            FROM roles_permisos T
+                            INNER JOIN roles_usuarios TT on T.IdRol = TT.IdRol
+                            WHERE TT.IdUsuario = :idUser)
+                    WHERE activo = 1 
+                    AND (T0.FechaFinRec IS NULL OR T0.FechaFinRec >= CURDATE())
+                    ORDER BY T0.IdRecordatorio DESC;";
+
+                $params = [
+                    ['clave' => ':idUser', 'valor' => $userId]
+                ];
+
+                $result = ConexionDb::consult($sql,$params);
+
+                foreach ($result as $key => $row) {
+                    $objFecha = self::calcularProximaFecha($row);
+                    
+                    if ($objFecha) {
+                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
+                    } else {
+                        $result[$key]['ProximaEjecucion'] = null;
+                    }
+                }
+
+                ConexionDb::disconnect();
+
+                return $result;
+            } catch (Exception $e) {
+                throw new Exception("Problemas al obtener los Recordatorios pendientes: " . $e);
+            }
+        }
+
         public static function getRecordatoriosByInt($idInt)
         {
             try{
@@ -308,9 +416,8 @@ use Dba\Connection;
 
                 ConexionDb::connect();
 
-                $sql = "SELECT T0.IdRecordatorio, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
-                    T6.DescTipoRevision, T7.DescEstadoRev, T0.Estado, T8.Nombre as NombreCreador, T8.Apellido as ApellidoCreador, 
-                    T0.*
+                $sql = "SELECT T0.*, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
+                    T6.DescTipoRevision, T8.Nombre as NombreCreador, T8.Apellido as ApellidoCreador
                     FROM recordatorio T0
                     INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
                     INNER JOIN habitaciones T2 ON T1.IdHabitacion = T2.IdHabitacion
@@ -318,7 +425,6 @@ use Dba\Connection;
                     INNER JOIN pacientes T4 ON T1.IdPaciente = T4.IdPaciente
                     INNER JOIN usuarios T5 on T4.IdUsuario = T5.IdUsuario
                     INNER JOIN tiporevisiones T6 ON T0.TipoRevision = T6.IdTipoRevision
-                    INNER JOIN estadorevisiones T7 ON T0.EstadoRevision = T7.IdEstadoRev
                     INNER JOIN usuarios T8 ON T0.IdUsuario = T8.IdUsuario
                     WHERE T0.Estado = 'Atrasado'
                     AND T0.TipoRevision IN (
@@ -351,21 +457,25 @@ use Dba\Connection;
 
                 $result = ConexionDb::consult($sql,$params);
 
-                ConexionDb::disconnect();
-
-                $resultadosHoy = [];
-                $fechaHoyString = date('Y-m-d');
-
-                foreach ($result as $row) {
+                foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
                     
                     if ($objFecha) {
-                        if ($objFecha->format('Y-m-d') === $fechaHoyString) {
-                            
-                            $row['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
-                            
-                            $resultadosHoy[] = $row;
-                        }
+                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
+                    } else {
+                        $result[$key]['ProximaEjecucion'] = null;
+                    }
+                }
+
+                ConexionDb::disconnect();
+                
+                $resultadosHoy = [];
+                $fechaHoy = date('Y-m-d');
+
+                foreach ($result as $row) {
+                    $proximaFecha = date('Y-m-d', strtotime($row['ProximaEjecucion']));
+                    if ($proximaFecha  === $fechaHoy) {
+                        $resultadosHoy[] = $row;
                     }
                 }
                 
@@ -384,8 +494,8 @@ use Dba\Connection;
 
                 ConexionDb::connect();
 
-                $sql = "SELECT T0.IdRecordatorio, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
-                    T6.DescTipoRevision, T0.Estado
+                $sql = "SELECT T0.*, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
+                    T6.DescTipoRevision, T8.Nombre as NombreCreador, T8.Apellido as ApellidoCreador,T0.Observaciones
                     FROM recordatorio T0
                     INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
                     INNER JOIN habitaciones T2 ON T1.IdHabitacion = T2.IdHabitacion
@@ -394,7 +504,7 @@ use Dba\Connection;
                     INNER JOIN usuarios T5 on T4.IdUsuario = T5.IdUsuario
                     INNER JOIN tiporevisiones T6 ON T0.TipoRevision = T6.IdTipoRevision
                     INNER JOIN usuarios T8 ON T0.IdUsuario = T8.IdUsuario
-                    WHERE T0.Estado = 'No Hecho'
+                    WHERE T0.Estado = 'Pendiente'
                     AND T0.TipoRevision IN (
                             SELECT 
                             CASE T.idPermiso 
@@ -423,6 +533,7 @@ use Dba\Connection;
                 ];
 
                 $result = ConexionDb::consult($sql,$params);
+
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
                     
@@ -436,18 +547,12 @@ use Dba\Connection;
                 ConexionDb::disconnect();
                 
                 $resultadosHoy = [];
-                $fechaHoyString = date('Y-m-d');
+                $fechaHoy = date('Y-m-d');
 
                 foreach ($result as $row) {
-                    $objFecha = self::calcularProximaFecha($row);
-                    
-                    if ($objFecha) {
-                        if ($objFecha->format('Y-m-d') === $fechaHoyString) {
-                            
-                            $row['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
-                            
-                            $resultadosHoy[] = $row;
-                        }
+                    $proximaFecha = date('Y-m-d', strtotime($row['ProximaEjecucion']));
+                    if ($proximaFecha  === $fechaHoy) {
+                        $resultadosHoy[] = $row;
                     }
                 }
                 

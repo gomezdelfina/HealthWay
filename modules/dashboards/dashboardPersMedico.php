@@ -60,54 +60,10 @@
 <div class="col">
     <div class="card shadow-sm mb-4 border-warning border-3">
         <div class="card-header bg-warning text-white">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i> Recordatorios pendientes
+            <i class="bi bi bi-clock me-2"></i> Recordatorios pendientes
         </div>
         <div class="card-body p-0">
-            <div class="div-ul"> 
-                <ul class="list-group list-group-flush" id="recordPendList">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <p>Medicion de signos vitales</p>
-                        </div>
-                        <div>
-                            <p>Diego Cesari</p>
-                        </div>
-                        <div>
-                            <span class="badge bg-danger rounded-pill">De rutina</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-success btn-sm">Marcar realizada</button>
-                        </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <p>Medicion de signos vitales</p>
-                        </div>
-                        <div>
-                            <p>Diego Cesari</p>
-                        </div>
-                        <div>
-                            <span class="badge bg-danger rounded-pill">De rutina</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-success btn-sm">Marcar realizada</button>
-                        </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <p>Medicion de signos vitales</p>
-                        </div>
-                        <div>
-                            <p>Diego Cesari</p>
-                        </div>
-                        <div>
-                            <span class="badge bg-danger rounded-pill">De rutina</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-success btn-sm">Marcar realizada</button>
-                        </div>
-                    </li>
-                </ul>
+            <div class="div-ul" id="recordPendList">
             </div>
             <div class="p-3">
                 <a class="text-decoration-none text-light btn btn-warning btn-sm w-100" 
@@ -120,68 +76,10 @@
 <div class="col">
     <div class="card shadow-sm mb-4 border-danger border-3">
         <div class="card-header bg-danger text-white">
-            <i class="bi bi-exclamation-octagon-fill me-2"></i> Recordatorios atrasados
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> Recordatorios atrasados
         </div>
         <div class="card-body p-0">
-            <div class="div-ul"> 
-                <ul class="list-group list-group-flush" id="recordPendList">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <p>Medicion de signos vitales</p>
-                        </div>
-                        <div>
-                            <p>Diego Cesari</p>
-                        </div>
-                        <div>
-                            <span class="badge bg-danger rounded-pill">De rutina</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-success btn-sm">Marcar realizada</button>
-                        </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <p>Medicion de signos vitales</p>
-                        </div>
-                        <div>
-                            <p>Diego Cesari</p>
-                        </div>
-                        <div>
-                            <span class="badge bg-danger rounded-pill">De rutina</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-success btn-sm">Marcar realizada</button>
-                        </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <p>Medicion de signos vitales</p>
-                        </div>
-                        <div>
-                            <p>Diego Cesari</p>
-                        </div>
-                        <div>
-                            <span class="badge bg-danger rounded-pill">De rutina</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-success btn-sm">Marcar realizada</button>
-                        </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <p>Medicion de signos vitales</p>
-                        </div>
-                        <div>
-                            <p>Diego Cesari</p>
-                        </div>
-                        <div>
-                            <span class="badge bg-danger rounded-pill">De rutina</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-success btn-sm">Marcar realizada</button>
-                        </div>
-                    </li>
-                </ul>
+            <div class="div-ul" id="recordAtraList">
             </div>
             <div class="p-3">
                 <a class="text-decoration-none text-light btn btn-danger btn-sm w-100"

@@ -23,8 +23,6 @@
                 $errors['usuario'] = 'El Usuario no esta logeado en el sistema';
             } elseif (!preg_match('/^[0-9]+$/', $userId)) {
                 $errors['usuario'] = 'El campo Usuario no tiene el formato correcto';
-            } elseif (!Permisos::tienePermiso(12,$_SESSION['usuario'])){
-                $errors['usuario'] = 'El usuario no tiene permiso para la peticion';
             }
 
             if(empty($errors)){

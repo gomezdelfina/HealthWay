@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    //Evento de boton Campanita
     document.getElementById("btnNotificaciones").addEventListener("click", () => {
 
         // Primero limpia y coloca mensaje de carga
@@ -55,25 +56,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    function actualizarContador() {
-        fetch("/HealthWay/api/notificaciones/getNotificaciones.php")
-            .then(res => res.json())
-            .then(data => {
-                const notifCount = document.getElementById("notifCount");
-
-                if (data.length > 0) {
-                    notifCount.style.display = "inline-block";
-                    notifCount.textContent = data.length;
-                } else {
-                    notifCount.style.display = "none";
-                }
-            });
-    }
-
-    // Ejecutar cada 10 segundos
+    // -- Ejecutar cada 10 segundos
+    // Actualiza contador de notificaciones
     setInterval(actualizarContador, 10000);
+
+    // -- Ejecutar cada 60 segundos
+    // Verifica recordatorios
+    setInterval(revisarEjecucionRecordatorio, 60000); 
 
     // Ejecutar al cargar la página
     actualizarContador();
-
+    revisarEjecucionRecordatorio();
 })
+
+function actualizarContador() {
+    fetch("/HealthWay/api/notificaciones/getNotificaciones.php")
+        .then(res => res.json())
+        .then(data => {
+            const notifCount = document.getElementById("notifCount");
+
+            if (data.length > 0) {
+                notifCount.style.display = "inline-block";
+                notifCount.textContent = data.length;
+            } else {
+                notifCount.style.display = "none";
+            }
+    });
+}
+
+function revisarEjecucionRecordatorio() {
+    fetch('/HealthWay/api/recordatorios/createRecordatorioNotif.php')
+        .then(response => response.json())
+        .catch(error => console.error('Error en cron:', error));
+}
+    
+    

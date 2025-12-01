@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-11-2025 a las 23:58:14
+-- Tiempo de generación: 01-12-2025 a las 04:26:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -549,7 +549,8 @@ INSERT INTO `permisos` (`IdPermiso`, `DescPermiso`) VALUES
 (44, 'Visualizar informacion personal'),
 (45, 'Visualizar Gestion de Pacientes'),
 (46, 'Finalizar Internaciones'),
-(47, 'Visualizar Notificaciones');
+(47, 'Visualizar Notificaciones'),
+(48, 'Visualizar historia clinica');
 
 -- --------------------------------------------------------
 
@@ -623,7 +624,7 @@ CREATE TABLE `recordatorio` (
   `IdUsuario` int(11) DEFAULT NULL,
   `TipoRevision` int(11) NOT NULL,
   `FechaCreacion` datetime DEFAULT current_timestamp(),
-  `Estado` enum('Hecho','No Hecho') DEFAULT 'No Hecho',
+  `Estado` enum('Pendiente','Atrasado') DEFAULT 'Pendiente',
   `FechaInicioRec` datetime NOT NULL,
   `FechaFinRec` datetime NOT NULL,
   `Frecuencia` enum('Diaria','Semanal','Unica Vez','Horas') NOT NULL,
@@ -646,8 +647,8 @@ CREATE TABLE `recordatorio` (
 --
 
 INSERT INTO `recordatorio` (`IdRecordatorio`, `IdInternacion`, `IdUsuario`, `TipoRevision`, `FechaCreacion`, `Estado`, `FechaInicioRec`, `FechaFinRec`, `Frecuencia`, `FrecuenciaHoras`, `FrecuenciaDias`, `FrecuenciaSem`, `RepetirLunes`, `RepetirMartes`, `RepetirMiercoles`, `RepetirJueves`, `RepetirViernes`, `RepetirSabado`, `RepetirDomingo`, `Observaciones`, `activo`) VALUES
-(1, 4, 3, 4, '2025-11-29 16:42:00', 'No Hecho', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Horas', 8, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'prueba rec2', 0),
-(2, 6, 3, 1, '2025-11-29 17:00:00', 'No Hecho', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Unica Vez', NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'hola mundo22', 1);
+(1, 4, 3, 4, '2025-11-29 16:42:00', '', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Horas', 8, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'prueba rec2', 0),
+(2, 6, 3, 1, '2025-11-29 17:00:00', '', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Unica Vez', NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'hola mundo22', 1);
 
 -- --------------------------------------------------------
 
@@ -843,7 +844,9 @@ INSERT INTO `roles_permisos` (`IdRoles_Perm`, `IdRol`, `IdPermiso`) VALUES
 (90, 5, 47),
 (91, 6, 47),
 (92, 7, 47),
-(93, 2, 47);
+(93, 2, 47),
+(94, 4, 48),
+(95, 2, 48);
 
 -- --------------------------------------------------------
 
@@ -1196,7 +1199,7 @@ ALTER TABLE `pacientes`
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
-  MODIFY `IdPermiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `IdPermiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `personascontacto`
@@ -1238,7 +1241,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `roles_permisos`
 --
 ALTER TABLE `roles_permisos`
-  MODIFY `IdRoles_Perm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `IdRoles_Perm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT de la tabla `roles_usuarios`
