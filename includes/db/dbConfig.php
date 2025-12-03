@@ -1,5 +1,5 @@
 <?php
-    $db_serverName = "localhost";
+    $db_serverName = "127.0.0.1";
     $db_username = "root";
     $db_password = "";
     $db_name = "healthway";

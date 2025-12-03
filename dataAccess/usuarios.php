@@ -69,7 +69,7 @@
 
                 $sql = "SELECT IdUsuario FROM usuarios WHERE Usuario = :user 
                         AND Clave = :psw AND Habilitado = 1";
-
+ 
                 $params = [
                     ["clave" => ":user", "valor" => $user['Usuario']],
                     ["clave" => ":psw", "valor" => $clave_hasheada]
@@ -81,7 +81,8 @@
 
                 return $result;
                 
-            } catch (Exception) {
+            } catch (Exception $e) {
+                var_dump( $e->getMessage());
                 return [];
             }
         }
