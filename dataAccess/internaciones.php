@@ -361,6 +361,7 @@
                 $sql = "
                     SELECT 
                         i.IdInternacion,
+                        i.IdPaciente,
                         i.IdCama,
                         i.IdHabitacion,
                         i.FechaInicio,
@@ -707,8 +708,7 @@
             }
         }
 
-        public static function getPacientesInterAct()
-        {
+        public static function getPacientesInterAct() {
             try{
                 ConexionDb::connect();
 

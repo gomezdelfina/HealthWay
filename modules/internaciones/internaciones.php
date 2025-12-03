@@ -7,8 +7,8 @@ require_once(__DIR__ . '/../../includes/globals.php');
     <?php
         $module = 'internaciones';
         require_once($dirBaseFile . '/includes/html/head.php');
-        echo '<script src="' . $dirBaseUrl . '/script/script_camas.js"></script>';
-        echo '<script src="' . $dirBaseUrl . '/script/script_internaciones.js"></script>';
+        echo '<script src="' . $dirBaseUrl . '/script/script_camas.js" defer></script>';
+        echo '<script src="' . $dirBaseUrl . '/script/script_internaciones.js" defer></script>';
     ?>
 </head>
 <body>
@@ -115,6 +115,9 @@ require_once(__DIR__ . '/../../includes/globals.php');
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" form="pswRecoveryForm" id="btnPswRecovery" data-bs-dismiss="modal"> Cancelar </button>
+                            <?php if (userTienePermiso(48, $idUser)) { //Crear internaciones?>
+                                <a id="historia" class="btn btn-info" href="#"> Historial Clinico </a>
+                            <?php } ?>
                             <?php if (userTienePermiso(8, $idUser)) { //Crear internaciones?>
                                 <button type="button" class="btn btn-primary" id="modificar"> Modificar </button>
                             <?php } ?>
