@@ -20,25 +20,47 @@ try {
     }
 
     $query = "
-        SELECT 
-            i.IdInternacion,
-            i.IdSolicitud,
-            i.IdCama,
-            i.IdHabitacion,
-            i.IdPaciente,
-            i.FechaInicio,
-            i.FechaFin,
-            i.EstadoInternacion,
-            i.Observaciones,
-            p.DNI,
-            u.Nombre,
-            u.Apellido
-        FROM internaciones i
-        INNER JOIN pacientes p ON p.IdPaciente = i.IdPaciente
-        INNER JOIN usuarios u ON u.IdUsuario = p.IdUsuario
-        WHERE u.IdUsuario = :idPaciente
-        ORDER BY i.FechaInicio DESC
-    ";
+    SELECT 
+        i.IdInternacion,
+        i.IdSolicitud,
+        i.IdCama,
+        i.IdHabitacion,
+        i.IdPaciente,
+        i.FechaInicio,
+        i.FechaFin,
+        i.EstadoInternacion,
+        i.Observaciones,
+
+        -- Datos del paciente
+        p.DNI,
+        u.Nombre,
+        u.Apellido,
+
+        -- Plan y obra social (relación según IdPlan_OS)
+        pl.IdPlan,
+        pl.NombrePlan,
+        pl.TipoHabitacion,
+        pl.HorasInternacion,
+        pl.PrecioHora,
+        pl.PrecioHoraExtra,
+
+        os.IdOS,
+        os.NombreOS
+
+    FROM internaciones i
+    INNER JOIN pacientes p ON p.IdPaciente = i.IdPaciente
+    INNER JOIN usuarios u ON u.IdUsuario = p.IdUsuario
+
+    -- JOIN con PLAN
+    INNER JOIN planes_obrassociales pl ON pl.IdPlan = p.IdPlan_OS
+
+    -- JOIN con OBRA SOCIAL (a través del plan)
+    INNER JOIN obrassociales os ON os.IdOS = pl.IdOS
+
+    WHERE u.IdUsuario = :idPaciente
+    ORDER BY i.FechaInicio DESC
+";
+
 
     $params = [
         ["clave" => ":idPaciente", "valor" => $idPaciente]

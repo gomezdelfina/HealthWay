@@ -233,6 +233,7 @@ function loadPacienteDash(){
     cargarDatosPaciente();
 }
 
+//carga los datos del paciente mediante su id
 function cargarDatosPaciente(){
     const baseUrl = window.location.origin;
 
@@ -270,6 +271,7 @@ function cargarDatosPaciente(){
     });
 }
 
+//lista de internaciones 
 function mostrarInternaciones(lista) {
     const contenedor = document.getElementById("contenedorInternaciones");
     contenedor.innerHTML = "";
@@ -287,40 +289,76 @@ function mostrarInternaciones(lista) {
     }
 
     lista.forEach(p => {
+    const fechaInicio = new Date(p.FechaInicio);
+    const fechaFin = new Date(p.FechaFin);
+    const horasTotales = parseInt(calcularHoras(fechaInicio, fechaFin));
 
-        const fechaInicio = new Date(p.FechaInicio);
-        const fechaFin = new Date(p.FechaFin);
-        const horasTotales = calcularHoras(fechaInicio, fechaFin);
+    // Calcular costo usando los valores del plan
+    const costo = calcularCostoInternacion(
+        horasTotales,
+        p.HorasInternacion,
+        parseFloat(p.PrecioHora),
+        parseFloat(p.PrecioHoraExtra)
+    );
 
-        contenedor.innerHTML += `
-        <div class="border rounded p-3 mb-3 shadow-sm">
-            <div class="d-flex justify-content-between align-items-center">
+    contenedor.innerHTML += `
+    <div class="border rounded p-3 mb-3 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center">
             <h5 class="text-primary">
                 <i class="bi bi-clipboard2-pulse"></i>Internación #${p.IdInternacion}
             </h5>
             <span class="badge bg-info">${p.EstadoInternacion}</span>
-            </div>
+        </div>
 
-            <small class="text-muted">
+        <small class="text-muted">
             <i class="bi bi-calendar-event me-1"></i>Desde: ${p.FechaInicio}  
             <br>
             <i class="bi bi-calendar-check me-1"></i>Hasta: ${p.FechaFin}
-            </small>
+        </small>
 
-            <div class="mt-3">
+        <div class="mt-3">
             <p><strong>Paciente:</strong> ${p.Nombre} ${p.Apellido}</p>
             <p><strong>DNI:</strong> ${p.DNI}</p>
             <p><strong>Horas Totales:</strong> ${horasTotales}</p>
-            </div>
         </div>
-        `;
-    });
+
+        <hr>
+
+        <div class="mt-3">
+            <p><strong>Plan OS:</strong> ${p.NombrePlan} (${p.NombreOS})</p>
+            <p><strong>Horas Incluidas:</strong> ${p.HorasInternacion}</p>
+            <p><strong>Horas Extras:</strong> ${costo.horasExtras}</p>
+            <p><strong>Costo Horas Normales:</strong> $${costo.costoNormal}</p>
+            <p><strong>Costo Horas Extras:</strong> $${costo.costoExtra}</p>
+
+            <h5 class="text-success">
+                Total a cobrar: $${costo.total}
+            </h5>
+        </div>
+    </div>`;
+});
 }
 
 function calcularHoras(inicio, fin) {
     const diferenciaMS = fin - inicio;
     const horas = diferenciaMS / (1000 * 60 * 60);
     return horas.toFixed(0);
+}
+
+function calcularCostoInternacion(horasTotales, horasIncluidas, precioHora, precioHoraExtra) {
+    const horasExtras = Math.max(0, horasTotales - horasIncluidas);
+
+    const costoNormal = Math.min(horasTotales, horasIncluidas) * precioHora;
+    const costoExtra = horasExtras * precioHoraExtra;
+
+    return {
+        horasTotales,
+        horasIncluidas,
+        horasExtras,
+        costoNormal,
+        costoExtra,
+        total: costoNormal + costoExtra
+    };
 }
 
 function fetchRevisiones(idInternacion) {
@@ -369,5 +407,7 @@ function mostrarRevisiones(lista) {
         `;
     });
 }
+
+
 
 // --
