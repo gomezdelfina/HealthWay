@@ -4,43 +4,86 @@
     require_once($dirBaseFile . '/dataAccess/revisiones.php');
     require_once($dirBaseFile . '/dataAccess/pacientes.php');
 
-    $id = $_GET["id"] ?? null;
+    $response = [];
+    $errors = [];
+    $id = '';
 
-    if (!$id) {
-        exit("ID no proporcionado");
+    if (!isset($_SESSION['usuario'])) {
+        $response['code'] = 401;
+        $response['msg'] = 'El Usuario no esta logeado en el sistema';
+    } elseif(!Permisos::tienePermiso(48, $_SESSION['usuario'])){
+        $response['code'] = 401;
+        $response['msg'] = 'El usuario no tiene permiso para la peticion';
+    } else {
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+        if (strpos($contentType, 'application/json') !== false) {
+            $rawInput = file_get_contents('php://input');
+            $data = json_decode($rawInput, true);
+        } else {
+            $data = $_POST;
+        }
+
+        if(empty($data)){
+            $response['code'] = 400;
+            $response['msg'] = 'El contenido de la petición no puede estar vacío';
+        }else{
+            //VALIDACIONES
+            //IDINTERNACION
+            if(!isset($data['id'])){
+                $errors['id'] = 'El campo id no puede estar vacío';
+            }else{
+                $id = trim($data['id']);
+
+                if($id == ''){
+                    $errors['id'] = 'El campo id no puede estar vacío';
+                }else if(!preg_match('/^[0-9]+$/', $id)){
+                    $errors['id'] = 'El campo id no contiene un formato correcto';
+                }
+            }
+
+            if(empty($errors)){
+                try{
+                    $resultado = internaciones::ObtenerInternacion($id);
+
+                    // Datos de la internación
+                    $internacionActual = $resultado["data"];
+                    $idPaciente = $internacionActual['IdPaciente'] ?? 0;
+
+                    $revisiones = Revisiones::getRevisionByInter($id);
+                    $paciente = Pacientes::getPacienteById($idPaciente);
+
+                    $response['code'] = 200;
+                    $response['msg'] = $resultado;
+                }catch(Exception $e){
+                    $response['code'] = 500;
+                    $response['msg'] = 'Error interno de aplicacion';
+                }
+            }else{
+                $msgError = [];
+
+                if(isset($errors['id'])){
+                    $msgError[] = [
+                        'campo' => 'id',
+                        'error' => $errors['id']
+                    ];
+                };
+
+                $response['code'] = 400;
+                $response['msg'] = $msgError;
+            }
+        }
     }
 
-    $resultado = internaciones::ObtenerInternacion($id);
-
-    if ($resultado["status"] === "error") {
-        echo $resultado["mensaje"];
-        exit;
-    }
-
-    // Datos de la internación
-    $internacionActual = $resultado["data"];
-
-    $idPaciente = $internacionActual['IdPaciente'] ?? 0;
-    $idInternacion = $internacionActual['IdInternacion'] ?? 0;
-
-    try{
-        $revisiones = Revisiones::getRevisionByInter($idInternacion);
-    }catch(Exception $e){
-        echo $e;
-        exit;
+    if($response['code'] != 200){
+        header('Content-Type: application/json');
+        http_response_code($response['code']);
+        echo json_encode($response['msg']);
     }
     
-    try{
-        $paciente = Pacientes::getPacienteById($idPaciente);
-    }catch(Exception $e){
-        echo $e;
-        exit;
-    }
 ?>
 
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,14 +95,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
-    <title>Healthway - Datos de la Internación</title>
+    <title>Healthway - Historia Clinica</title>
 </head>
 
 <body>
     <div class="container">
         <div class="doc-container">
 
-            <!-- HEADER: INFORMACIÓN DEL PACIENTE -->
+            <!-- INFORMACIÓN DEL PACIENTE -->
             <div class="row mb-4">
                 <div class="col-12 text-center mb-4">
                     <h2 class="fw-bold">Historial Médico Digital</h2>
@@ -70,7 +113,6 @@
                     <h4 class="section-title"><i class="bi bi-person-vcard"></i> Datos del Paciente</h4>
                 </div>
 
-                <!-- Fila 1 Paciente -->
                 <div class="col-md-4">
                     <div class="label-text">Paciente</div>
                     <div class="value-text"><?php if(isset($paciente[0]['Nombre'])) { echo $paciente[0]['Nombre']; } ?></div>
@@ -91,7 +133,6 @@
                     </div>
                 </div>
 
-                <!-- Fila 2 Paciente -->
                 <div class="col-md-4">
                     <div class="label-text">Género</div>
                     <div class="value-text"><?php if(isset($paciente[0]['Genero'])) { echo $paciente[0]['Genero'];} ?></div>
@@ -112,87 +153,84 @@
             <!-- SECCIÓN: DETALLES DE LA INTERNACIÓN -->
             <div class="row mb-5">
                 <div class="col-12">
-                    <h4 class="section-title"><i class="bi bi-hospital"></i> Detalle de Internación N° <?= $internacionActual['IdInternacion'] ?></h4>
+                    <h4 class="section-title"><i class="bi bi-hospital"></i> Detalle de Internación N° <?php if(isset($internacionActual['IdInternacion'])) { echo $internacionActual['IdInternacion']; } ?></h4>
                 </div>
 
                 <div class="col-md-3">
                     <div class="label-text">Ubicación</div>
                     <div class="value-text">
-                        Hab: <?= $internacionActual['IdHabitacion'] ?> - Cama: <?= $internacionActual['IdCama'] ?>
+                        Hab: <?php if(isset($internacionActual['IdHabitacion'])) { echo $internacionActual['IdHabitacion']; } ?> - Cama: <?php if(isset($internacionActual['IdCama'])) { echo $internacionActual['IdCama']; } ?>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="label-text">Estado</div>
                     <div class="value-text">
-                        <?php
-                        $badgeClass = ($internacionActual['EstadoInternacion'] == 'Activa') ? 'bg-success' : 'bg-secondary';
-                        ?>
-                        <span class="badge <?= $badgeClass ?>"><?= $internacionActual['EstadoInternacion'] ?></span>
+                        <span class="badge"><?php if(isset($internacionActual['EstadoInternacion'])) {echo $internacionActual['EstadoInternacion'];} ?></span>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="label-text">Fecha Ingreso</div>
-                    <div class="value-text"><?= $internacionActual['FechaInicio'] ?></div>
+                    <div class="value-text"><?php if(isset($internacionActual['FechaInicio'])) { echo $internacionActual['FechaInicio'];}  ?></div>
                 </div>
                 <div class="col-md-3">
-                    <div class="label-text">Fecha Alta</div>
-                    <div class="value-text"><?= $internacionActual['FechaFin'] ?: '-' ?></div>
+                    <div class="label-text">Fecha Finalizacion</div>
+                    <div class="value-text"><?php if(isset($internacionActual['FechaFin'])) {echo $internacionActual['FechaFin'];} ?></div>
                 </div>
                 <div class="col-12">
                     <div class="label-text">Notas de Ingreso</div>
                     <div class="value-text bg-light p-3 rounded border">
-                        <?= $internacionActual['Notas'] ?? 'Sin notas registradas.' ?>
+                        <?php if(isset($internacionActual['Notas'])) { echo $internacionActual['Notas'];} else { echo 'Sin notas registradas.' ;} ?>
                     </div>
                 </div>
             </div>
 
-            <!-- SECCIÓN: REVISIONES MEDICAS (TIMELINE) -->
+            <!-- SECCIÓN: REVISIONES MEDICAS -->
             <div class="row">
                 <div class="col-12">
-                    <h4 class="section-title"><i class="bi bi-journal-medical"></i> Bitácora de Revisiones</h4>
+                    <h4 class="section-title"><i class="bi bi-journal-medical"></i> Revisiones</h4>
                 </div>
 
                 <div class="col-12">
-                    <?php if (count($revisiones) > 0): ?>
-                        <?php foreach ($revisiones as $rev): ?>
+                    <?php if (count($revisiones) > 0){ ?>
+                        <?php foreach ($revisiones as $rev){ ?>
                             <div class="card revision-card">
                                 <div class="revision-header">
                                     <div>
-                                        <strong class="text-primary"><?= $rev['Tipo'] ?></strong>
-                                        <span class="text-muted ms-2 small"><i class="bi bi-clock"></i> <?= $rev['FechaCreacion'] ?></span>
+                                        <strong class="text-primary"><?php if(isset($rev['Tipo'])) { echo $rev['Tipo'];} ?></strong>
+                                        <span class="text-muted ms-2 small"><i class="bi bi-clock"></i> <?php if(isset($rev['FechaCreacion'])) { echo $rev['FechaCreacion'];} ?></span>
                                     </div>
-                                    <span class="badge bg-primary rounded-pill"><?= $rev['Estado'] ?></span>
+                                    <span class="badge bg-primary rounded-pill"><?php if(isset($rev['Estado'])) { echo $rev['Estado'];} ?></span>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6 mb-2">
                                             <strong class="d-block small text-muted">SÍNTOMAS</strong>
-                                            <?= $rev['Sintomas'] ?>
+                                            <?php if(isset($rev['Sintomas'])) { echo $rev['Sintomas'];} ?>
                                         </div>
                                         <div class="col-md-6 mb-2">
                                             <strong class="d-block small text-muted">DIAGNÓSTICO</strong>
-                                            <?= $rev['Diagnostico'] ?>
+                                            <?php if(isset($rev['Diagnostico'])) { echo $rev['Diagnostico'];} ?>
                                         </div>
                                         <div class="col-md-12 mb-2">
                                             <strong class="d-block small text-muted">TRATAMIENTO</strong>
-                                            <?= $rev['Tratamiento'] ?>
+                                            <?php if(isset($rev['Tratamiento'])) { echo $rev['Tratamiento'];} ?>
                                         </div>
                                         <div class="col-md-12">
                                             <strong class="d-block small text-muted">OBSERVACIONES</strong>
-                                            <p class="mb-0 fst-italic"><?= $rev['Observaciones'] ?></p>
+                                            <p class="mb-0 fst-italic"><?php if(isset($rev['Observaciones'])) { echo $rev['Observaciones'];} ?></p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-footer text-end text-muted small bg-white">
-                                    <i class="bi bi-person-circle"></i> Profesional: <?= $rev['UsuarioCreador'] ?>
+                                    <i class="bi bi-person-circle"></i> Profesional: <?php if(isset($rev['UsuarioCreador'])) {echo $rev['UsuarioCreador'];}  ?>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+                        <?php } ?>
+                    <?php } else { ?>
                         <div class="alert alert-info text-center">
-                            No hay revisiones registradas para esta internación.
+                            <?php echo 'No hay revisiones registradas para esta internación.'; ?>
                         </div>
-                    <?php endif; ?>
+                    <?php } ?>
                 </div>
             </div>
 

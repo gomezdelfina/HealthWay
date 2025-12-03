@@ -29,8 +29,8 @@
                 <?php } ?>
                 <div class="col-md-8">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Buscar por Paciente, Cama o Habitacion">
-                        <button class="btn btn-outline-primary" type="button"><i class="bi bi-search"></i> Buscar</button>
+                        <input id="buscadorRevs" type="text" class="form-control" placeholder="Buscar por Paciente, Cama o Habitacion">
+                        <button id="btnBuscarRevs" class="btn btn-outline-primary" type="button"><i class="bi bi-search"></i> Buscar</button>
                     </div>
                 </div>
             </div>
@@ -49,11 +49,6 @@
             <!-- Modal Revisión -->
             <?php
                 require_once($dirBaseFile . '/modules/revisiones/revision.php');
-            ?>
-
-            <!-- Live Toast -->
-            <?php
-                require_once($dirBaseFile . '/includes/html/notification.php');
             ?>
     </main>
 

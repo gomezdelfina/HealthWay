@@ -10,7 +10,8 @@
         public static function obtenerObrasSociales() 
         {
             try {
-                $conn = ConexionDb::connect();
+                global $conn;
+                ConexionDb::connect();
 
                 $sql = "SELECT IdOS, NombreOS FROM ObrasSociales";
                 $stm = $conn->prepare($sql);
@@ -40,7 +41,8 @@
         public static function obtenerPacientes($search = "") 
         {
             try {
-                $conn = ConexionDb::connect();
+                global $conn;
+                ConexionDb::connect();
 
                 $sql = "
                     SELECT 
@@ -98,7 +100,8 @@
         public static function crearPaciente($data) 
         {
             try {
-                $conn = ConexionDb::connect();
+                global $conn;
+                ConexionDb::connect();
                 $conn->beginTransaction();
 
                 // Obtener IdOS
@@ -172,7 +175,8 @@
         public static function actualizarPaciente($id, $data) 
         {
             try {
-                $conn = ConexionDb::connect();
+                global $conn;
+                ConexionDb::connect();
                 $conn->beginTransaction();
 
                 // Obtener IdOS
@@ -263,7 +267,8 @@
         public static function eliminarPaciente($id) 
         {
             try {
-                $conn = ConexionDb::connect();
+                global $conn;
+                ConexionDb::connect();
                 $conn->beginTransaction();
 
                 // Obtener IdUsuario

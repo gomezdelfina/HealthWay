@@ -13,13 +13,16 @@ use Dba\Connection;
                 ConexionDb::connect();
 
                 $sql = "SELECT T0.IdRevisiones, T2.NumeroHabitacion, T3.NumeroCama, T5.Nombre, T5.Apellido,
-                    T0.FechaCreacion, T0.TipoRevision, T0.EstadoRevision
+                    T0.FechaCreacion, T6.DescTipoRevision as TipoRevision, T7.DescEstadoRev as EstadoRevision,
+                    T0.Observaciones as Notas
                     FROM revisiones T0
                     INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
                     INNER JOIN habitaciones T2 ON T1.IdHabitacion = T2.IdHabitacion
                     INNER JOIN camas T3 ON T1.IdCama = T3.IdCama
                     INNER JOIN pacientes T4 ON T1.IdPaciente = T4.IdPaciente
                     INNER JOIN usuarios T5 on T4.IdUsuario = T5.IdUsuario
+                    INNER JOIN tiporevisiones T6 on T0.TipoRevision = T6.idTipoRevision
+                    INNER JOIN estadorevisiones T7 on T0.EstadoRevision = T7.idEstadoRev
                     ORDER BY T0.IdRevisiones DESC
                     LIMIT 30;
                 ";
@@ -121,7 +124,7 @@ use Dba\Connection;
         public static function createRevision($revision)
         {
             if (is_null($revision)) {
-                return [];
+                throw new Exception("La revision no puede estar vacía");
             }
 
             try{
@@ -165,7 +168,7 @@ use Dba\Connection;
 
                 $sql = 'SELECT T0.IdRevisiones, T0.IdUsuario, CAST(T0.FechaCreacion AS DATE) AS FechaCreacion,
                         CAST(T0.FechaCreacion AS TIME) AS HoraCreacion, T0.TipoRevision, T0.EstadoRevision, 
-                        T0.Sintomas, T0.Diagnostico, T0.Tratamiento, T2.IdPaciente
+                        T0.Sintomas, T0.Diagnostico, T0.Tratamiento, T2.IdPaciente, T0.Observaciones as Notas
                         FROM revisiones T0 
                         INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
                         INNER JOIN pacientes T2 ON T1.IdPaciente = T2.IdPaciente
@@ -219,6 +222,9 @@ use Dba\Connection;
 
         public static function editRevision($revision){
             try{
+                require_once($dirBaseFile . '/dataAccess/internaciones.php');
+                require_once($dirBaseFile . '/dataAccess/recordatorios.php');
+
                 if (is_null($revision)) {
                     throw new Exception("El campo IdRevision no puede estar vacío");
                 }
@@ -226,12 +232,12 @@ use Dba\Connection;
                 ConexionDb::connect();
 
                 $sql = 'UPDATE revisiones SET
-                            TipoRevision = :tipoRevision
-                            EstadoRevision = :estadoRevision
-                            Sintomas = :sintomas
-                            Diagnostico = :diagnostico
-                            Tratamiento = :tratamiento
-                            Notas = :notas
+                            TipoRevision = :tipoRevision,
+                            EstadoRevision = :estadoRevision,
+                            Sintomas = :sintomas,
+                            Diagnostico = :diagnostico,
+                            Tratamiento = :tratamiento,
+                            Observaciones = :notas
                         WHERE IdRevisiones = :idRev';
 
                 $params = [
@@ -241,13 +247,37 @@ use Dba\Connection;
                     ["clave" => ":sintomas", "valor" => $revision["Sintomas"]],
                     ["clave" => ":diagnostico", "valor" => $revision["Diagnostico"]],
                     ["clave" => ":tratamiento", "valor" => $revision["Tratamiento"]],
-                    ["clave" => ":observaciones", "valor" => $revision["Observaciones"]]
+                    ["clave" => ":notas", "valor" => $revision["Observaciones"]]
                 ];
 
                 $result = ConexionDb::consult($sql, $params);
 
                 ConexionDb::disconnect();
+                
+                if(!empty($result) & 
+                   (strpos($revision["EstadoRevision"], 5) == 0 || strpos($revision["EstadoRevision"], 4))){
+                        //Obtener internacion de revision
+                        $rev = self::getRevisionById($revision['IdRevision']);
 
+                        //Cerrar internacion
+                        if(!empty($rev)){
+                            internaciones::FinalizarInternacion($rev['IdInternacion']);
+                        }else{
+                            throw new Exception("Problemas al finalizar internacion");
+                        }  
+                        
+                        //Obtener recordatorios de revision
+                        if(!empty($rev)){
+                            $recs = Recordatorio::getRecordatoriosByInt($rev['IdInternacion']);
+
+                            //Inactivar recordatorios
+                            foreach ($recs as $rec){
+                                Recordatorio::inactivarRecordatorio($rec['IdRecordatorio']);
+                            }
+                        }else{
+                            throw new Exception("Problemas al finalizar internacion");
+                        }  
+                }
                 return $result;
             }catch(Exception $e){
                 throw new Exception("Problemas al editar la revision: " . $e);

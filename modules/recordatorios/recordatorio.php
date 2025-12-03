@@ -27,7 +27,7 @@
                                     <select class="form-select" id="recPac" name="recPac" required>
                                         <option value='-1' selected="true">Seleccionar un paciente</option>
                                     </select>
-                                    <div id="valPacRec" class="invalid-feedback visibility-hidden">
+                                    <div id="valPacRec" class="text-danger visibility-hidden">
                                         Debe seleccionar un paciente
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@
                                     <select class="form-select" id="tipoRevisRec" name="tipoRevisRec" required>
                                         <option value='-1' selected="true">Seleccionar tipo de revisión</option>
                                     </select>
-                                    <div id="valTipoRevisRec" class="invalid-feedback visibility-hidden">
+                                    <div id="valTipoRevisRec" class="text-danger visibility-hidden">
                                         Debe seleccionar un tipo de revisión
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="fechaRecordatorio" class="form-label">Fecha de inicio <span class="text-danger">*</span></label>
                                     <input type="date" class="form-control" id="fechaRecordatorio" name="fechaRecordatorio" required>
-                                    <div id="valfechaRecordatorio" class="invalid-feedback visibility-hidden">
+                                    <div id="valfechaRecordatorio" class="text-danger visibility-hidden">
                                         Debe seleccionar una fecha de inicio valida
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="horaRecordatorio" class="form-label">Hora <span class="text-danger">*</span></label>
                                     <input type="time" class="form-control" id="horaRecordatorio" name="horaRecordatorio" value="00:00" required>
-                                    <div id="valhoraRecordatorio" class="invalid-feedback visibility-hidden">
+                                    <div id="valhoraRecordatorio" class="text-danger visibility-hidden">
                                         Debe seleccionar una hora de inicio valida
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@
                                 <div id="divFrecFin" class="col-md-6 mb-3 visibility-remove">
                                     <label for="fechaFinRecordatorio" class="form-label">Fecha de finalización </label>
                                     <input type="date" class="form-control" id="fechaFinRecordatorio" name="fechaFinRecordatorio">
-                                    <div id="valfechaFinRecordatorio" class="invalid-feedback visibility-hidden">
+                                    <div id="valfechaFinRecordatorio" class="text-danger visibility-hidden">
                                         Debe seleccionar una fecha de finalizacion valida
                                     </div>
                                 </div>

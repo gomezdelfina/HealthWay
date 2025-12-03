@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-11-2025 a las 01:36:17
+-- Tiempo de generación: 01-12-2025 a las 04:26:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -40,20 +40,20 @@ CREATE TABLE `camas` (
 --
 
 INSERT INTO `camas` (`IdCama`, `IdHabitacion`, `NumeroCama`, `EstadoCama`, `Habilitada`) VALUES
-(1, 1, 1, 'Ocupada', 0),
-(2, 1, 2, 'Ocupada', 0),
-(3, 2, 3, 'Ocupada', 0),
-(4, 2, 4, 'Ocupada', 0),
-(5, 3, 5, 'Ocupada', 0),
-(6, 3, 6, 'Ocupada', 0),
-(7, 4, 7, 'Ocupada', 0),
-(8, 4, 8, 'Ocupada', 0),
-(9, 5, 9, 'Ocupada', 0),
-(10, 5, 10, 'Ocupada', 0),
+(1, 1, 1, 'Disponible', 1),
+(2, 1, 2, 'Disponible', 1),
+(3, 2, 3, 'Disponible', 1),
+(4, 2, 4, 'Disponible', 1),
+(5, 3, 5, 'Disponible', 1),
+(6, 3, 6, 'Disponible', 1),
+(7, 4, 7, 'Disponible', 1),
+(8, 4, 8, 'Disponible', 1),
+(9, 5, 9, 'Disponible', 1),
+(10, 5, 10, 'Disponible', 1),
 (11, 6, 11, 'Disponible', 1),
 (12, 6, 12, 'Disponible', 1),
 (13, 7, 13, 'Disponible', 1),
-(14, 7, 14, 'Disponible', 1),
+(14, 7, 14, 'Ocupada', 0),
 (15, 8, 15, 'Disponible', 1),
 (16, 8, 16, 'Disponible', 1),
 (17, 9, 17, 'Disponible', 1),
@@ -75,7 +75,7 @@ INSERT INTO `camas` (`IdCama`, `IdHabitacion`, `NumeroCama`, `EstadoCama`, `Habi
 (33, 17, 33, 'Disponible', 1),
 (34, 17, 34, 'Disponible', 1),
 (35, 18, 35, 'Disponible', 1),
-(36, 18, 36, 'Disponible', 1),
+(36, 18, 36, 'Ocupada', 0),
 (37, 19, 37, 'Disponible', 1),
 (38, 19, 38, 'Disponible', 1),
 (39, 20, 39, 'Disponible', 1),
@@ -132,7 +132,7 @@ INSERT INTO `camas` (`IdCama`, `IdHabitacion`, `NumeroCama`, `EstadoCama`, `Habi
 (90, 45, 90, 'Disponible', 1),
 (91, 46, 91, 'Disponible', 1),
 (92, 46, 92, 'Disponible', 1),
-(93, 47, 93, 'Disponible', 1),
+(93, 47, 93, 'Ocupada', 0),
 (94, 47, 94, 'Disponible', 1),
 (95, 48, 95, 'Disponible', 1),
 (96, 48, 96, 'Disponible', 1),
@@ -397,7 +397,7 @@ INSERT INTO `internaciones` (`IdInternacion`, `IdSolicitud`, `IdCama`, `IdHabita
 (10, 7, 7, 4, 7, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Cirugía de rodilla', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3130),
 (11, 8, 8, 4, 8, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Neumonía grave', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3131),
 (12, 9, 9, 5, 9, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Evaluación neurológica', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3132),
-(13, 10, 10, 5, 10, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Finalizada', 'Terapia de rehabilitación', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3133),
+(13, 10, 10, 5, 10, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Terapia de rehabilitación', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3133),
 (16, 10, 10, 5, 10, '2025-11-28 19:46:00', '2025-11-29 19:46:00', 'Activa', NULL, 0x89504e470d0a1a0a0000000d49484452000000cd000000cd01030000002172662a00000006504c5445ffffff00000055c2d37e000000097048597300000ec400000ec401952b0e1b000001b9494441545885ed97318e84300c458d28527284dc64b8181291b818dc8423505220bcff3bc0b0b3b3add3e082c9f028acd8ffc71179e2897fa351d55d3a09bbd4582e7c68f247f879355b5cdba59ec328f59cdf79a341d797f42aada6a86333ccba9742c8304c4b17916b4984ed01c7aac26e954156af61964af56b299d10bb178819e6347f37b6133a03dd2b31e8227fc30321c3b5c51ee90841af955a03f923e951aaa563d1f0111057c91f413a2df4832ab15ef852afddf244d08fd052d8b3d44f84d51640cc105502da046d83a2c97da39c5003054f34921169c25244c2a4fe0805827eba9c1c8fbe5bbd3c91a50411513a1ff5724458a37b6929d08f1d3c7aeda1238291e0c8dd249b0b8f1bfbd21dd59a4791ec2bb4b712886f991cf2b2c1ac93f7e1eb89f2ec11c5548d0c391695406a7dc21398032beba565902efd6ce7ee6acdfc3a2ae98a9204ee8c6939ece6b2efa1dd0f0dd6bda6653abe5d25c41d9dbd739d7a90760174cc877413168d83c0a5654f946824e62bb0f8a38f933f3aae30f6673da6b36248d82c11c9d16a8b21a59631a255a8d75de67e28d92d3bf72c66a35e6f3380233a6f5266ab7cdcaf156ee88927bec60fa2628f119ac4993c0000000049454e44ae426082);
 
 -- --------------------------------------------------------
@@ -487,7 +487,7 @@ INSERT INTO `pacientes` (`IdPaciente`, `IdUsuario`, `IdPlan_OS`, `IdDireccion`, 
 (7, 17, 7, 7, '1990-03-12 15:00:00', 'Mujer', 12345689, 'Casado', 'Normal'),
 (8, 18, 8, 8, '1990-01-13 12:30:00', 'Hombre', 12345690, 'Soltero', 'Normal'),
 (9, 19, 9, 9, '1990-02-14 11:00:00', 'Mujer', 12345691, 'Soltero', 'Normal'),
-(10, 20, 10, 10, '1990-04-15 09:00:00', 'Hombre', 12345692, 'Soltero', 'Internado');
+(10, 20, 10, 10, '1990-04-15 09:00:00', 'Hombre', 12345692, 'Soltero', 'Normal');
 
 -- --------------------------------------------------------
 
@@ -549,7 +549,8 @@ INSERT INTO `permisos` (`IdPermiso`, `DescPermiso`) VALUES
 (44, 'Visualizar informacion personal'),
 (45, 'Visualizar Gestion de Pacientes'),
 (46, 'Finalizar Internaciones'),
-(47, 'Visualizar Notificaciones');
+(47, 'Visualizar Notificaciones'),
+(48, 'Visualizar historia clinica');
 
 -- --------------------------------------------------------
 
@@ -621,12 +622,12 @@ CREATE TABLE `recordatorio` (
   `IdRecordatorio` int(11) NOT NULL,
   `IdInternacion` int(11) DEFAULT NULL,
   `IdUsuario` int(11) DEFAULT NULL,
-  `TipoRevision` enum('Signos Vitales','Alimentacion','Higienizacion','Medicacion','Intervencion','Intervencion Quirurgica','Otro') NOT NULL,
+  `TipoRevision` int(11) NOT NULL,
   `FechaCreacion` datetime DEFAULT current_timestamp(),
-  `Estado` enum('Hecho','No Hecho') DEFAULT 'No Hecho',
+  `Estado` enum('Pendiente','Atrasado') DEFAULT 'Pendiente',
   `FechaInicioRec` datetime NOT NULL,
   `FechaFinRec` datetime NOT NULL,
-  `Frecuencia` enum('Diaria','Semanal','Unica Vez') NOT NULL,
+  `Frecuencia` enum('Diaria','Semanal','Unica Vez','Horas') NOT NULL,
   `FrecuenciaHoras` int(11) DEFAULT NULL,
   `FrecuenciaDias` int(11) DEFAULT NULL,
   `FrecuenciaSem` int(11) DEFAULT NULL,
@@ -637,8 +638,17 @@ CREATE TABLE `recordatorio` (
   `RepetirViernes` tinyint(1) DEFAULT 0,
   `RepetirSabado` tinyint(1) DEFAULT 0,
   `RepetirDomingo` tinyint(1) DEFAULT 0,
-  `Observaciones` varchar(100) DEFAULT NULL
+  `Observaciones` varchar(100) DEFAULT NULL,
+  `activo` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `recordatorio`
+--
+
+INSERT INTO `recordatorio` (`IdRecordatorio`, `IdInternacion`, `IdUsuario`, `TipoRevision`, `FechaCreacion`, `Estado`, `FechaInicioRec`, `FechaFinRec`, `Frecuencia`, `FrecuenciaHoras`, `FrecuenciaDias`, `FrecuenciaSem`, `RepetirLunes`, `RepetirMartes`, `RepetirMiercoles`, `RepetirJueves`, `RepetirViernes`, `RepetirSabado`, `RepetirDomingo`, `Observaciones`, `activo`) VALUES
+(1, 4, 3, 4, '2025-11-29 16:42:00', '', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Horas', 8, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'prueba rec2', 0),
+(2, 6, 3, 1, '2025-11-29 17:00:00', '', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Unica Vez', NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'hola mundo22', 1);
 
 -- --------------------------------------------------------
 
@@ -693,7 +703,13 @@ INSERT INTO `revisiones` (`IdRevisiones`, `IdInternacion`, `IdUsuario`, `FechaCr
 (27, 7, 5, '2025-11-03 12:00:00', 3, 1, 'Sudoracion', 'Higiene personal', 'Ducha asistida', 'Se siente mas comodo'),
 (28, 13, 6, '2025-11-03 15:00:00', 1, 1, 'Cansancio post-ejercicio', 'Control signos vitales', 'Hidratacion oral', 'Frecuencia cardiaca normal'),
 (29, 12, 7, '2025-11-03 18:00:00', 4, 1, 'Ansiedad', 'Estado animico', 'Ansiolitico suave', 'Interconsulta psicologia'),
-(30, 5, 8, '2025-11-04 09:00:00', 1, 4, 'Buen estado general', 'Alta traumatologia', 'Uso de muletas', 'Control radiografico en 15 dias');
+(30, 5, 8, '2025-11-04 09:00:00', 1, 4, 'Buen estado general', 'Alta traumatologia', 'Uso de muletas', 'prueba act'),
+(31, NULL, 3, '2025-11-27 20:30:00', 4, 3, 'Fiebre superior a 39grados', 'Anginas', 'Ibuprofeno 1mgr para bajar la fiebre', ''),
+(32, NULL, 3, '2025-11-27 20:30:00', 4, 3, 'Fiebre superior a 39grados', 'Anginas', 'Ibuprofeno 1mgr para bajar la fiebre', ''),
+(33, 8, 3, '2025-11-27 20:43:00', 1, 2, 'Desmayo', 'Pulmonia', 'Medicacion intravenosa', 'Se midieron los signos vitales, el paciente se encuentra estable. Hola mundo'),
+(34, 8, 3, '2025-11-27 20:43:00', 1, 2, 'Desmayo', 'Pulmonia', 'Medicacion intravenosa', 'Se midieron los signos vitales, el paciente se encuentra estable.'),
+(35, 4, 3, '2025-11-27 20:58:00', 1, 1, 'hola mundo', 'asd', 'asd', 'asd'),
+(36, 7, 3, '2025-11-27 21:09:00', 1, 1, 'asd', 'ad', 'asd', 'act');
 
 -- --------------------------------------------------------
 
@@ -828,7 +844,9 @@ INSERT INTO `roles_permisos` (`IdRoles_Perm`, `IdRol`, `IdPermiso`) VALUES
 (90, 5, 47),
 (91, 6, 47),
 (92, 7, 47),
-(93, 2, 47);
+(93, 2, 47),
+(94, 4, 48),
+(95, 2, 48);
 
 -- --------------------------------------------------------
 
@@ -906,7 +924,7 @@ INSERT INTO `solicitudesinternacion` (`IdSolicitud`, `IdPaciente`, `TipoSolicitu
 (7, 7, 'Programada', 'Abierta', '2025-10-30 23:29:59', 'Cirugía de rodilla', NULL),
 (8, 8, 'Urgencia', 'Abierta', '2025-10-30 23:29:59', 'Neumonía grave', NULL),
 (9, 9, 'Programada', 'Abierta', '2025-10-30 23:29:59', 'Evaluación neurológica', NULL),
-(10, 10, 'Reprogramada', 'Cerrada', '2025-10-30 23:29:59', 'Terapia de rehabilitación', NULL);
+(10, 10, 'Reprogramada', 'Abierta', '2025-10-30 23:29:59', 'Terapia de rehabilitación', NULL);
 
 -- --------------------------------------------------------
 
@@ -958,7 +976,7 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`IdUsuario`, `Usuario`, `Clave`, `Habilitado`, `Nombre`, `Apellido`, `Email`, `Telefono`, `token_recuperacion`, `token_expiracion`) VALUES
 (1, 'agarcia', '3cd6e84a34793dabc32d3748bc890aa88cd1e018d3d86170c0565248f9ab0d49', 1, 'Ana', 'García', 'ana.garcia@mail.com.ar', 5491145678901, NULL, NULL),
 (2, 'cmartinez', '04a61557a469ef923d66fa3b7617212283cd35e59b4bc33ed00975e4d1832e9a', 1, 'Carlos', 'Martínez', 'c.martinez@empresa.com', 5493515550001, NULL, NULL),
-(3, 'vsanchez', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 1, 'Valeria', 'Sánchez', 'gomezdelfina25@gmail.com', 5493414445566, '4ec38108779f378e4ec949f9181c496e', '2025-11-24 23:28:20'),
+(3, 'vsanchez', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 1, 'Valeria', 'Sánchez', 'gomezdelfina25@gmail.com', 5493414445566, 'ec70d653822f76c4904b10fa78e7debe', '2025-11-28 22:23:38'),
 (4, 'jdiaz', '629cb398b51eb025476cb4e3176659d8e2e52a8b8cd25b13ee5d55669313d422', 1, 'Jorge', 'Díaz', 'jorge.diaz@mail.com', 5492616667788, NULL, NULL),
 (5, 'csosa', '55885176009fc065a7add27d23a3245d14488922edf068df36afa2e490d83331', 0, 'Camila', 'Sosa', 'cami.sosa@test.ar', 5491122334455, NULL, NULL),
 (6, 'fruiz', 'ca792355c5821ad530003360ac31a982759a4127e67c037c5a353074af36edd1', 1, 'Federico', 'Ruiz', 'fede.ruiz@servidor.com', 5492217778899, NULL, NULL),
@@ -1071,7 +1089,8 @@ ALTER TABLE `planes_obrassociales`
 ALTER TABLE `recordatorio`
   ADD PRIMARY KEY (`IdRecordatorio`),
   ADD KEY `IdInternacion` (`IdInternacion`),
-  ADD KEY `IdUsuario` (`IdUsuario`);
+  ADD KEY `IdUsuario` (`IdUsuario`),
+  ADD KEY `recordatorio_ibfk_3` (`TipoRevision`);
 
 --
 -- Indices de la tabla `revisiones`
@@ -1156,7 +1175,7 @@ ALTER TABLE `habitaciones`
 -- AUTO_INCREMENT de la tabla `internaciones`
 --
 ALTER TABLE `internaciones`
-  MODIFY `IdInternacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `IdInternacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `notificaciones`
@@ -1180,7 +1199,7 @@ ALTER TABLE `pacientes`
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
-  MODIFY `IdPermiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `IdPermiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `personascontacto`
@@ -1204,13 +1223,13 @@ ALTER TABLE `planes_obrassociales`
 -- AUTO_INCREMENT de la tabla `recordatorio`
 --
 ALTER TABLE `recordatorio`
-  MODIFY `IdRecordatorio` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IdRecordatorio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `revisiones`
 --
 ALTER TABLE `revisiones`
-  MODIFY `IdRevisiones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `IdRevisiones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -1222,7 +1241,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `roles_permisos`
 --
 ALTER TABLE `roles_permisos`
-  MODIFY `IdRoles_Perm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `IdRoles_Perm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT de la tabla `roles_usuarios`
@@ -1299,7 +1318,8 @@ ALTER TABLE `planes_obrassociales`
 --
 ALTER TABLE `recordatorio`
   ADD CONSTRAINT `recordatorio_ibfk_1` FOREIGN KEY (`IdInternacion`) REFERENCES `internaciones` (`IdInternacion`),
-  ADD CONSTRAINT `recordatorio_ibfk_2` FOREIGN KEY (`IdUsuario`) REFERENCES `usuarios` (`IdUsuario`);
+  ADD CONSTRAINT `recordatorio_ibfk_2` FOREIGN KEY (`IdUsuario`) REFERENCES `usuarios` (`IdUsuario`),
+  ADD CONSTRAINT `recordatorio_ibfk_3` FOREIGN KEY (`TipoRevision`) REFERENCES `tiporevisiones` (`idTipoRevision`);
 
 --
 -- Filtros para la tabla `revisiones`

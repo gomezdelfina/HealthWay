@@ -429,13 +429,46 @@
             }
         }
 
+        public static function VerInternacionActivaByPac($idPaciente) {
+            try {
+                global $conn;
+                ConexionDb::connect();
+
+                $sql = "SELECT * from internaciones i
+                        WHERE i.EstadoInternacion =  'Activa'
+                        AND i.IdPaciente = :id;";
+
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([":id" => $idPaciente]);
+
+                $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($data)
+                    return [ "status" => "success", "data" => $data ];
+
+                return [
+                    "status" => "error",
+                    "mensaje" => "Internación no encontrada"
+                ];
+            } catch (Exception $e) {
+
+                return [
+                    "status" => "error",
+                    "mensaje" => "Error DB: " . $e->getMessage()
+                ];
+
+            } finally {
+                ConexionDb::disconnect();
+            }
+        }
+
         public static function VerInternacionesActivas() {
 
             try {
                 global $conn;
                 ConexionDb::connect();
 
-                $sql = "SELECT * from internaciones i
+                $sql = "SELECT i.IdInternacion from internaciones i
                         WHERE i.EstadoInternacion =  'Activa';";
 
                 $result = ConexionDb::consult($sql);
@@ -446,6 +479,42 @@
                 return [
                     "status" => "error",
                     "mensaje" => "Internación no encontrada"
+                ];
+
+            } catch (Exception $e) {
+
+                return [
+                    "status" => "error",
+                    "mensaje" => "Error DB: " . $e->getMessage()
+                ];
+
+            } finally {
+                ConexionDb::disconnect();
+            }
+        }
+
+        public static function VerInternacionesByPac($idPaciente) {
+
+            try {
+                global $conn;
+                ConexionDb::connect();
+
+                $sql = "SELECT i.* from internaciones i
+                        WHERE i.IdPaciente =  :idPaciente
+                        ORDER BY i.IdInternacion DESC;";
+
+                $params = [
+                    [ 'clave' => ':idPaciente', 'valor' => $idPaciente]
+                ];
+
+                $result = ConexionDb::consult($sql, $params);
+
+                if ($result)
+                    return $result;
+
+                return [
+                    "status" => "error",
+                    "mensaje" => "No hay internaciones para dicho paciente"
                 ];
 
             } catch (Exception $e) {
