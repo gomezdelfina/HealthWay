@@ -3,6 +3,7 @@
     require_once($dirBaseFile . '/dataAccess/internaciones.php');
     require_once($dirBaseFile . '/dataAccess/revisiones.php');
     require_once($dirBaseFile . '/dataAccess/pacientes.php');
+    require_once($dirBaseFile . '/dataAccess/permisos.php');
 
     $response = [];
     $errors = [];

@@ -172,6 +172,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('fechaInter').value = data.FechaInicio || '';
         document.getElementById('fechaFinInter').value = data.FechaFin || '';
         document.getElementById('notasInter').value = data.Observaciones || '';
+
+        const idPacienteGlobal = data.IdPaciente;
+
+        document.getElementById("historia").href =
+        "http://localhost/HealthWay/api/internaciones/mostrarInternacionesHistByPac.php?idPaciente=" + idPacienteGlobal;
+
     });
 
 
