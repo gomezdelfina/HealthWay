@@ -1,10 +1,17 @@
 <?php
-    require_once(__DIR__ . '/../../includes/globals.php');
-    require_once($dirBaseFile . '/dataAccess/Notificaciones.php');
+    require_once("../../includes/globals.php");
+    require_once($dirBaseFile . "/dataAccess/notificaciones.php");
 
-    $id = $_GET["id"] ?? 0;
+    header("Content-Type: application/json");
 
-    if ($id) {
-        Notificaciones::marcarLeida($id);
+    if (!isset($_GET["id"])) {
+        echo json_encode(["ok" => false, "msg" => "Falta ID"]);
+        exit;
     }
+
+    $id = intval($_GET["id"]);
+
+    $result = Notificaciones::marcarLeida($id);
+
+    echo json_encode(["ok" => $result]);
 ?>
