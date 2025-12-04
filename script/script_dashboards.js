@@ -326,12 +326,18 @@ function mostrarInternaciones(lista) {
 
         <div class="mt-3">
             <p><strong>Plan OS:</strong> ${p.NombrePlan} (${p.NombreOS})</p>
-            <p><strong>Horas Incluidas:</strong> ${p.HorasInternacion}</p>
-            <p><strong>Horas Extras:</strong> ${costo.horasExtras}</p>
-            <p><strong>Costo Horas Normales:</strong> $${costo.costoNormal}</p>
-            <p><strong>Costo Horas Extras:</strong> $${costo.costoExtra}</p>
 
-            <h5 class="text-success">
+            <p>
+                <strong>Horas Incluidas:</strong> ${p.HorasInternacion}
+                <span class="text-muted">($${p.PrecioHora} c/u)</span>
+            </p>
+
+            <p>
+                <strong>Horas Extras:</strong> ${costo.horasExtras}
+                <span class="text-muted">($${p.PrecioHoraExtra} c/u)</span>
+            </p>
+
+            <h5 class="text-success mt-3">
                 Total a cobrar: $${costo.total}
             </h5>
         </div>
