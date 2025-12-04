@@ -685,6 +685,7 @@ async function renderizarTablaRec() {
 
     try{
         let recordatoriosData = await getRecordatorios();
+        let datosTipos = await getTiposRev();
     
         if(recordatoriosData.length === 0) {
             container.innerHTML = `
@@ -714,6 +715,7 @@ async function renderizarTablaRec() {
             `;
             
             recordatoriosData.forEach(rec => {
+                let proxEjec = rec.ProximaEjecucion != null ? rec.ProximaEjecucion : '';
                 html += `
                     <tr data-id="${rec.IdRecordatorio}">
                         <td>${rec.NombreCreador + ' ' + rec.ApellidoCreador}</td>
@@ -721,15 +723,20 @@ async function renderizarTablaRec() {
                         <td>${rec.NumeroHabitacion}</td>
                         <td>${rec.NumeroCama}</td>
                         <td>${rec.DescTipoRevision}</td>
-                        <th>${rec.ProximaEjecucion}</th>
+                        <th>${proxEjec}</th>
                         <td class="text-center">
                             <div class="btn-group btn-group-sm" role="group">
                                 <button id="btnVerRec" class="btn btn-sm btn-outline-dark me-2 btn-ver-rec" data-bs-toggle="modal" data-bs-target="#modalRecordatorio" data-id="${rec.IdRecordatorio}">
                                     <i class="bi bi-eye-fill me-2"></i>Ver
-                                </button>
+                                </button>`;
+                if(datosTipos.some(item => item.DescTipoRevision === rec.TipoRevision)){
+                    html += `
                                 <button id="btnEditarRec" class="btn btn-sm btn-outline-dark me-2 btn-editar-rec" data-bs-toggle="modal" data-bs-target="#modalRecordatorio" data-id="${rec.IdRecordatorio}">
                                     <i class="bi bi-pen me-2"></i>Editar
-                                </button>
+                                </button>`;
+                };
+
+                html += `
                             </div>
                         </td>
                     </tr>

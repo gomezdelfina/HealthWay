@@ -21,13 +21,13 @@
 
             <div class="row mb-4 align-items-center">
                 <?php if (userTienePermiso(10, $idUser)) { ?>
-                    <div id="createRev" class="col-md-2">
-                        <button id="btnCrearRev" class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#modalRevision">
+                    <div id="createRev" class="col-12 col-md-auto mb-3 mb-md-0">
+                        <button id="btnCrearRev" class="btn btn-success btn-md w-100 w-md-auto text-nowrap" data-bs-toggle="modal" data-bs-target="#modalRevision">
                             <i class="bi bi bi-card-list me-2"></i>Crear Revision
                         </button>
                     </div>
                 <?php } ?>
-                <div class="col-md-8">
+                <div class="col-12 col-md">
                     <div class="input-group">
                         <input id="buscadorRevs" type="text" class="form-control" placeholder="Buscar por Paciente, Cama o Habitacion">
                         <button id="btnBuscarRevs" class="btn btn-outline-primary" type="button"><i class="bi bi-search"></i> Buscar</button>
@@ -40,8 +40,7 @@
                     <div class="card-header text-white card-header-color">
                         Lista de Revisiones
                     </div>
-                    <div>
-                        <div id="divTablaRevs" class="card-body"></div>
+                    <div id="divTablaRevs" class="card-body table-responsive">
                     </div>
                 </div>
             </div>
@@ -50,7 +49,7 @@
             <?php
                 require_once($dirBaseFile . '/modules/revisiones/revision.php');
             ?>
+        </div>
     </main>
-
 </body>
 </html>

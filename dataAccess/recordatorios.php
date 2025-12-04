@@ -33,8 +33,8 @@ use Dba\Connection;
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
                     
-                    if ($objFecha) {
-                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
+                    if ($objFecha != null & $result[$key]['activo'] == 1) {
+                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i');
                     } else {
                         $result[$key]['ProximaEjecucion'] = null;
                     }
@@ -73,8 +73,8 @@ use Dba\Connection;
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
                     
-                    if ($objFecha) {
-                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
+                    if ($objFecha != null & $result[$key]['activo'] == 1) {
+                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i');
                     } else {
                         $result[$key]['ProximaEjecucion'] = null;
                     }
@@ -141,8 +141,8 @@ use Dba\Connection;
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
                     
-                    if ($objFecha) {
-                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
+                    if ($objFecha != null & $result[$key]['activo'] == 1) {
+                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i');
                     } else {
                         $result[$key]['ProximaEjecucion'] = null;
                     }
@@ -460,8 +460,8 @@ use Dba\Connection;
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
                     
-                    if ($objFecha) {
-                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
+                    if ($objFecha != null & $result[$key]['activo'] == 1) {
+                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i');
                     } else {
                         $result[$key]['ProximaEjecucion'] = null;
                     }
@@ -537,8 +537,8 @@ use Dba\Connection;
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
                     
-                    if ($objFecha) {
-                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i:s');
+                    if ($objFecha != null & $result[$key]['activo'] == 1) {
+                        $result[$key]['ProximaEjecucion'] = $objFecha->format('Y-m-d H:i');
                     } else {
                         $result[$key]['ProximaEjecucion'] = null;
                     }
@@ -621,7 +621,6 @@ use Dba\Connection;
                             
                             if (in_array($diaSemanaActual, $diasHabilitados)) {
                                 // Revisar semanas transcurridas
-                                // NOTA: Para simplificar, aquí usamos diff en días / 7
                                 $diferenciaDias = $inicio->diff($buscando)->days;
                                 // Ajuste para asegurar que contamos semanas completas desde inicio
                                 $semanasPasadas = floor($diferenciaDias / 7);
@@ -629,7 +628,7 @@ use Dba\Connection;
                                 if ($semanasPasadas % $freqSemana === 0) {
                                     // Verificar hora
                                     $candidato = clone $buscando;
-                                    $horaOriginal = explode(':', $inicio->format('H:i:s'));
+                                    $horaOriginal = explode(':', $inicio->format('H:i'));
                                     $candidato->setTime($horaOriginal[0], $horaOriginal[1], $horaOriginal[2]);
                                     
                                     if ($candidato > $ahora) {
@@ -650,7 +649,7 @@ use Dba\Connection;
                 return $proximaFecha;
 
             } catch (Exception $e) {
-                return null; // Si falla el cálculo, retornamos null para no romper el flujo
+                return null;
             }
         }
     }

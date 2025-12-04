@@ -442,6 +442,8 @@ async function renderizarTablaRev(){
         divTablaRevs = document.getElementById('divTablaRevs');
 
         let datos = await getRevisiones();
+        let datosTipos = await getTiposRev();
+        let datosEstados = await getEstadosRev();
 
         if(datos.length === 0) {
             divTablaRevs.innerHTML = `
@@ -487,10 +489,15 @@ async function renderizarTablaRev(){
                                     <div class="btn-group btn-group-sm" role="group">
                                         <button id="btnVerRev" class="btn btn-sm btn-outline-dark me-2 btn-ver-rev" data-bs-toggle="modal" data-bs-target="#modalRevision" data-id="${rev.IdRevisiones}">
                                             <i class="bi bi-eye-fill me-2"></i>Ver
-                                        </button>
-                                        <button id="btnEditarRev" class="btn btn-sm btn-outline-dark me-2 btn-editar-rev" data-bs-toggle="modal" data-bs-target="#modalRevision" data-id="${rev.IdRevisiones}">
-                                            <i class="bi bi-pen me-2"></i>Editar
-                                        </button>
+                                        </button>`;
+                if(datosTipos.some(item => item.DescTipoRevision === rev.TipoRevision) && datosEstados.some(item => item.DescEstadoRev === rev.EstadoRevision)){
+                    tableHTML += `
+                                <button id="btnEditarRev" class="btn btn-sm btn-outline-dark me-2 btn-editar-rev" data-bs-toggle="modal" data-bs-target="#modalRevision" data-id="${rev.IdRevisiones}">
+                                    <i class="bi bi-pen me-2"></i>Editar
+                                </button>`;
+                };
+
+                tableHTML += `
                                     </div>
                                 </td>
                             </tr>`;
