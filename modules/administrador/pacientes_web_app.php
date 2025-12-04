@@ -7,120 +7,171 @@
     <?php
         $module = 'administrador';
         require_once($dirBaseFile . '/includes/html/head.php');
-        echo '<script src="' . $dirBaseUrl . '/script/pacientes.js"></script>';
+        echo '<script src="' . $dirBaseUrl . '/script/pacientes.js" defer></script>';
     ?>
-    <link rel="stylesheet" href="styless.css">
 </head>
-<body class="p-4 md:p-8">
+<body class="bg-light">
     <header>
         <?php
             require($dirBaseFile . '/includes/html/navbar.php');
         ?>
     </header>
-    <div id="messageContainer" class="fixed top-0 right-0 m-4 w-full max-w-sm"></div>
 
-    <h1 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-green-400 pb-2">Gestion de Pacientes</h1>
-    
-    <div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
-        <div class="flex w-full md:w-auto space-x-2">
-            <input type="text" id="searchInput" placeholder="Buscar por Nombre, Apellido o DNI" class="p-2 border border-gray-300 rounded-lg w-full md:w-96 focus:ring-green-500 focus:border-green-500">
-            <button onclick="cargarPacientes()" class="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition">Buscar</button>
+    <!-- Contenedor principal -->
+    <div class="container mt-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">Gestión de Pacientes</h2>
+            <button class="btn btn-primary" onclick="openModal('crear')">
+                <i class="bi bi-plus-circle"></i> Nuevo Paciente
+            </button>
         </div>
-        <button onclick="openModal('crear')" class="btn-primary text-white font-semibold py-2 px-6 rounded-lg shadow-md">
-            + Nuevo Paciente
-        </button>
-    </div>
 
-    <div class="bg-white p-4 rounded-xl card overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="table-header">
-                <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">ID</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nombre Completo</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">DNI</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Fecha Nac.</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Obra Social</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Estado</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="pacientesTableBody" class="bg-white divide-y divide-gray-200">
-                <tr><td colspan="7" class="text-center py-4 text-gray-500">Cargando pacientes...</td></tr>
-            </tbody>
-        </table>
-    </div>
+        <!-- Buscador -->
+        <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" id="buscarInput" class="form-control" placeholder="Buscar por Paciente, Cama o Habitación" title="buscar">
+                    <button class="btn btn-outline-primary" id="btnBuscar" type="button">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+            </div>
+        </div>
 
-    <div id="pacienteModal" class="fixed inset-0 modal-overlay hidden items-center justify-center p-4">
-        <div class="bg-white rounded-xl w-full max-w-2xl card p-6" onclick="event.stopPropagation()">
-            <h2 id="modalTitle" class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2"></h2>
-            
-            <form id="pacienteForm">
-                <input type="hidden" id="pacienteId">
-                <input type="hidden" id="formType">
+        <!-- Mensajes Bootstrap Alerts -->
+        <div id="messageContainer" class="mb-3"></div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-                        <input type="text" id="nombre" name="nombre" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div>
-                        <label for="apellido" class="block text-sm font-medium text-gray-700">Apellido</label>
-                        <input type="text" id="apellido" name="apellido" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div>
-                        <label for="dni" class="block text-sm font-medium text-gray-700">DNI</label>
-                        <input type="number" id="dni" name="dni" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div>
-                        <label for="fechaNac" class="block text-sm font-medium text-gray-700">Fecha Nacimiento</label>
-                        <input type="date" id="fechaNac" name="fechaNac" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div>
-                        <label for="genero" class="block text-sm font-medium text-gray-700">Genero</label>
-                        <select id="genero" name="genero" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                            <option value="Hombre">Hombre</option>
-                            <option value="Mujer">Mujer</option>
-                            <option value="Otro">Otro</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="estadoCivil" class="block text-sm font-medium text-gray-700">Estado Civil</label>
-                        <select id="estadoCivil" name="estadoCivil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                            <option value="Soltero">Soltero</option>
-                            <option value="Casado">Casado</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="email" name="email" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div>
-                        <label for="telefono" class="block text-sm font-medium text-gray-700">Telefono</label>
-                        <input type="number" id="telefono" name="telefono" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div>
-                        <label for="nombreOS" class="block text-sm font-medium text-gray-700">Obra Social</label>
-                        <select id="nombreOS" name="nombreOS" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                            <!-- Opciones cargadas por JS -->
-                        </select>
-                    </div>
-                    <div id="habilitadoGroup" class="hidden">
-                        <label for="habilitado" class="block text-sm font-medium text-gray-700">Habilitado</label>
-                        <select id="habilitado" name="habilitado" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                            <option value="1">Si</option>
-                            <option value="0">No</option>
-                        </select>
-                    </div>
+        <!-- Tabla -->
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>DNI</th>
+                                <th>Fecha Nac</th>
+                                <th>Obra Social</th>
+                                <th>Estado</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pacientesTableBody">
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-muted">Cargando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 text-gray-700 bg-gray-200 font-semibold rounded-lg hover:bg-gray-300 transition">Cancelar</button>
-                    <button type="submit" id="submitButton" class="btn-primary text-white font-semibold py-2 px-4 rounded-lg shadow-md" title="1"></button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
-    <script src="../script/pacientes.js"></script>
+
+    <!-- ==========================
+        MODAL BOOTSTRAP
+    =========================== -->
+    <div class="modal fade" id="pacienteModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content shadow-lg">
+
+                <div class="modal-header">
+                    <h5 id="modalTitle" class="modal-title fw-bold"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form id="pacienteForm">
+
+                        <input type="hidden" id="pacienteId">
+                        <input type="hidden" id="formType">
+
+                        <div class="row g-3">
+
+                            <!-- Nombre -->
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre</label>
+                                <input id="nombre" type="text" class="form-control" required>
+                            </div>
+
+                            <!-- Apellido -->
+                            <div class="col-md-6">
+                                <label class="form-label">Apellido</label>
+                                <input id="apellido" type="text" class="form-control" required>
+                            </div>
+
+                            <!-- DNI -->
+                            <div class="col-md-6">
+                                <label class="form-label">DNI</label>
+                                <input id="dni" type="number" class="form-control" required>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input id="email" type="email" class="form-control" required>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="col-md-6">
+                                <label class="form-label">Teléfono</label>
+                                <input id="telefono" type="number" class="form-control" required>
+                            </div>
+
+                            <!-- FechaNacimiento -->
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha de nacimiento</label>
+                                <input id="fechaNac" type="date" class="form-control" required>
+                            </div>
+
+                            <!-- Género -->
+                            <div class="col-md-6">
+                                <label class="form-label">Género</label>
+                                <select id="genero" class="form-select" required>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Femenino">Femenino</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+
+                            <!-- Estado civil -->
+                            <div class="col-md-6">
+                                <label class="form-label">Estado Civil</label>
+                                <select id="estadoCivil" class="form-select" required>
+                                    <option>Soltero/a</option>
+                                    <option>Casado/a</option>
+                                    <option>Divorciado/a</option>
+                                    <option>Viudo/a</option>
+                                </select>
+                            </div>
+
+                            <!-- Obra Social -->
+                            <div class="col-md-6">
+                                <label class="form-label">Obra Social</label>
+                                <select id="nombreOS" class="form-select" required></select>
+                            </div>
+
+                            <!-- Habilitado (solo en editar) -->
+                            <div class="col-md-6 d-none" id="habilitadoGroup">
+                                <label class="form-label">Estado</label>
+                                <select id="habilitado" class="form-select">
+                                    <option value="1">Habilitado</option>
+                                    <option value="0">Inhabilitado</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="submitButton" class="btn btn-primary">Guardar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </body>
 </html>
