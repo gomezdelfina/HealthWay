@@ -320,11 +320,6 @@ function mostrarInternaciones(lista) {
                 <p><strong>DNI:</strong> ${p.DNI}</p>
                 <p><strong>Horas Totales:</strong> ${horasTotales}</p>
                 <p><strong>Observaciones:</strong> ${p.Observaciones ?? "Sin observaciones"}</p>
-
-                <button class="btn btn-sm btn-outline-primary"
-                    onclick="fetchRevisiones(${p.IdInternacion})">
-                    <i class="bi bi-search me-1"></i>Ver revisiones
-                </button>
             </div>
 
             <hr>
