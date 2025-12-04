@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-12-2025 a las 04:26:26
+-- Tiempo de generación: 04-12-2025 a las 02:23:34
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -550,7 +550,8 @@ INSERT INTO `permisos` (`IdPermiso`, `DescPermiso`) VALUES
 (45, 'Visualizar Gestion de Pacientes'),
 (46, 'Finalizar Internaciones'),
 (47, 'Visualizar Notificaciones'),
-(48, 'Visualizar historia clinica');
+(48, 'Visualizar historia clinica'),
+(49, 'Recuperar contraseña');
 
 -- --------------------------------------------------------
 
@@ -708,8 +709,11 @@ INSERT INTO `revisiones` (`IdRevisiones`, `IdInternacion`, `IdUsuario`, `FechaCr
 (32, NULL, 3, '2025-11-27 20:30:00', 4, 3, 'Fiebre superior a 39grados', 'Anginas', 'Ibuprofeno 1mgr para bajar la fiebre', ''),
 (33, 8, 3, '2025-11-27 20:43:00', 1, 2, 'Desmayo', 'Pulmonia', 'Medicacion intravenosa', 'Se midieron los signos vitales, el paciente se encuentra estable. Hola mundo'),
 (34, 8, 3, '2025-11-27 20:43:00', 1, 2, 'Desmayo', 'Pulmonia', 'Medicacion intravenosa', 'Se midieron los signos vitales, el paciente se encuentra estable.'),
-(35, 4, 3, '2025-11-27 20:58:00', 1, 1, 'hola mundo', 'asd', 'asd', 'asd'),
-(36, 7, 3, '2025-11-27 21:09:00', 1, 1, 'asd', 'ad', 'asd', 'act');
+(35, 4, 3, '2025-11-27 20:58:00', 1, 1, 'Dolor de espalda', 'Cancer de pulmon', 'Quimioterapia', ''),
+(36, 7, 3, '2025-11-27 21:09:00', 1, 1, '-', 'Arritmia cardiaca', 'Internacion para monitoreo', 'Se tomaros los signos vitales.\nPresion alta con respecto a la normal.\nSigue en observacion.'),
+(37, 10, 9, '2025-12-03 21:27:00', 4, 2, 'Fiebre', 'Anginas', 'Antibioticos', 'Se crea recordatorio de antibioticos:\ncada 2hs x 7 dias'),
+(38, 10, 9, '2025-12-03 21:27:00', 1, 2, 'Fiebre', 'Anginas', 'Antibioticos', 'Se midio el ritmo cardiaco, se estabilizó'),
+(39, 10, 9, '2025-12-03 21:27:00', 4, 2, 'Fiebre', 'Anginas', 'Antibioticos', 'Se crea recordatorio de antibioticos:\ncada 2hs x 7 dias');
 
 -- --------------------------------------------------------
 
@@ -846,7 +850,14 @@ INSERT INTO `roles_permisos` (`IdRoles_Perm`, `IdRol`, `IdPermiso`) VALUES
 (92, 7, 47),
 (93, 2, 47),
 (94, 4, 48),
-(95, 2, 48);
+(95, 2, 48),
+(103, 1, 49),
+(104, 2, 49),
+(105, 3, 49),
+(106, 4, 49),
+(107, 5, 49),
+(108, 6, 49),
+(109, 7, 49);
 
 -- --------------------------------------------------------
 
@@ -976,13 +987,13 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`IdUsuario`, `Usuario`, `Clave`, `Habilitado`, `Nombre`, `Apellido`, `Email`, `Telefono`, `token_recuperacion`, `token_expiracion`) VALUES
 (1, 'agarcia', '3cd6e84a34793dabc32d3748bc890aa88cd1e018d3d86170c0565248f9ab0d49', 1, 'Ana', 'García', 'ana.garcia@mail.com.ar', 5491145678901, NULL, NULL),
 (2, 'cmartinez', '04a61557a469ef923d66fa3b7617212283cd35e59b4bc33ed00975e4d1832e9a', 1, 'Carlos', 'Martínez', 'c.martinez@empresa.com', 5493515550001, NULL, NULL),
-(3, 'vsanchez', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 1, 'Valeria', 'Sánchez', 'gomezdelfina25@gmail.com', 5493414445566, 'ec70d653822f76c4904b10fa78e7debe', '2025-11-28 22:23:38'),
+(3, 'vsanchez', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 1, 'Valeria', 'Sánchez', 'gomezdelfina@gmail.com', 5493414445566, '63ffd031debcc54664dc97b79fee7c0b', '2025-12-03 22:03:48'),
 (4, 'jdiaz', '629cb398b51eb025476cb4e3176659d8e2e52a8b8cd25b13ee5d55669313d422', 1, 'Jorge', 'Díaz', 'jorge.diaz@mail.com', 5492616667788, NULL, NULL),
 (5, 'csosa', '55885176009fc065a7add27d23a3245d14488922edf068df36afa2e490d83331', 0, 'Camila', 'Sosa', 'cami.sosa@test.ar', 5491122334455, NULL, NULL),
 (6, 'fruiz', 'ca792355c5821ad530003360ac31a982759a4127e67c037c5a353074af36edd1', 1, 'Federico', 'Ruiz', 'fede.ruiz@servidor.com', 5492217778899, NULL, NULL),
 (7, 'ntorres', 'b2fc677635e97f5124cd7a209d83e13609b3403daf1f5730921fc3929f8ffdce', 1, 'Natalia', 'Torres', 'nati.torres@mail.com', 5493819990011, NULL, NULL),
-(8, 'psilva', '6fc6fe9b6404ed2fb80f762836349e53d6a2f680f5e23a322bd631dda5820fd0', 1, 'Pablo', 'Silva', 'pablo.silva@tech.com.ar', 5491133332211, NULL, NULL),
-(9, 'mcastro', '2d0bb132cdf675ab1ec10806d332a85e9aef84c4f73a2214d5318bc6c5905210', 1, 'Micaela', 'Castro', 'mica.castro@mail.com', 5492995556677, NULL, NULL),
+(8, 'psilva', '6fc6fe9b6404ed2fb80f762836349e53d6a2f680f5e23a322bd631dda5820fd0', 1, 'Pablo', 'Silva', 'gomezdelf@gmail.com', 5491133332211, '63ffd031debcc54664dc97b79fee7c0b', '2025-12-03 22:03:48'),
+(9, 'mcastro', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 1, 'Micaela', 'Castro', 'gomezdelfina25@gmail.com', 5492995556677, 'f3b6c65e94fd1a0f414967aa4526eca1', '2025-12-03 19:05:34'),
 (10, 'grios', 'fdfc8b3bf947e5ad7e1181921d0c9169337d3227df0ed62a7f21c2d2a6a065db', 1, 'Gonzalo', 'Ríos', 'gonza.rios@red.ar', 5493424441122, NULL, NULL),
 (11, 'vflores', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 1, 'Valentina', 'Flores', 'leandro8421@outlook.es', 5491167891234, '498f2a489f17656356c4f2defd655dc0', '2025-11-24 13:30:30'),
 (12, 'mbenitez', '3fbfcbcf63d64948270d1999029fb5c202c7360d9ce3a1aac752df71ad8ebed5', 0, 'Martín', 'Benítez', 'martin.b@empresa.com', 5493512223344, NULL, NULL),
@@ -1199,7 +1210,7 @@ ALTER TABLE `pacientes`
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
-  MODIFY `IdPermiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `IdPermiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT de la tabla `personascontacto`
@@ -1229,7 +1240,7 @@ ALTER TABLE `recordatorio`
 -- AUTO_INCREMENT de la tabla `revisiones`
 --
 ALTER TABLE `revisiones`
-  MODIFY `IdRevisiones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `IdRevisiones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -1241,7 +1252,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `roles_permisos`
 --
 ALTER TABLE `roles_permisos`
-  MODIFY `IdRoles_Perm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `IdRoles_Perm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT de la tabla `roles_usuarios`
