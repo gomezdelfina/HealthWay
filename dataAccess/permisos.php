@@ -87,9 +87,10 @@
             try{
                 ConexionDb::connect();
 
-                $sql = "SELECT DISTINCT T1.IdRol
+                $sql = "SELECT DISTINCT T1.IdRol, T2.DescRol
                         FROM roles_permisos T1
-                        WHERE T2.IdPermiso = :idPermiso;
+                        INNER JOIN roles T2 ON T1.IdRol = T2.IdRol
+                        WHERE T1.IdPermiso = :idPermiso;
                 ";
 
                 $params = [

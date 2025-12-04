@@ -138,11 +138,8 @@ function userTienePermiso($permiso, $user)
                 <div class="d-flex align-items-center order-2 order-lg-2">
                     <button type="button" id="btnNotificaciones" class="btn btn-light position-relative" title="notificacion">
                         <!-- Contador de notificaciones -->
-                        <span id="notifCount"
-                            class="badge rounded-pill bg-danger me-2">
-                            0
-                        </span>
-                        <i class="bi bi-bell"></i>
+                        <span id="notifCount" class="badge rounded-pill bg-danger me-2">0</span>
+                        <i class="bi bi-bell span-notif"></i>
                     </button>
                 </div>
             <?php } ?>

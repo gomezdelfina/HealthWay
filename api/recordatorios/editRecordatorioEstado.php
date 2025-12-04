@@ -51,7 +51,8 @@
                 if ($estado == '') {
                     $errors['Estado'] = 'El campo Estado no puede estar vacío';
                 } elseif ($estado != 'Pendiente' & 
-                        $estado != 'Atrasado') {
+                        $estado != 'Atrasado' & 
+                        $estado != 'Hecho') {
                     $errors['Estado'] = 'El campo Estado tiene un formato incorrecto';
                 }
             }
@@ -87,6 +88,8 @@
                         'error' => $errors['Estado']
                     ];
                 };
+
+                $response['msg'] = $msgError;
             }
         }
     }

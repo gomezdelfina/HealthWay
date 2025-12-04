@@ -1,5 +1,5 @@
 <?php
-    require_once(__DIR__ . '/../../includes/globals.php');
+;    require_once(__DIR__ . '/../../includes/globals.php');
     require_once($dirBaseFile . '/dataAccess/permisos.php');
     require_once($dirBaseFile . '/dataAccess/recordatorios.php');
     require_once($dirBaseFile . '/dataAccess/internaciones.php');
@@ -29,20 +29,18 @@
 
             if(empty($errors)){
                 $recs = Recordatorio::getRecordatoriosActivosByUser($userId);
+
                 $response['code'] = 200;
+                $response['msg'] = $recs;
 
                 $ahora = new DateTime();
+                $ahora = $ahora->format('Y-m-d H:i');
                 foreach ($recs as $rec) {
-                    $debeEjecutarse = false;
                     if($rec['ProximaEjecucion'] != null){
-                        $proxEjec = new DateTime($rec['ProximaEjecucion']);
-
-                        if ($ahora == $proxEjec) {
-                            $debeEjecutarse = true;
-                        }
+                        $proxEjec = $rec['ProximaEjecucion'];
                             
                         // Si debe ejecutarse, crear notificación
-                        if ($debeEjecutarse) {
+                        if ($ahora == $proxEjec) {
                             $tipoRev = $rec['TipoRevision'];
                             $permiso = 0;
 
@@ -74,20 +72,31 @@
                             $inter = $rec['IdInternacion'];
                             $roles = Permisos::getRolByPermiso($permiso);
                             $inter = internaciones::ObtenerInternacion($inter);
-                            $pac = $inter['NombrePaciente'];
+                            $pac = $inter['data']['NombrePaciente'];
 
                             //Creacion de notificacion para cada rol
                             foreach($roles as $rol){
-                                $notifCreada = Notificaciones::crear($rol,'Recordatorio de ' . $tipoRev, 
+                                $notifCreada = Notificaciones::crear($rol['DescRol'],'Recordatorio de ' . $tipoRev, 
                                 'Existe una revisión pendiente de tipo ' . $tipoRev . 'en paciente ' . $pac);
                             }
 
-                            //Cambio de estado de recordatorio a Atrasado
+                            //Cambio de estado de recordatorio
                             $recordatorio = [
-                                'IdRecordatorio' => $rec[$rec],
+                                'IdRecordatorio' => $rec['IdRecordatorio'],
                                 'Estado' => 'Atrasado'
                             ];
+
                             $editRec = Recordatorio::editRecordatorioEstado($recordatorio);
+                        }else {
+                            if ($rec['Estado'] == 'Hecho'){
+                                //Cambio de estado de recordatorio
+                                $recordatorio = [
+                                    'IdRecordatorio' => $rec['IdRecordatorio'],
+                                    'Estado' => 'Pendiente'
+                                ];
+
+                                $editRec = Recordatorio::editRecordatorioEstado($recordatorio);
+                            }
                         }
                     }
                 }
@@ -110,10 +119,8 @@
         $response['msg'] = 'Error interno de aplicacion';
     }
 
-    if($response['code'] != 200){
-        header('Content-Type: application/json');
-        http_response_code($response['code']);
-        echo json_encode($response['msg']);
-    }
+    header('Content-Type: application/json');
+    http_response_code($response['code']);
+    echo json_encode($response['msg']);
 
 ?>

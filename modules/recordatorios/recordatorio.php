@@ -171,7 +171,7 @@
                                 <div class="col-md-12 mb-3">
                                     <div class="form-check form-switch d-flex align-items-center ps-0 py-1">
                                         <input class="form-check-input ms-0 mt-0 me-3" type="checkbox" id="fechaFinActivo"
-                                            name="recordatorioActivo">
+                                            name="fechaFinActivo">
                                         <label class="form-check-label" for="fechaFinActivo">
                                             <strong>Definir fecha de finalización</strong>
                                         </label>
