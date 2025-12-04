@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     //Evento de boton Campanita
     document.getElementById("btnNotificaciones").addEventListener("click", () => {
 
-        // Primero limpia y coloca mensaje de carga
         document.getElementById("listaNotificaciones").innerHTML = `
             <div class="text-center py-3">
                 <div class="spinner-border"></div>
@@ -11,11 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
 
-        // Abrimos el modal de inmediato
         const myModal = new bootstrap.Modal(document.getElementById("modalNotificaciones"));
         myModal.show();
 
-        // Pedimos las notificaciones al servidor
         fetch("/HealthWay/api/notificaciones/getNotificaciones.php")
             .then(res => res.json())
             .then(data => {
@@ -32,15 +29,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                // Construimos la lista
                 let html = "<ul class='list-group'>";
 
                 data.forEach(n => {
                     html += `
-                        <li class="list-group-item">
-                            <b>${n.evento}</b><br>
-                            ${n.mensaje}<br>
-                            <small class="text-muted">${n.fecha}</small>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <b>${n.evento}</b>
+
+                            <button class="btn btn-success btnMarcarLeida" data-id="${n.id}">
+                                ✓
+                            </button>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ${n.mensaje}
+                            <span>${n.fecha}</span>
                         </li>
                     `;
                 });
@@ -48,6 +50,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 html += "</ul>";
 
                 document.getElementById("listaNotificaciones").innerHTML = html;
+
+                // 👉 AHORA SÍ ASIGNAMOS LOS EVENTOS (el HTML ya existe)
+                document.querySelectorAll(".btnMarcarLeida").forEach(btn => {
+
+                    btn.addEventListener("click", function () {
+                        const id = this.dataset.id;
+
+                        fetch("/HealthWay/api/notificaciones/marcarLeida.php?id=" + id)
+                            .then(res => res.json())
+                            .then(resp => {
+                                if (resp.ok) {
+                                    this.closest("li").remove();
+                                } else {
+                                    alert("Error al marcar como leída.");
+                                }
+                            })
+                            .catch(e => alert("Error de conexión"));
+                    });
+
+                });
+
             })
             .catch(e => {
                 document.getElementById("listaNotificaciones").innerHTML =
@@ -55,6 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
     });
+
+    
 
     // -- Ejecutar cada 10 segundos
     // Actualiza contador de notificaciones
@@ -85,7 +110,7 @@ function actualizarContador() {
 }
 
 function revisarEjecucionRecordatorio() {
-    fetch('/HealthWay/api/recordatorios/createRecordatorioNotif.php')
+    fetch('/HealthWay/api/recordatorios/createRecordatoriosNotif.php')
         .then(response => response.json())
         .catch(error => console.error('Error en cron:', error));
 }
