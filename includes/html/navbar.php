@@ -99,7 +99,7 @@ function userTienePermiso($permiso, $user)
                                             echo 'active';
                                         } ?>"
                         href="<?php echo $dirBaseUrl ?>/modules/administrador/pacientes_web_app.php"
-                        id="gestionUsu">Gestion Usuarios</a>
+                        id="gestionPac">Gestion Pacientes</a>
                 </li>
             <?php } ?>
             <?php if (userTienePermiso(9, $idUser)) { //Visualizar revisiones
