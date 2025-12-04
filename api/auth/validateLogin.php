@@ -40,7 +40,7 @@
                 $errors['clave'] = 'El campo clave no puede ser vacío.';
             }
         }
-
+ 
         //PROCESAR
         if (!empty($errors)) {
             if(isset($errors['user'])){
@@ -65,9 +65,7 @@
                     "Usuario" => $userLogin,
                     "Clave" => $claveLogin
                 ];
-
                 $userResult = Usuarios::getUsuarioByUserPsw($user);
-
                 $response['code'] = 200;
                 $response['msg'] = $userResult;
 
