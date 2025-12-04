@@ -1,7 +1,10 @@
 <?php
+    date_default_timezone_set('America/Argentina/Buenos_Aires');
+
     require_once(__DIR__ . '/../../includes/globals.php');
     require_once($dirBaseFile . '/utils/mailer.php');
     require_once($dirBaseFile . '/dataAccess/usuarios.php');
+    require_once($dirBaseFile . '/dataAccess/permisos.php');
 
     $errors = [];
     $response = [];
@@ -30,6 +33,8 @@
                 $errors['idUsuario'] = 'El campo idUsuario no puede ser vacío.';
             }elseif(!preg_match('/^[0-9]+$/', $idUsuario)){
                 $errors['idUsuario'] = 'El campo idUsuario no contiene el formato correcto.';
+            }elseif(!Permisos::tienePermiso(49, $idUsuario)){
+                $errors['idUsuario'] = 'El usuario no tiene permiso para la peticion';
             }
         }
 

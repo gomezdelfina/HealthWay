@@ -34,59 +34,61 @@
                 $ahora = new DateTime();
                 foreach ($recs as $rec) {
                     $debeEjecutarse = false;
-                    $proxEjec = new DateTime($rec['ProximaEjecucion']);
+                    if($rec['ProximaEjecucion'] != null){
+                        $proxEjec = new DateTime($rec['ProximaEjecucion']);
 
-                    if ($ahora == $proxEjec) {
-                        $debeEjecutarse = true;
-                    }
-                        
-                    // Si debe ejecutarse, crear notificación
-                    if ($debeEjecutarse) {
-                        $tipoRev = $rec['TipoRevision'];
-                        $permiso = 0;
-
-                        switch($tipoRev){
-                            case 1: 
-                                $permiso = 15;
-                                break;
-                            case 2:
-                                $permiso = 16;
-                                break;
-                            case 3:
-                                $permiso = 17;
-                                break;
-                            case 4:
-                                $permiso = 18;
-                                break;
-                            case 5:
-                                $permiso = 19;
-                                break;
-                            case 6:
-                                $permiso = 20;
-                                break;
-                            case 7:
-                                $permiso = 27;
-                                break;
+                        if ($ahora == $proxEjec) {
+                            $debeEjecutarse = true;
                         }
+                            
+                        // Si debe ejecutarse, crear notificación
+                        if ($debeEjecutarse) {
+                            $tipoRev = $rec['TipoRevision'];
+                            $permiso = 0;
 
-                        //Datos de Notificacion
-                        $inter = $rec['IdInternacion'];
-                        $roles = Permisos::getRolByPermiso($permiso);
-                        $inter = internaciones::ObtenerInternacion($inter);
-                        $pac = $inter['NombrePaciente'];
+                            switch($tipoRev){
+                                case 1: 
+                                    $permiso = 15;
+                                    break;
+                                case 2:
+                                    $permiso = 16;
+                                    break;
+                                case 3:
+                                    $permiso = 17;
+                                    break;
+                                case 4:
+                                    $permiso = 18;
+                                    break;
+                                case 5:
+                                    $permiso = 19;
+                                    break;
+                                case 6:
+                                    $permiso = 20;
+                                    break;
+                                case 7:
+                                    $permiso = 27;
+                                    break;
+                            }
 
-                        //Creacion de notificacion para cada rol
-                        foreach($roles as $rol){
-                            $notifCreada = Notificaciones::crear($rol,'Recordatorio de ' . $tipoRev, 
-                            'Existe una revisión pendiente de tipo ' . $tipoRev . 'en paciente ' . $pac);
+                            //Datos de Notificacion
+                            $inter = $rec['IdInternacion'];
+                            $roles = Permisos::getRolByPermiso($permiso);
+                            $inter = internaciones::ObtenerInternacion($inter);
+                            $pac = $inter['NombrePaciente'];
+
+                            //Creacion de notificacion para cada rol
+                            foreach($roles as $rol){
+                                $notifCreada = Notificaciones::crear($rol,'Recordatorio de ' . $tipoRev, 
+                                'Existe una revisión pendiente de tipo ' . $tipoRev . 'en paciente ' . $pac);
+                            }
+
+                            //Cambio de estado de recordatorio a Atrasado
+                            $recordatorio = [
+                                'IdRecordatorio' => $rec[$rec],
+                                'Estado' => 'Atrasado'
+                            ];
+                            $editRec = Recordatorio::editRecordatorioEstado($recordatorio);
                         }
-
-                        //Cambio de estado de recordatorio a Atrasado
-                        $recordatorio = [
-                            'IdRecordatorio' => $rec[$rec],
-                            'Estado' => 'Atrasado'
-                        ];
-                        $editRec = Recordatorio::editRecordatorioEstado($recordatorio);
                     }
                 }
             }else{

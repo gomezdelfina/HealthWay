@@ -21,13 +21,13 @@
 
             <div class="row mb-4 align-items-center">
                 <?php if (userTienePermiso(11, $idUser)) { ?>
-                    <div id="createRec" class="col-md-2">
-                        <button class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#modalRecordatorio">
+                    <div id="createRec" class="col-12 col-md-auto mb-3 mb-md-0">
+                        <button class="btn btn-success btn-md w-100 w-md-auto text-nowrap" data-bs-toggle="modal" data-bs-target="#modalRecordatorio">
                             <i class="bi bi-calendar-event me-2"></i>Crear Recordatorio
                         </button>
                     </div>
                 <?php } ?>
-                <div class="col-md-8">
+                <div class="col-12 col-md">
                     <div class="input-group">
                         <input id="buscadorRecs" type="text" class="form-control" placeholder="Buscar por Paciente, Cama o Habitacion">
                         <button class="btn btn-outline-primary" id="btnBuscarRecs" type="button"><i class="bi bi-search"></i> Buscar</button>
@@ -40,8 +40,7 @@
                     <div class="card-header text-white card-header-color">
                         Lista de Recordatorios
                     </div>
-                    <div>
-                        <div id="divTablaRecs" class="card-body"></div>
+                    <div id="divTablaRecs" class="card-body table-responsive">
                     </div>
                 </div>
             </div>

@@ -94,8 +94,9 @@ button.btn-sendEmail {
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 8px;
-    width: 13%;
+    padding: 8px 25px;
+    width: auto;
+    min-width: 120px;
 }
 
 button.btn-cancelEmail {
@@ -104,8 +105,9 @@ button.btn-cancelEmail {
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 8px;
-    width: 13%;
+    padding: 8px 25px;
+    width: auto;
+    min-width: 120px;
 }
 
 button.btn-submit {
@@ -114,8 +116,9 @@ button.btn-submit {
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 8px;
-    width: 13%;
+    padding: 8px 25px;
+    width: auto;
+    min-width: 120px;
 }
 
 .btn-login:hover {
@@ -207,19 +210,19 @@ div .text-danger{
 }
 
 /**** Revisiones ****/
-#divTablaRevs {
-    height: 550px;
-    overflow-y: auto;
+/**** Recordatorios ****/
+ #divTablaRevs,
+ #divTablaRecs {
+    height: auto;
+    max-height: none;
+    overflow-x: auto;
+    width: 100%;
+    display: block;
 }
 
 #divTablaRevs .table{
     width: 100%;
     margin-bottom: 0;
-}
-
-#divTablaRecs {
-    height: 550px;
-    overflow-y: auto;
 }
 
 #divTablaRecs .table{
@@ -287,17 +290,6 @@ body .containerEmail {
     font-size: 12px;
     color: #777777;
 }
-        
-/**** MediaQuerys ****/
-@media only screen and (max-width: 706px) {
-    button.btn-sendEmail {
-        width: 100%;
-    }
-
-    button.btn-cancelEmail {
-        width: 100%;
-    }
-}
 
 /*** Camas y habitaciones  ***/
 #DivComp {
@@ -312,9 +304,8 @@ body .containerEmail {
     display : none;
 }
 
-/*** NOTIFICACIONES 
-
-span {
+/*** NOTIFICACIONES ***/
+/*span {
 
     width:20px; 
     height:20px; 
@@ -322,11 +313,11 @@ span {
     justify-content:center; 
     align-items:center;
 
-}***/
+}
 
 i {
     font-size: 1.5rem;
-}
+}*/
 
 /*** Historial Medico ***/
 .doc-container {
@@ -339,10 +330,10 @@ i {
 }
 
 .doc-container .section-title {
-    border-bottom: 2px solid #0d6efd;
+    border-bottom: 2px solid #007bff;
     padding-bottom: 10px;
     margin-bottom: 20px;
-    color: #0d6efd;
+    color: #007bff;
     font-weight: 700;
     text-transform: uppercase;
     font-size: 1.1rem;
@@ -382,3 +373,87 @@ div.div-ul {
 }
 
 /*** ADMINISTRADOR ***/
+
+/*** MediaQuerys para Celulares y Tablets ***/
+@media only screen and (max-width: 991px) {
+    #divTablaRevs table th,
+    #divTablaRecs table th {
+        display: none;
+    }
+
+    #divTablaRevs table td,
+    #divTablaRecs table td {
+        height: auto;
+        max-height: none;
+        overflow-x: auto;
+        width: 100%;
+        display: block; 
+        white-space: nowrap;
+        align-items: center;
+    }
+}
+
+/**** MediaQuerys para Celulares ****/
+@media only screen and (max-width: 576px) {
+    /*** Login ***/
+    .login-container {
+        padding: 20px;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .hospital-logo img{
+        width: 60px;
+        margin-bottom: 10px;
+    }
+
+    .login-subtitle {
+        margin-bottom: 15px;
+    }
+
+    button.btn-sendEmail {
+        width: 100%;
+    }
+
+    button.btn-cancelEmail {
+        width: 100%;
+    }
+
+    button.btn-submit {
+        width: 100%;
+    }
+}
+
+/**** MediaQuerys para Celulares Horizontal ****/
+@media screen and (orientation: landscape) and (max-height: 500px) {
+    /*** Login ***/
+    .img-background {
+        height: auto;  
+        min-height: 100vh;
+        padding: 20px 0;  
+        align-items: flex-start;
+    }
+
+    .login-container {
+        padding: 15px 30px;
+        margin-top: 20px;
+    }
+
+    .hospital-logo img{
+        width: 35px;
+        margin-bottom: 2px;
+    }
+
+    .login-subtitle {
+        display: none;
+    }
+
+    .login-title {
+        font-size: 1rem;
+        margin-bottom: 2px;
+    }
+    
+    .input-group.mb-2 {
+        margin-bottom: 0.5rem;
+    }
+}

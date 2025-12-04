@@ -1,7 +1,30 @@
 <?php
     require_once(__DIR__ . '/../../includes/globals.php');
+    require_once($dirBaseFile . '/dataAccess/usuarios.php');
+    require_once($dirBaseFile . '/dataAccess/permisos.php');
 
-    $token = isset($_GET['token']) ? $_GET['token'] : '';
+    $idUser = '';
+    $token = '';
+   
+    try{
+        $token = isset($_GET['token']) ? $_GET['token'] : '';
+
+        $result = Usuarios::getUsuarioByToken($token);
+
+        if(!empty($result)){
+            $idUser = $result[0]["IdUsuario"];
+
+            if(!Permisos::tienePermiso(49,$idUser)){
+                throw new Exception();
+            }
+        }else{
+            throw new Exception();
+        }
+    }catch(Exception $e){
+        echo "Problemas al recuperar la contraseña. Contáctese con el Centro de Soporte de Healthway.";
+        die;
+    }
+    
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -25,7 +48,7 @@
 
                 <form id="resetPasswordForm" method="POST" novalidate>
                     <input type="hidden" name="token" id="token" value="<?php echo $token; ?>">
-                    <div class="mb-3">
+                    <div class="mb-1">
                         <label for="newPass" class="form-label text-start w-100">Nueva contraseña</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
@@ -37,7 +60,7 @@
                         <div id="newPass-error" class="text-danger"></div>
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-2">
                         <label for="confirmPass" class="form-label text-start w-100">Confirmar contraseña</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
@@ -55,7 +78,7 @@
                         <i class="bi bi-check-circle me-2"></i>Cambiar contraseña
                     </button>
 
-                    <div class="mt-4 text-center">
+                    <div class="mt-2 text-center">
                         <a href="<?php echo $dirBaseUrl ?>/index.php" class="text-decoration-none text-muted">
                             <i class="bi bi-arrow-left me-1"></i> Volver al inicio de sesión
                         </a>

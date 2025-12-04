@@ -85,7 +85,7 @@ function actualizarContador() {
 }
 
 function revisarEjecucionRecordatorio() {
-    fetch('/HealthWay/api/recordatorios/createRecordatorioNotif.php')
+    fetch('/HealthWay/api/recordatorios/createRecordatoriosNotif.php')
         .then(response => response.json())
         .catch(error => console.error('Error en cron:', error));
 }

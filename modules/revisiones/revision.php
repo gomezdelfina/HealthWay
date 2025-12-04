@@ -28,7 +28,7 @@
 
                             <div class="row">
                                 <!-- MUESTRA PACIENTES DE INTERNACIONES ACTIVAS (CLAVE: ID INTERNACION / VALOR: PACIENTE CORRESP)-->
-                                <div class="col-4 mb-3">
+                                <div class="col-mb-4 col-lg mb-3">
                                     <label class="form-label" for="revPac">Paciente</label>
                                     <select class="form-select" id="revPac" name="revPac">
                                         <option value='-1' selected="true">Seleccionar un paciente</option>
@@ -39,13 +39,13 @@
                                 </div>
                         
                                 <!-- MUESTRA FECHA ACTUAL -->
-                                <div class="col-4 mb-3">
+                                <div class="col-mb-4 col-lg mb-3">
                                     <label class="form-label" for="fechaRevis">Fecha revisión</label>
                                     <input class="form-control" type="date" id="fechaRevis" name="fechaRevis" value="<?php echo ($fechaRevis); ?>" disabled>
                                 </div>
 
                                 <!-- MUESTRA HORA ACTUAL -->
-                                <div class="col-4 mb-3">
+                                <div class="col-mb-4 col-lg mb-3">
                                     <label class="form-label" for="horaRevis">Hora</label>
                                     <input class="form-control" type="time" id="horaRevis" name="horaRevis" value="<?php echo ($horaRevis); ?>" disabled>
                                 </div>
@@ -53,7 +53,7 @@
 
                             <div class="row">
                                 <!-- MUESTRA TIPOS DE REVISIONES SEGUN ROL-->
-                                <div class="col-6 mt-1">
+                                <div class="col-mb-6 col-lg mt-1">
                                     <label class="form-label" for="tipoRevis">Tipo</label>
                                     <select class="form-select" id="tipoRevis" name="tipoRevis">
                                         <option value='-1' selected="true">Seleccionar tipo de revisión</option>
@@ -64,7 +64,7 @@
                                 </div>
 
                                 <!-- MUESTRA ESTADOS DE REVISIONES SEGUN ROL-->
-                                <div class="col-6 mt-1">
+                                <div class="col-mb-6 col-lg mt-1">
                                     <label class="form-label" for="estadoRevis">Estado</label>
                                     <select class="form-select" id="estadoRevis" name="estadoRevis">
                                         <option value='-1' selected="true">Seleccionar estado de revisión</option>
