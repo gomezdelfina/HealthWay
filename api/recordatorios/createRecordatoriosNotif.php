@@ -1,5 +1,5 @@
 <?php
-;    require_once(__DIR__ . '/../../includes/globals.php');
+    require_once(__DIR__ . '/../../includes/globals.php');
     require_once($dirBaseFile . '/dataAccess/permisos.php');
     require_once($dirBaseFile . '/dataAccess/recordatorios.php');
     require_once($dirBaseFile . '/dataAccess/internaciones.php');
