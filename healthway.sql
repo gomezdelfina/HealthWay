@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-12-2025 a las 02:23:34
+-- Tiempo de generación: 05-12-2025 a las 00:05:31
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -420,8 +420,9 @@ CREATE TABLE `notificaciones` (
 --
 
 INSERT INTO `notificaciones` (`id`, `rol_destino`, `evento`, `mensaje`, `fecha`, `leido`) VALUES
-(9, 'medico', 'Internacion Creada', 'Se creó una internación para el paciente ID: 10', '2025-11-28 19:42:04', 0),
-(10, 'medico', 'Internacion Creada', 'Se creó una internación para el paciente ID: 10', '2025-11-28 19:46:30', 0);
+(9, 'medico', 'Internacion Creada', 'Se creó una internación para el paciente ID: 10', '2025-11-28 19:42:04', 1),
+(10, 'medico', 'Internacion Creada', 'Se creó una internación para el paciente ID: 10', '2025-11-28 19:46:30', 1),
+(11, 'Medico Especial', 'Recordatorio de 6', 'Existe una revisión pendiente de tipo 6en paciente ', '2025-12-04 19:26:30', 0);
 
 -- --------------------------------------------------------
 
@@ -625,7 +626,7 @@ CREATE TABLE `recordatorio` (
   `IdUsuario` int(11) DEFAULT NULL,
   `TipoRevision` int(11) NOT NULL,
   `FechaCreacion` datetime DEFAULT current_timestamp(),
-  `Estado` enum('Pendiente','Atrasado') DEFAULT 'Pendiente',
+  `Estado` enum('Pendiente','Atrasado','Hecho') DEFAULT 'Pendiente',
   `FechaInicioRec` datetime NOT NULL,
   `FechaFinRec` datetime NOT NULL,
   `Frecuencia` enum('Diaria','Semanal','Unica Vez','Horas') NOT NULL,
@@ -648,8 +649,11 @@ CREATE TABLE `recordatorio` (
 --
 
 INSERT INTO `recordatorio` (`IdRecordatorio`, `IdInternacion`, `IdUsuario`, `TipoRevision`, `FechaCreacion`, `Estado`, `FechaInicioRec`, `FechaFinRec`, `Frecuencia`, `FrecuenciaHoras`, `FrecuenciaDias`, `FrecuenciaSem`, `RepetirLunes`, `RepetirMartes`, `RepetirMiercoles`, `RepetirJueves`, `RepetirViernes`, `RepetirSabado`, `RepetirDomingo`, `Observaciones`, `activo`) VALUES
-(1, 4, 3, 4, '2025-11-29 16:42:00', '', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Horas', 8, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'prueba rec2', 0),
-(2, 6, 3, 1, '2025-11-29 17:00:00', '', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Unica Vez', NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'hola mundo22', 1);
+(1, 4, 3, 4, '2025-11-29 16:42:00', 'Pendiente', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Horas', 8, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'prueba rec2', 1),
+(2, 6, 3, 1, '2025-11-29 19:01:00', 'Pendiente', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Unica Vez', NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'hola mundo22', 0),
+(3, 8, 9, 3, '2025-12-04 16:17:00', 'Pendiente', '2025-12-04 17:42:00', '0000-00-00 00:00:00', 'Diaria', NULL, 1, NULL, 0, 0, 0, 0, 0, 0, 0, NULL, 1),
+(4, 9, 9, 4, '2025-12-04 17:44:00', 'Pendiente', '2025-12-04 17:45:00', '0000-00-00 00:00:00', 'Semanal', NULL, NULL, 1, 0, 0, 0, 1, 1, 1, 1, 'Inyeccion de antibiotico', 1),
+(5, 12, 8, 6, '2025-12-04 18:48:00', 'Atrasado', '2025-12-04 19:25:00', '0000-00-00 00:00:00', 'Unica Vez', NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'Extirpar riñon', 1);
 
 -- --------------------------------------------------------
 
@@ -1192,7 +1196,7 @@ ALTER TABLE `internaciones`
 -- AUTO_INCREMENT de la tabla `notificaciones`
 --
 ALTER TABLE `notificaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `obrassociales`
@@ -1234,7 +1238,7 @@ ALTER TABLE `planes_obrassociales`
 -- AUTO_INCREMENT de la tabla `recordatorio`
 --
 ALTER TABLE `recordatorio`
-  MODIFY `IdRecordatorio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `IdRecordatorio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `revisiones`
