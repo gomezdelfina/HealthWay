@@ -41,9 +41,22 @@
                 }
             }
 
+            //ACTIVO
+            if (!isset($data['activo'])) {
+                $errors['activo'] = 'El campo activo no puede faltar en la petición';
+            } else {
+                $activo = trim($data['activo']);
+
+                if ($activo == '') {
+                    $errors['activo'] = 'El campo activo no puede estar vacío';
+                } elseif (!preg_match('/^[0-1]$/', $idRecordatorio)) {
+                    $errors['activo'] = 'El campo activo no tiene el formato correcto';
+                }
+            }
+
             if (empty($errors)) {
                 try{
-                    $recAct = Recordatorio::inactivarRecordatorio($idRecordatorio);
+                    $recAct = Recordatorio::inactivarRecordatorio($idRecordatorio, $activo);
 
                     $response['code'] = 200;
                     $response['msg'] = $recAct;
@@ -59,6 +72,13 @@
                     $msgError[] = [
                         'campo' => 'IdRecordatorio',
                         'error' => $errors['IdRecordatorio']
+                    ];
+                };
+
+                if(isset($errors['activo'])){
+                    $msgError[] = [
+                        'campo' => 'activo',
+                        'error' => $errors['activo']
                     ];
                 };
 
