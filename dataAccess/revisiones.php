@@ -1,9 +1,8 @@
 <?php
-
-use Dba\Connection;
-
     global $dirBaseFile;
     require_once($dirBaseFile . '/conexiones/conectorMySQL.php');
+    require_once($dirBaseFile . '/dataAccess/internaciones.php');
+    require_once($dirBaseFile . '/dataAccess/recordatorios.php');
 
     class Revisiones
     {
@@ -150,6 +149,31 @@ use Dba\Connection;
                 $result = ConexionDb::consult($sql,$params);
 
                 ConexionDb::disconnect();
+
+                if(!empty($result) & 
+                   ($revision["EstadoRevision"] == 5 || $revision["EstadoRevision"] == 4)){
+                        //Obtener internacion de revision
+                        $rev = self::getRevisionById($revision['IdRevision']);
+
+                        //Cerrar internacion
+                        if(!empty($rev)){
+                            internaciones::FinalizarInternacion($rev['IdInternacion']);
+                        }else{
+                            throw new Exception("Problemas al finalizar internacion");
+                        }  
+                        
+                        //Obtener recordatorios de revision
+                        if(!empty($rev)){
+                            $recs = Recordatorio::getRecordatoriosByInt($rev['IdInternacion']);
+
+                            //Inactivar recordatorios
+                            foreach ($recs as $rec){
+                                Recordatorio::inactivarRecordatorio($rec['IdRecordatorio']);
+                            }
+                        }else{
+                            throw new Exception("Problemas al finalizar internacion");
+                        }  
+                }
                 
                 return $result;
             } catch (Exception $e) {
@@ -222,8 +246,7 @@ use Dba\Connection;
 
         public static function editRevision($revision){
             try{
-                require_once($dirBaseFile . '/dataAccess/internaciones.php');
-                require_once($dirBaseFile . '/dataAccess/recordatorios.php');
+                
 
                 if (is_null($revision)) {
                     throw new Exception("El campo IdRevision no puede estar vacío");
@@ -255,7 +278,7 @@ use Dba\Connection;
                 ConexionDb::disconnect();
                 
                 if(!empty($result) & 
-                   (strpos($revision["EstadoRevision"], 5) == 0 || strpos($revision["EstadoRevision"], 4))){
+                   ($revision["EstadoRevision"] == 5 || $revision["EstadoRevision"] == 4)){
                         //Obtener internacion de revision
                         $rev = self::getRevisionById($revision['IdRevision']);
 

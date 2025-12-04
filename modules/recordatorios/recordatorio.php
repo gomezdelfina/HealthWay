@@ -54,24 +54,24 @@
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">Tipo de Recordatorio <span class="text-danger">*</span></label>
-                                    <div class="btn-group w-100" role="group">
+                                    <div class="w-100 d-flex flex-column flex-lg-row" role="group">
                                         <input type="radio" class="btn-check" name="op" id="opUnaVez" checked>
-                                        <label class="btn btn-outline-secondary" for="opUnaVez">
+                                        <label class="btn btn-outline-secondary w-100" for="opUnaVez">
                                             <i class="bi bi-calendar-check me-1"></i>Una vez
                                         </label>
 
                                         <input type="radio" class="btn-check" name="op" id="opPorHoras">
-                                        <label class="btn btn-outline-secondary" for="opPorHoras">
+                                        <label class="btn btn-outline-secondary w-100" for="opPorHoras">
                                             <i class="bi bi-clock-history me-1"></i>Cada X horas
                                         </label>
 
                                         <input type="radio" class="btn-check" name="op" id="opDiariamente">
-                                        <label class="btn btn-outline-secondary" for="opDiariamente">
+                                        <label class="btn btn-outline-secondary w-100" for="opDiariamente">
                                             <i class="bi bi-calendar-day me-1"></i>Diariamente
                                         </label>
 
                                         <input type="radio" class="btn-check" name="op" id="opSemanalmente">
-                                        <label class="btn btn-outline-secondary" for="opSemanalmente">
+                                        <label class="btn btn-outline-secondary w-100" for="opSemanalmente">
                                             <i class="bi bi-calendar-week me-1"></i>Semanalmente
                                         </label>
                                     </div>

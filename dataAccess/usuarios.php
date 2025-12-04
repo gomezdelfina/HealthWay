@@ -1,4 +1,5 @@
 <?php
+    date_default_timezone_set('America/Argentina/Buenos_Aires');
     global $dirBaseFile;
     require_once($dirBaseFile . '/conexiones/conectorMySQL.php');
 
@@ -83,6 +84,33 @@
                 
             } catch (Exception) {
                 return [];
+            }
+        }
+
+        public static function getUsuarioByToken($token)
+        {
+            if (is_null($token)) {
+                throw new Exception();
+            }
+
+            try{
+                ConexionDb::connect();
+
+                $sql = "SELECT IdUsuario FROM usuarios WHERE token_recuperacion = :token
+                        AND Habilitado = 1";
+
+                $params = [
+                    ["clave" => ":token", "valor" => $token]
+                ];
+
+                $result = ConexionDb::consult($sql, $params);
+
+                ConexionDb::disconnect();
+
+                return $result;
+                
+            } catch (Exception $e) {
+                throw new Exception("Problemas al obtener el usuario por token: " . $e);
             }
         }
 
