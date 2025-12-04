@@ -1,6 +1,12 @@
+//---------------------------------------------------------
+// CONFIG
+//---------------------------------------------------------
 const API_BASE = '/HealthWay/api/administrador';
 
-const modal = document.getElementById('pacienteModal');
+// Bootstrap modal
+let pacienteModal;
+
+// Form elements
 const form = document.getElementById('pacienteForm');
 const submitButton = document.getElementById('submitButton');
 const modalTitle = document.getElementById('modalTitle');
@@ -9,237 +15,229 @@ const formTypeInput = document.getElementById('formType');
 const osSelect = document.getElementById('nombreOS');
 const habilitadoGroup = document.getElementById('habilitadoGroup');
 
+//---------------------------------------------------------
+// INIT
+//---------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
+
+    pacienteModal = new bootstrap.Modal(document.getElementById('pacienteModal'));
+
     cargarPacientes();
     cargarObrasSociales();
+
     form.addEventListener('submit', handleFormSubmit);
 
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    document.getElementById('buscarInput').addEventListener('keypress', e => {
         if (e.key === 'Enter') {
             e.preventDefault();
             cargarPacientes();
         }
     });
-
-    modal.addEventListener('click', (e) => {
-        if (e.target.id === 'pacienteModal') {
-            closeModal();
-        }
-    });
 });
 
+//---------------------------------------------------------
+// MENSAJES (Bootstrap Alerts)
+//---------------------------------------------------------
 function mostrarMensaje(message, isSuccess) {
     const container = document.getElementById('messageContainer');
-    const alertClass = isSuccess ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700';
+    const tipo = isSuccess ? 'success' : 'danger';
 
     const html = `
-        <div class="${alertClass} border-l-4 p-4 mb-3 rounded-lg shadow-lg" role="alert">
-            <p class="font-bold">${isSuccess ? 'Éxito' : 'Error'}</p>
-            <p class="text-sm">${message}</p>
+        <div class="alert alert-${tipo} alert-dismissible fade show shadow" role="alert">
+            <strong>${isSuccess ? 'Éxito:' : 'Error:'}</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     `;
 
     container.insertAdjacentHTML('beforeend', html);
 
     setTimeout(() => {
-        const alert = container.lastChild;
+        const alert = container.querySelector('.alert');
         if (alert) alert.remove();
     }, 5000);
 }
 
-function ajaxRequest(url, method, data, callback) {
-    const xhr = new XMLHttpRequest();
-    xhr.open(method, url, true);
+//---------------------------------------------------------
+// FETCH GENÉRICO
+//---------------------------------------------------------
+async function fetchAPI(url, options = {}) {
+    try {
+        const res = await fetch(url, options);
+        const data = await res.json();
 
-    xhr.onload = function() {
-        let response;
-        try {
-            response = JSON.parse(xhr.responseText);
-        } catch (e) {
-            mostrarMensaje('Respuesta inválida del servidor.', false);
-            return;
+        if (!data.success) {
+            mostrarMensaje(data.message || "Error desconocido", false);
+            return null;
         }
 
-        if (response.success) {
-            callback(response);
-        } else {
-            mostrarMensaje(response.message, false);
-        }
-    };
+        return data;
 
-    xhr.onerror = function() {
-        mostrarMensaje('Error de red o servidor al comunicarse con la API.', false);
-    };
-
-    if (data) {
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(data));
-    } else {
-        xhr.send();
+    } catch (err) {
+        mostrarMensaje("Error de red o servidor.", false);
+        return null;
     }
 }
 
-function cargarObrasSociales() {
-    ajaxRequest(
-        `${API_BASE}/obras_sociales.php`,
-        'GET',
-        null,
-        (response) => {
-            osSelect.innerHTML = '';
-            response.data.forEach(os => {
-                const option = document.createElement('option');
-                option.value = os;
-                option.textContent = os;
-                osSelect.appendChild(option);
-            });
-        }
-    );
+//---------------------------------------------------------
+// OBRAS SOCIALES
+//---------------------------------------------------------
+async function cargarObrasSociales() {
+    const response = await fetchAPI(`${API_BASE}/obras_sociales.php`);
+
+    if (!response) return;
+
+    osSelect.innerHTML = '';
+
+    response.data.forEach(os => {
+        const option = document.createElement('option');
+        option.value = os.IdOS;
+        option.textContent = os.NombreOS;
+        osSelect.appendChild(option);
+    });
 }
 
-function cargarPacientes() {
+//---------------------------------------------------------
+// LISTAR PACIENTES
+//---------------------------------------------------------
+async function cargarPacientes() {
     const tbody = document.getElementById('pacientesTableBody');
-    const searchTerm = document.getElementById('searchInput').value;
+    const search = document.getElementById('buscarInput').value;
 
     tbody.innerHTML = `
-        <tr>
-            <td colspan="7" class="text-center py-4 text-gray-500">Buscando...</td>
-        </tr>
+        <tr><td colspan="7" class="text-center py-4 text-muted">
+            <div class="spinner-border"></div>
+            <p class="mt-2">Buscando...</p>
+        </td></tr>
     `;
 
-    ajaxRequest(
-        `${API_BASE}/listar.php?search=${encodeURIComponent(searchTerm)}`,
-        'GET',
-        null,
-        (response) => {
-            tbody.innerHTML = '';
+    const response = await fetchAPI(`${API_BASE}/listar.php?search=${encodeURIComponent(search)}`);
 
-            if (response.data.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-center py-4 text-gray-500">
-                            No se encontraron pacientes.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
+    if (!response) return;
 
-            response.data.forEach(paciente => {
-                const row = tbody.insertRow();
-                row.className = 'hover:bg-gray-50';
+    tbody.innerHTML = '';
 
-                const estadoTexto = paciente.Habilitado == 1
-                    ? `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Habilitado</span>`
-                    : `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inhabilitado</span>`;
+    if (response.data.length === 0) {
+        tbody.innerHTML = `
+            <tr><td colspan="7" class="text-center py-4 text-muted">No se encontraron pacientes.</td></tr>
+        `;
+        return;
+    }
 
-                row.insertCell().textContent = paciente.IdPaciente;
-                row.insertCell().textContent = `${paciente.Nombre} ${paciente.Apellido}`;
-                row.insertCell().textContent = paciente.DNI;
-                row.insertCell().textContent = paciente.FechaNac.split(' ')[0];
-                row.insertCell().textContent = paciente.NombreOS;
-                row.insertCell().innerHTML = estadoTexto;
+    response.data.forEach(p => {
+        const row = tbody.insertRow();
 
-                const actionsCell = row.insertCell();
-                actionsCell.className = 'space-x-2';
+        const estado = p.Habilitado == 1
+            ? `<span class="badge bg-success">Habilitado</span>`
+            : `<span class="badge bg-danger">Inhabilitado</span>`;
 
-                const editBtn = document.createElement('button');
-                editBtn.textContent = 'Editar';
-                editBtn.className = 'text-indigo-600 hover:text-indigo-900 text-sm font-medium';
-                editBtn.onclick = () => openModal('editar', paciente);
-                actionsCell.appendChild(editBtn);
+        row.innerHTML = `
+            <td>${p.IdPaciente}</td>
+            <td>${p.Nombre} ${p.Apellido}</td>
+            <td>${p.DNI}</td>
+            <td>${p.FechaNac.split(" ")[0]}</td>
+            <td>${p.NombreOS}</td>
+            <td>${estado}</td>
+            <td class="text-center">
+                <button class="btn btn-sm btn-primary me-2"
+                    onclick='openModal("editar", ${JSON.stringify(p)})'>Editar</button>
 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'Eliminar';
-                deleteBtn.className = 'text-red-600 hover:text-red-900 text-sm font-medium';
-                deleteBtn.onclick = () => confirmarEliminar(paciente.IdPaciente, `${paciente.Nombre} ${paciente.Apellido}`);
-                actionsCell.appendChild(deleteBtn);
-            });
-        }
-    );
+                <button class="btn btn-sm btn-danger"
+                    onclick='confirmarEliminar(${p.IdPaciente}, "${p.Nombre} ${p.Apellido}")'>
+                    Eliminar
+                </button>
+            </td>
+        `;
+    });
 }
 
-function confirmarEliminar(id, nombreCompleto) {
-    if (window.confirm(`¿Está seguro de eliminar al paciente ${nombreCompleto} (ID: ${id})? Esta acción es permanente.`)) {
-        ajaxRequest(
-            `${API_BASE}/eliminar.php?id=${id}`,
-            'DELETE',
-            null,
-            (response) => {
-                mostrarMensaje(response.message, true);
-                cargarPacientes();
-            }
-        );
+//---------------------------------------------------------
+// ELIMINAR
+//---------------------------------------------------------
+async function confirmarEliminar(id, nombre) {
+    if (!confirm(`¿Eliminar al paciente ${nombre} (ID: ${id})?`)) return;
+
+    const response = await fetchAPI(`${API_BASE}/eliminar.php?id=${id}`, {
+        method: "DELETE"
+    });
+
+    if (response) {
+        mostrarMensaje(response.message, true);
+        cargarPacientes();
     }
 }
 
-function handleFormSubmit(event) {
-    event.preventDefault();
+//---------------------------------------------------------
+// FORM SUBMIT
+//---------------------------------------------------------
+async function handleFormSubmit(e) {
+    e.preventDefault();
 
     const formData = new FormData(form);
     const data = {};
 
     formData.forEach((value, key) => {
-        data[key] = (key === 'dni' || key === 'telefono' || key === 'habilitado')
+        data[key] = ['dni', 'telefono', 'habilitado'].includes(key)
             ? parseInt(value)
             : value;
     });
 
-    const type = formTypeInput.value;
-    let url = '';
-    let method = '';
+    const tipo = formTypeInput.value;
 
-    if (type === 'crear') {
-        url = `${API_BASE}/crear.php`;
-        method = 'POST';
+    const url = tipo === 'crear'
+        ? `${API_BASE}/crear.php`
+        : `${API_BASE}/editar.php?id=${pacienteIdInput.value}`;
 
-    } else if (type === 'editar') {
-        url = `${API_BASE}/editar.php?id=${pacienteIdInput.value}`;
-        method = 'PUT';
-    }
+    const method = tipo === 'crear' ? 'POST' : 'PUT';
 
-    ajaxRequest(url, method, data, (response) => {
-        mostrarMensaje(response.message, true);
-        closeModal();
-        cargarPacientes();
+    const response = await fetchAPI(url, {
+        method: method,
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
     });
+
+    if (response) {
+        mostrarMensaje(response.message, true);
+        pacienteModal.hide();
+        cargarPacientes();
+    }
 }
 
-function openModal(type, paciente = null) {
+//---------------------------------------------------------
+// MODAL
+//---------------------------------------------------------
+function openModal(tipo, paciente = null) {
     form.reset();
-    formTypeInput.value = type;
-    habilitadoGroup.classList.add('hidden');
+    formTypeInput.value = tipo;
 
-    if (type === 'crear') {
-        modalTitle.textContent = 'Crear Nuevo Paciente';
-        submitButton.textContent = 'Guardar Paciente';
+    habilitadoGroup.classList.add('d-none');
 
-    } else if (type === 'editar' && paciente) {
+    if (tipo === 'crear') {
+        modalTitle.textContent = "Crear Nuevo Paciente";
+        submitButton.textContent = "Guardar Paciente";
+
+    } else {
         modalTitle.textContent = `Editar Paciente: ${paciente.Nombre} ${paciente.Apellido}`;
-        submitButton.textContent = 'Actualizar Paciente';
+        submitButton.textContent = "Actualizar Paciente";
 
         pacienteIdInput.value = paciente.IdPaciente;
-
         document.getElementById('nombre').value = paciente.Nombre;
         document.getElementById('apellido').value = paciente.Apellido;
         document.getElementById('dni').value = paciente.DNI;
         document.getElementById('email').value = paciente.Email;
         document.getElementById('telefono').value = paciente.Telefono;
-        document.getElementById('fechaNac').value = paciente.FechaNac.split(' ')[0];
+        document.getElementById('fechaNac').value = paciente.FechaNac.split(" ")[0];
         document.getElementById('genero').value = paciente.Genero;
         document.getElementById('estadoCivil').value = paciente.EstadoCivil;
-
-        if (paciente.NombreOS) osSelect.value = paciente.NombreOS;
-
+        osSelect.value = paciente.NombreOS;
         document.getElementById('habilitado').value = paciente.Habilitado;
-        habilitadoGroup.classList.remove('hidden');
+
+        habilitadoGroup.classList.remove('d-none');
     }
 
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
+    pacienteModal.show();
 }
 
 function closeModal() {
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
+    pacienteModal.hide();
     form.reset();
 }

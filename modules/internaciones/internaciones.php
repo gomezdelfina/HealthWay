@@ -7,7 +7,6 @@ require_once(__DIR__ . '/../../includes/globals.php');
     <?php
         $module = 'internaciones';
         require_once($dirBaseFile . '/includes/html/head.php');
-        echo '<script src="' . $dirBaseUrl . '/script/script_camas.js" defer></script>';
         echo '<script src="' . $dirBaseUrl . '/script/script_internaciones.js" defer></script>';
     ?>
 </head>
@@ -256,5 +255,8 @@ require_once(__DIR__ . '/../../includes/globals.php');
             </div>
         </div>
     </main>
+    <?php
+        echo '<script src="' . $dirBaseUrl . '/script/script_camas.js"></script>';
+    ?>
 </body>
 </html>

@@ -457,3 +457,8 @@ div.div-ul {
         margin-bottom: 0.5rem;
     }
 }
+
+/**** ADMINISTRADOR ****/
+
+@import url(styless.css);
+@import url(estilo.css);
