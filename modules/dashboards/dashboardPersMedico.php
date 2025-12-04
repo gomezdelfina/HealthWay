@@ -24,7 +24,7 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-10">
-                            <h7 class="card-subtitle text-uppercase text-muted">Recordatorios pendientes del día</h7>
+                            <h7 class="card-subtitle text-uppercase text-muted">Recordatorios pendientes futuros del día</h7>
                         </div>
                         <div class="col-2 text-end">
                             <i class="bi bi bi-clock me-2 fs-3 text-warning"></i>
@@ -60,7 +60,7 @@
 <div class="col">
     <div class="card shadow-sm mb-4 border-warning border-3">
         <div class="card-header bg-warning text-white">
-            <i class="bi bi bi-clock me-2"></i> Detalle de recordatorios pendientes del día
+            <i class="bi bi bi-clock me-2"></i> Detalle de recordatorios pendientes futuros del día
         </div>
         <div class="card-body p-0">
             <div class="div-ul" id="recordPendList">
