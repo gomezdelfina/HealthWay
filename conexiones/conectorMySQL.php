@@ -6,10 +6,10 @@
     {
         public static function connect()
         {
-            global $db_servername, $db_username, $db_password, $db_name, $conn;
+            global $db_serverName, $db_username, $db_password, $db_name, $conn;
             try{
                 if (!isset($conn)) {
-                    $conn = new PDO("mysql:host=" . $db_servername . ";dbname=" . $db_name . ";charset=utf8", $db_username, $db_password);
+                    $conn = new PDO("mysql:host=" . $db_serverName . ";dbname=" . $db_name . ";charset=utf8", $db_username, $db_password);      
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                     return $conn;

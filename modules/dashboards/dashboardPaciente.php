@@ -2,7 +2,7 @@
     <input type="hidden" id="idUser" name="idUser" value="<?php echo $idUser ?>">
     
     <div class="d-flex gap-2 mb-3">
-        <button id="btnHoras" type="button" class="btn btn-primary shadow-sm">
+        <button id="btnHoras" type="button" class="btn btn-outline-secondary shadow-sm">
             <i class="bi bi-clock-history me-2"></i>Horas de internación
         </button>
         <button id="btnRevisiones" type="button" class="btn btn-outline-secondary shadow-sm">

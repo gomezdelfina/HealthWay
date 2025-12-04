@@ -11,14 +11,32 @@ header('Content-Type: application/json; charset=utf-8');
 try {
     ConexionDb::connect();
 
-    $idPaciente = isset($_GET['idPaciente']) ? intval($_GET['idPaciente']) : 0;
+   
+    $idUsuario = isset($_GET['idUsuario']) ? intval($_GET['idUsuario']) : 0;
 
-    if ($idPaciente <= 0) {
-        echo json_encode(["error" => "IdPaciente no válido o no provisto"]);
+    if ($idUsuario <= 0) {
+        echo json_encode(["error" => "IdUsuario no válido o no provisto"]);
         ConexionDb::disconnect();
         exit;
     }
 
+    // Obtener el IdPaciente correspondiente
+    $queryPaciente = "SELECT IdPaciente FROM pacientes WHERE IdUsuario = :idUsuario LIMIT 1";
+    $paramsPaciente = [
+        ["clave" => ":idUsuario", "valor" => $idUsuario]
+    ];
+
+    $paciente = ConexionDb::consult($queryPaciente, $paramsPaciente);
+
+    if (!$paciente || !isset($paciente[0]['IdPaciente'])) {
+        echo json_encode([]); // simplemente vacío
+        ConexionDb::disconnect();
+        exit;
+    }
+
+    $idPacienteReal = intval($paciente[0]['IdPaciente']);
+
+    // Obtener internaciones del paciente
     $query = "
         SELECT 
             i.IdInternacion,
@@ -30,23 +48,35 @@ try {
             i.FechaFin,
             i.EstadoInternacion,
             i.Observaciones,
+
             p.DNI,
             u.Nombre,
-            u.Apellido
+            u.Apellido,
+
+            pl.IdPlan,
+            pl.NombrePlan,
+            pl.TipoHabitacion,
+            pl.HorasInternacion,
+            pl.PrecioHora,
+            pl.PrecioHoraExtra,
+
+            os.IdOS,
+            os.NombreOS
+
         FROM internaciones i
         INNER JOIN pacientes p ON p.IdPaciente = i.IdPaciente
         INNER JOIN usuarios u ON u.IdUsuario = p.IdUsuario
-        WHERE u.IdUsuario = :idPaciente
-        ORDER BY i.FechaInicio DESC
-    ";
+        INNER JOIN planes_obrassociales pl ON pl.IdPlan = p.IdPlan_OS
+        INNER JOIN obrassociales os ON os.IdOS = pl.IdOS
+        WHERE i.IdPaciente = :idPacienteReal
+        ORDER BY i.FechaInicio DESC";
 
     $params = [
-        ["clave" => ":idPaciente", "valor" => $idPaciente]
+        ["clave" => ":idPacienteReal", "valor" => $idPacienteReal]
     ];
 
     $datos = ConexionDb::consult($query, $params);
-
-    echo json_encode($datos ?? ["error" => "Error en la consulta"], JSON_UNESCAPED_UNICODE);
+    echo json_encode($datos ?: [], JSON_UNESCAPED_UNICODE);
 
     ConexionDb::disconnect();
 } catch (Exception $e) {
