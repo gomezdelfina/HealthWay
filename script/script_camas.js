@@ -1,9 +1,8 @@
-document.addEventListener('DOMContentLoaded', async () => {
-
-    const contenedor = document.getElementById("contenedorCamas");
+let idInternacionActual = null;
+const contenedor = document.getElementById("contenedorCamas");
     const input = document.getElementById('buscarInput');
 
-    let idInternacionActual = null;
+document.addEventListener('DOMContentLoaded', async () => {
 
     // ================================
     // BUSCADOR
@@ -13,6 +12,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         termino === "" ? await cargarCamas() : await buscarCamas(termino);
     });
 
+    // ================================
+    // CARGA INICIAL
+    // ================================
+    await cargarCamas();
+});
 
     // ================================
     // FUNCIÓN BUSCAR CAMAS
@@ -275,7 +279,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Enviar cambios al backend
         try {
-            const res = await fetch("/HealthWay/api/internaciones/ModificarInternacion.php", {
+            const res = await fetch("/HealthWay/api/internaciones/modificarInternacion.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -304,10 +308,3 @@ document.addEventListener('DOMContentLoaded', async () => {
             try { bsModal.show(); } catch (e) {}
         }
     });
-
-
-    // ================================
-    // CARGA INICIAL
-    // ================================
-    cargarCamas();
-});

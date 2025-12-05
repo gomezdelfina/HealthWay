@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 userRoleSelect.innerHTML = '<option value="" disabled selected>Seleccione un Rol</option>'; // Opcion por defecto
                 result.data.forEach(role => {
                     const option = document.createElement('option');
-                    option.value = role;
-                    option.textContent = role;
+                    option.value = role.IdRol;
+                    option.textContent = role.DescRol;
                     userRoleSelect.appendChild(option);
                 });
             } else {
@@ -282,73 +282,114 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    userForm.addEventListener('submit', async function(e) {
+    userForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-        
+
+        // Tomar datos del formulario
         const formData = new FormData(userForm);
         const userData = Object.fromEntries(formData.entries());
-        
+
         let url = '/HealthWay/api/administrador';
         let method = '';
-        
-        // Alta o Edicion
+
+        // -----------------------------------------
+        //      CREAR USUARIO
+        // -----------------------------------------
         if (currentMode === 'add') {
             method = 'POST';
             url += '/crear_usuario.php';
-            userData.habilitado = 1; // Alta: siempre habilitado
-        } else if (currentMode === 'edit') {
-            method = 'PUT';
-            url += `/actualizar_usuario.php?id=${editingUserId}`;
-            
-            // Recoger el estado de habilitado del checkbox
-            userData.habilitado = document.getElementById('user-habilitado').checked ? 1 : 0;
-            
-            // Si el campo de contrasena esta vacio en edicion, NO lo enviamos al backend.
-            if (!userData.password) {
-                delete userData.password;
+
+            // Validar contraseña obligatoria en alta
+            if (!userData["user-password"] || userData["user-password"].trim() === "") {
+                showNotification('Debe ingresar una contraseña para el usuario nuevo.', 'warning');
+                return;
             }
-        }
-        
-        // El campo de telefono es opcional, 
-        if (!userData.phone) {
-            userData.phone = ''; // PHP lo manejara como NULL o cadena vacia
+
+            // Usuario nuevo siempre habilitado = 1
+            userData["user-habilitado"] = 1;
         }
 
-    
-        if (!userData.name || !userData.lastname || !userData.username || !userData.email || !userData.role || (currentMode === 'add' && !userData.password)) {
-            showNotification('Por favor, complete todos los campos obligatorios (*).', 'warning');
-            return;
+        // -----------------------------------------
+        //      EDITAR USUARIO
+        // -----------------------------------------
+        else if (currentMode === 'edit') {
+
+            method = 'PUT';
+            url += `/actualizar_usuario.php?id=${editingUserId}`;
+
+            // checkbox habilitado
+            userData["user-habilitado"] =
+                document.getElementById('user-habilitado').checked ? 1 : 0;
+
+            // Si contraseña está vacía → eliminarla
+            if (!userData["user-password"] || userData["user-password"].trim() === "") {
+                delete userData["user-password"];
+            }
         }
-        
-        saveUserBtn.disabled = true; // Deshabilitar boton durante el envio
-        saveUserBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
-        
+
+        // Normalizar teléfono (opcional)
+        userData["user-phone"] = userData["user-phone"]?.trim() || null;
+
+        // -----------------------------------------
+        //   VALIDAR CAMPOS OBLIGATORIOS
+        // -----------------------------------------
+        const requiredFields = [
+            'user-name',
+            'user-lastname',
+            'user-username',
+            'user-email',
+            'user-role'
+        ];
+
+        for (let f of requiredFields) {
+            if (!userData[f] || userData[f].trim() === "") {
+                showNotification('Complete todos los campos obligatorios (*).', 'warning');
+                return;
+            }
+        }
+
+        // -----------------------------------------
+        //  BLOQUEAR BOTÓN
+        // -----------------------------------------
+        saveUserBtn.disabled = true;
+        saveUserBtn.innerHTML =
+            '<span class="spinner-border spinner-border-sm"></span> Procesando...';
+
+        // -----------------------------------------
+        //  REALIZAR PETICIÓN
+        // -----------------------------------------
         try {
             const response = await fetch(url, {
                 method: method,
-                // POST y PUT envian datos en el cuerpo como JSON
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(userData)
             });
-            
+
             const result = await response.json();
 
-            if (result.success) {
-                showNotification(result.message, 'success');
+            // Tu backend devuelve: { "status": "success" }
+            if (result.status === "success") {
+                showNotification(result.mensaje, 'success');
                 window.closeUserModal();
-                loadUsers(); // Recargar la tabla via AJAX
+                loadUsers();
             } else {
-                showNotification(result.message, 'danger');
+                showNotification(result.mensaje, 'danger');
             }
+
         } catch (error) {
-            showNotification('Error de conexion al procesar la solicitud. Verifique que el backend (usuarios_api.php) este activo y la conexion a la BD.', 'danger');
             console.error('Error CRUD:', error);
-        } finally {
-            saveUserBtn.disabled = false;
-            saveUserBtn.innerHTML = (currentMode === 'add') ? 'Guardar Usuario' : 'Actualizar Usuario';
+            showNotification(
+                'Error de conexión al procesar la solicitud.',
+                'danger'
+            );
         }
+
+        // Restaurar botón
+        saveUserBtn.disabled = false;
+        saveUserBtn.innerHTML =
+            currentMode === 'add' ? 'Guardar Usuario' : 'Actualizar Usuario';
     });
 
     // Manejador del campo de busqueda con un pequeno retraso (debounce)

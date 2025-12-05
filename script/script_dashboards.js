@@ -243,9 +243,9 @@ async function marcarRecordatorioHecho(id){
 // --
 
 // -- Paciente
-document.addEventListener("DOMContentLoaded", () => {
+function loadPacienteDash(){
     cargarDatosPaciente();
-});
+}
 
 // Carga los datos del paciente mediante el id de usuario
 function cargarDatosPaciente() {

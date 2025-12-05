@@ -4,35 +4,44 @@
 
     header('Content-Type: application/json');
 
+    // Validar método
     if ($_SERVER["REQUEST_METHOD"] !== "PUT") {
-        echo json_encode(["success" => false, "message" => "Método no permitido"]);
+        echo json_encode(["status" => "error", "mensaje" => "Método no permitido"]);
         exit;
     }
 
+    // ID obligatorio
     $idUsuario = $_GET["id"] ?? null;
     if (!$idUsuario) {
-        echo json_encode(["success" => false, "message" => "ID faltante"]);
+        echo json_encode(["status" => "error", "mensaje" => "Falta el ID del usuario"]);
         exit;
     }
 
+    // Leer JSON enviado con fetch()
     $data = json_decode(file_get_contents("php://input"), true);
+
     if (!$data) {
-        echo json_encode(["success" => false, "message" => "JSON inválido"]);
+        echo json_encode(["status" => "error", "mensaje" => "JSON inválido"]);
         exit;
     }
 
-    $rol = UsuariosDataAccess::getRoleId($data["role"]);
+    // Rol obligatorio
+    if (!isset($data["user-role"])) {
+        echo json_encode(["status" => "error", "mensaje" => "Falta el rol de usuario"]);
+        exit;
+    }
+
+    $rol = UsuariosDataAccess::getRoleId($data["user-role"]);
     if ($rol["status"] !== "success") {
-        echo json_encode(["success" => false, "message" => "Rol inválido"]);
+        echo json_encode(["status" => "error", "mensaje" => "Rol inválido"]);
         exit;
     }
 
     $data["IdRol"] = $rol["data"];
 
+    // Actualizar
     $resp = UsuariosDataAccess::actualizarUsuario($idUsuario, $data);
 
-    echo json_encode([
-        "success" => $resp["status"] === "success",
-        "message" => $resp["status"] === "success" ? "Usuario actualizado." : $resp["mensaje"]
-    ]);
+    // Respuesta final
+    echo json_encode($resp);
 ?>

@@ -4,29 +4,37 @@
 
     header('Content-Type: application/json');
 
+    // Validar método
     if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-        echo json_encode(["success" => false, "message" => "Método no permitido"]);
+        echo json_encode(["status" => "error", "mensaje" => "Método no permitido"]);
         exit;
     }
 
+    // Leer JSON del body
     $data = json_decode(file_get_contents("php://input"), true);
+
     if (!$data) {
-        echo json_encode(["success" => false, "message" => "JSON inválido"]);
+        echo json_encode(["status" => "error", "mensaje" => "JSON inválido"]);
         exit;
     }
 
-    $rol = UsuariosDataAccess::getRoleId($data["role"]);
+    // Validar rol
+    if (!isset($data["user-role"])) {
+        echo json_encode(["status" => "error", "mensaje" => "Falta el rol de usuario"]);
+        exit;
+    }
+
+    $rol = UsuariosDataAccess::getRoleId($data["user-role"]);
     if ($rol["status"] !== "success") {
-        echo json_encode(["success" => false, "message" => "Rol inválido"]);
+        echo json_encode(["status" => "error", "mensaje" => "Rol inválido"]);
         exit;
     }
 
     $data["IdRol"] = $rol["data"];
 
+    // Crear usuario
     $resp = UsuariosDataAccess::crearUsuario($data);
 
-    echo json_encode([
-        "success" => $resp["status"] === "success",
-        "message" => $resp["status"] === "success" ? "Usuario creado correctamente." : $resp["mensaje"]
-    ]);
+    // Respuesta final
+    echo json_encode($resp);
 ?>

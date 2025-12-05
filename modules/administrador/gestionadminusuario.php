@@ -95,42 +95,42 @@
                         <!-- Campo Nombre -->
                         <div class="col-md-6">
                             <label for="user-name" class="form-label">Nombre</label>
-                            <input type="text" id="user-name" name="name" required
+                            <input type="text" id="user-name" name="user-name" required
                                    class="form-control rounded-pill">
                         </div>
                         
                         <!-- Campo Apellido -->
                         <div class="col-md-6">
                             <label for="user-lastname" class="form-label">Apellido</label>
-                            <input type="text" id="user-lastname" name="lastname" required
+                            <input type="text" id="user-lastname" name="user-lastname" required
                                    class="form-control rounded-pill">
                         </div>
                         
                         <!-- Campo Usuario (Login) -->
                         <div class="col-md-6">
                             <label for="user-username" class="form-label">Nombre de Usuario (Login)</label>
-                            <input type="text" id="user-username" name="username" required
+                            <input type="text" id="user-username" name="user-username" required
                                    class="form-control rounded-pill">
                         </div>
 
                         <!-- Campo Email -->
                         <div class="col-md-6">
                             <label for="user-email" class="form-label">Correo Electronico</label>
-                            <input type="email" id="user-email" name="email" required
+                            <input type="email" id="user-email" name="user-email" required
                                    class="form-control rounded-pill">
                         </div>
                         
                         <!-- Campo Telefono -->
                         <div class="col-md-6">
                             <label for="user-phone" class="form-label">Telefono (ej: 1112345678)</label>
-                            <input type="tel" id="user-phone" name="phone" required
+                            <input type="tel" id="user-phone" name="user-phone" required
                                    class="form-control rounded-pill">
                         </div>
 
                         <!-- Campo Contrasena (para Alta o Cambio Opcional en Edicion) -->
                         <div class="col-md-6" id="password-group">
                             <label for="user-password" class="form-label" id="password-label">Contrasena</label>
-                            <input type="password" id="user-password" name="password" required
+                            <input type="password" id="user-password" name="user-password" required
                                    class="form-control rounded-pill">
                         </div>
                         
@@ -138,7 +138,7 @@
                         <div class="col-md-6">
                             <label for="user-role" class="form-label">Rol de Usuario</label>
                             <!-- El contenido de este select se llena via AJAX en script.js -->
-                            <select id="user-role" name="role" required
+                            <select id="user-role" name="user-role" required
                                     class="form-select rounded-pill">
                                 <option value="" disabled>Cargando roles...</option>
                             </select>
@@ -147,7 +147,7 @@
                         <!-- Campo Habilitado (solo para Edicion) -->
                         <div class="col-md-6 d-none align-self-center" id="habilitado-group">
                             <div class="form-check pt-4">
-                                <input class="form-check-input" type="checkbox" id="user-habilitado" name="habilitado" checked>
+                                <input class="form-check-input" type="checkbox" id="user-habilitado" name="user-habilitado" checked>
                                 <label class="form-check-label fw-medium" for="user-habilitado">
                                     Usuario Habilitado (Activo)
                                 </label>
