@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // Asume que window.API_BASE_URL fue inyectado en solicitud_internacion.php
     const API_BASE_URL = window.API_BASE_URL || '/HTML/Healthway/api/solicitudes';
     const solicitudesTableBody = document.getElementById('solicitudesTableBody');
     const searchInput = document.getElementById('searchInput');
@@ -10,24 +9,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveEstadoBtn = document.getElementById('saveEstadoBtn');
     
    
-    loadPacientes(); // Cargar la lista de pacientes para el modal de creación
-    loadMedicos();   // Cargar la lista de médicos para el modal de creación
-    loadSolicitudes(); // Carga la tabla principal de solicitudes
+    loadPacientes(); 
+    loadMedicos();  
+    loadSolicitudes();
 
-    // Event listener para el envío del formulario de CREACIÓN
+    
     solicitudForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         await crearSolicitud();
     });
     
-    // Event listener para el envío del formulario de GESTIÓN DE ESTADO
+  
     estadoForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         await cambiarEstadoSolicitud();
     });
 
 
-    // Event listener para la búsqueda
+   
     let searchTimeout = null;
     searchInput.addEventListener('input', () => {
         clearTimeout(searchTimeout);
@@ -39,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function loadPacientes() {
         const selectPaciente = document.getElementById("pacienteId");
-        // Nota: Asumo una API endpoint para obtener pacientes
         const url = API_BASE_URL.replace('/solicitudes', '/pacientes') + '/ObtenerPacientes.php?soloActivos=true'; 
         
         try {
@@ -63,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function loadMedicos() {
         const selectMedico = document.getElementById("medicoId");
-        // Nota: Asumo una API endpoint para obtener medicos
         const url = API_BASE_URL.replace('/solicitudes', '/administrador') + '/ObtenerMedicos.php'; 
         
         try {
@@ -71,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await res.json();
             
             if (data.status === 'success' && data.data) {
-                // Primero, limpia las opciones predeterminadas
                 selectMedico.innerHTML = '<option value="" disabled selected>Seleccione un médico</option>';
                 
                 data.data.forEach(medico => {
@@ -105,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const json = await respuesta.json();
 
-            // Limpiar mensajes de error previos
             solicitudForm.querySelectorAll(".is-invalid").forEach(el => el.classList.remove("is-invalid"));
             solicitudForm.querySelectorAll(".invalid-feedback").forEach(el => el.innerHTML = "");
 
@@ -175,11 +170,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const row = document.createElement('tr');
         
        
-        // const formatDateTime = (dt) => {
-        //     if (!dt) return 'N/A';
-        //     const date = new Date(dt);
-        //     return date.toLocaleDateString('es-AR') + ' ' + date.toLocaleTimeString('es-AR').substring(0, 5);
-        // };
+        const formatDateTime = (dt) => {
+            if (!dt) return 'N/A';
+            const date = new Date(dt);
+            return date.toLocaleDateString('es-AR') + ' ' + date.toLocaleTimeString('es-AR').substring(0, 5);
+        };
 
         // Determinar clase de estilo para el estado
         let badgeClass = 'bg-secondary';
@@ -226,9 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
         estadoModal.show();
     }
     
-    /**
-     * Envía la solicitud para cambiar el estado de la solicitud.
-     */
+   
     async function cambiarEstadoSolicitud() {
         const id = document.getElementById('solicitudId').value;
         const nuevoEstado = document.getElementById('nuevoEstado').value;
