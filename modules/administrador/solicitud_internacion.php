@@ -58,7 +58,7 @@ require_once(__DIR__ . '/../../includes/globals.php');
                         </tr>
                     </thead>
                     <tbody id="solicitudesTableBody">
-                        <!-- Las filas se cargarán con JavaScript -->
+                       
                         <tr>
                             <td colspan="7" class="text-center">Cargando solicitudes...</td>
                         </tr>
