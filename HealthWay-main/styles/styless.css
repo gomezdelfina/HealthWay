@@ -1,8 +1,0 @@
-body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
-.card { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-.btn-primary { background-color: #10b981; transition: background-color 0.2s; }
-.btn-primary:hover { background-color: #059669; }
-.btn-danger { background-color: #ef4444; transition: background-color 0.2s; }
-.btn-danger:hover { background-color: #dc2626; }
-.modal-overlay { background-color: rgba(0, 0, 0, 0.5); z-index: 1000; }
-.table-header { background-color: #e5e7eb; }
