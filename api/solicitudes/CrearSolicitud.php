@@ -1,16 +1,16 @@
 <?php
     require_once(__DIR__ . '/../../../includes/globals.php');
-    require_once($dirBaseFile . '/dataAccess/SolicitudesDataAccess.php'); // Incluimos la clase de acceso a datos
+    require_once($dirBaseFile . '/dataAccess/SolicitudesDataAccess.php'); 
 
     header("Content-Type: application/json; charset=utf-8");
 
-    // Verificar si el método es POST (usado por FormData)
+    
     if ($_SERVER["REQUEST_METHOD"] !== "POST") {
         echo json_encode(["status" => "error", "mensaje" => "Método no permitido."]);
         exit;
     }
 
-    // Validar y obtener datos del POST
+   
     $pacienteId = filter_input(INPUT_POST, 'pacienteId', FILTER_VALIDATE_INT);
     $medicoId = filter_input(INPUT_POST, 'medicoId', FILTER_VALIDATE_INT);
     $motivo = filter_input(INPUT_POST, 'motivo', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -35,7 +35,7 @@
         'motivo' => $motivo,
         'diagnostico' => $diagnostico,
         'prioridad' => $prioridad,
-        // En un caso real, añadir IdUsuarioLogeado, FechaSolicitud (NOW()), etc.
+        
     ];
 
     try {

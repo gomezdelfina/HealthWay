@@ -27,12 +27,12 @@ if (isset($_SESSION['usuario'])) {
             }
         }
     } catch (Exception $e) {
-        print("Problemas para ingresar al sistema: " + $e);
+        print("Problemas para ingresar al sistema: " . $e);
 
         header('Location: ' . $dirBaseUrl . '/modules/auth/logout.php');
     }
 } else {
-    print("Problemas para ingresar al sistema: " + $e);
+    print("Problemas para ingresar al sistema: " . $e);
 
     header('Location: ' . $dirBaseUrl . '/modules/auth/logout.php');
 }
