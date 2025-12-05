@@ -41,7 +41,9 @@
                             
                         // Si debe ejecutarse, crear notificación
                         if ($ahora == $proxEjec) {
-                            $tipoRev = $rec['TipoRevision'];
+                            $tipo = Revisiones::getTipoRevById($rec['TipoRevision']);
+
+                            $tipoRev = $tipo['DescTipoRevision'];
                             $permiso = 0;
 
                             switch($tipoRev){

@@ -32,11 +32,18 @@ use Dba\Connection;
 
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
+                    $objUltFecha = self::calcularUltimaFecha($row);
                     
                     if ($objFecha != null & $result[$key]['activo'] == 1) {
                         $result[$key]['ProximaEjecucion'] = $objFecha;
                     } else {
                         $result[$key]['ProximaEjecucion'] = null;
+                    }
+
+                    if ($objUltFecha  != null & $result[$key]['activo'] == 1) {
+                        $result[$key]['UltimaEjecucion'] = $objUltFecha;
+                    } else {
+                        $result[$key]['UltimaEjecucion'] = null;
                     }
                 }
 
@@ -72,11 +79,18 @@ use Dba\Connection;
 
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
+                    $objUltFecha = self::calcularUltimaFecha($row);
                     
                     if ($objFecha != null & $result[$key]['activo'] == 1) {
                         $result[$key]['ProximaEjecucion'] = $objFecha;
                     } else {
                         $result[$key]['ProximaEjecucion'] = null;
+                    }
+
+                    if ($objUltFecha  != null & $result[$key]['activo'] == 1) {
+                        $result[$key]['UltimaEjecucion'] = $objUltFecha;
+                    } else {
+                        $result[$key]['UltimaEjecucion'] = null;
                     }
                 }
 
@@ -140,11 +154,18 @@ use Dba\Connection;
 
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
+                    $objUltFecha = self::calcularUltimaFecha($row);
                     
                     if ($objFecha != null & $result[$key]['activo'] == 1) {
                         $result[$key]['ProximaEjecucion'] = $objFecha;
                     } else {
                         $result[$key]['ProximaEjecucion'] = null;
+                    }
+
+                    if ($objUltFecha  != null & $result[$key]['activo'] == 1) {
+                        $result[$key]['UltimaEjecucion'] = $objUltFecha;
+                    } else {
+                        $result[$key]['UltimaEjecucion'] = null;
                     }
                 }
 
@@ -462,11 +483,18 @@ use Dba\Connection;
 
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
+                    $objUltFecha = self::calcularUltimaFecha($row);
                     
                     if ($objFecha != null & $result[$key]['activo'] == 1) {
                         $result[$key]['ProximaEjecucion'] = $objFecha;
                     } else {
                         $result[$key]['ProximaEjecucion'] = null;
+                    }
+
+                    if ($objUltFecha  != null & $result[$key]['activo'] == 1) {
+                        $result[$key]['UltimaEjecucion'] = $objUltFecha;
+                    } else {
+                        $result[$key]['UltimaEjecucion'] = null;
                     }
                 }
 
@@ -476,8 +504,8 @@ use Dba\Connection;
                 $fechaHoy = date('Y-m-d');
 
                 foreach ($result as $row) {
-                    $proximaFecha = $row['ProximaEjecucion'] == null ? null : date('Y-m-d', strtotime($row['ProximaEjecucion']));
-                    if ($proximaFecha  === $fechaHoy) {
+                    $UltimaFecha = $row['UltimaEjecucion'] == null ? null : date('Y-m-d', strtotime($row['UltimaEjecucion']));
+                    if ($UltimaFecha  === $fechaHoy) {
                         $resultadosHoy[] = $row;
                     }
                 }
@@ -539,11 +567,18 @@ use Dba\Connection;
 
                 foreach ($result as $key => $row) {
                     $objFecha = self::calcularProximaFecha($row);
+                    $objUltFecha = self::calcularUltimaFecha($row);
                     
                     if ($objFecha != null & $result[$key]['activo'] == 1) {
                         $result[$key]['ProximaEjecucion'] = $objFecha;
                     } else {
                         $result[$key]['ProximaEjecucion'] = null;
+                    }
+
+                    if ($objUltFecha  != null & $result[$key]['activo'] == 1) {
+                        $result[$key]['UltimaEjecucion'] = $objUltFecha;
+                    } else {
+                        $result[$key]['UltimaEjecucion'] = null;
                     }
                 }
 
@@ -572,7 +607,7 @@ use Dba\Connection;
                 $fin = $row['FechaFinRec'] != '0000-00-00 00:00:00' ? new DateTime($row['FechaFinRec']) : null;
                 $frecuencia = $row['Frecuencia'];
 
-                if ($inicio > $ahora) return $inicio;
+                if ($inicio->format('Y-m-d H:i') > $ahora->format('Y-m-d H:i')) return $inicio->format('Y-m-d H:i');
 
                 $proximaFecha = clone $inicio;
 
@@ -586,7 +621,7 @@ use Dba\Connection;
 
                         if($intervalo <= 0) return null; 
                         
-                        while ($proximaFecha <= $ahora) {
+                        while ($proximaFecha->format('Y-m-d H:i') <= $ahora->format('Y-m-d H:i')) {
                             $proximaFecha->modify("+{$intervalo} hours");
                         }
                         break;
@@ -597,7 +632,7 @@ use Dba\Connection;
                         $diffDias = $ahora->diff($inicio)->days;
                         $pasos = ceil($diffDias / $intervalo);
                         $proximaFecha->modify("+".($pasos * $intervalo)." days");
-                        while ($proximaFecha <= $ahora) {
+                        while ($proximaFecha->format('Y-m-d H:i') <= $ahora->format('Y-m-d H:i')) {
                             $proximaFecha->modify("+{$intervalo} days");
                         }
                         break;
@@ -636,7 +671,7 @@ use Dba\Connection;
                                     $horaOriginal = explode(':', $inicio->format('H:i'));
                                     $candidato->setTime($horaOriginal[0], $horaOriginal[1], 0);
                                     
-                                    if ($candidato > $ahora) {
+                                    if ($candidato->format('Y-m-d H:i') > $ahora->format('Y-m-d H:i')) {
                                         $proximaFecha = $candidato;
                                         $encontrado = true;
                                         break;
@@ -649,7 +684,9 @@ use Dba\Connection;
                         break;
                 }
 
-                if ($fin && $proximaFecha > $fin) return null;
+                if($fin != null){
+                    if($fin->format('Y-m-d H:i') && $proximaFecha->format('Y-m-d H:i') > $fin->format('Y-m-d H:i')) return null;
+                }
 
                 return $proximaFecha->format('Y-m-d H:i');
 
@@ -665,15 +702,15 @@ use Dba\Connection;
                 $fin = $row['FechaFinRec'] != '0000-00-00 00:00:00' ? new DateTime($row['FechaFinRec']) : null;
                 $frecuencia = $row['Frecuencia'];
 
-                // Si la fecha de inicio es en el futuro, no hay "última ejecución" todavía.
-                if ($inicio > $ahora) return null;
+                // Si la fecha de inicio es en el futuro, no hay ultima ejecución todavía.
+                if ($inicio->format('Y-m-d H:i') > $ahora->format('Y-m-d H:i')) return null;
 
                 $ultimaFecha = null;
 
                 switch ($frecuencia) {
                     case 'Unica Vez':
                         // Si ya pasó la fecha de inicio, esa fue la última y única.
-                        if ($inicio <= $ahora) {
+                        if ($inicio->format('Y-m-d H:i') <= $ahora->format('Y-m-d H:i')) {
                             $ultimaFecha = clone $inicio;
                         }
                         break;
@@ -705,7 +742,7 @@ use Dba\Connection;
 
                         // Al sumar días, la hora se mantiene. 
                         // Si la hora resultante es mayor a "ahora" entonces la última ejecución real fue hace un intervalo atrás.
-                        if ($ultimaFecha > $ahora) {
+                        if ($ultimaFecha->format('Y-m-d H:i') > $ahora->format('Y-m-d H:i')) {
                             $ultimaFecha->modify("-{$intervalo} days");
                         }
                         break;
@@ -734,14 +771,14 @@ use Dba\Connection;
 
                         // Si ajustando la hora resultamos en el futuro (ej: hoy a las 18:00, pero son las 15:00),
                         // hoy no cuenta como "pasado", empezamos a buscar desde ayer.
-                        if ($buscando > $ahora) {
+                        if ($buscando->format('Y-m-d H:i') > $ahora->format('Y-m-d H:i')) {
                             $buscando->modify('-1 day');
                         }
 
                         $encontrado = false;
                         // Buscamos hacia atrás hasta llegar a la fecha de inicio o un límite (1 año)
                         for ($i = 0; $i < 366; $i++) {
-                            if ($buscando < $inicio) break; // No podemos ir antes del inicio
+                            if ($buscando->format('Y-m-d H:i') < $inicio->format('Y-m-d H:i')) break; // No podemos ir antes del inicio
 
                             $diaSemanaActual = (int)$buscando->format('N');
 
@@ -763,11 +800,13 @@ use Dba\Connection;
                 }
 
                 // Si existe fecha fin y la última calculada es mayor a esa fecha fin, entonces el recordatorio ya expiró. 
-                if ($ultimaFecha && $fin && $ultimaFecha > $fin) {
-                    return $fin; 
+                if($fin != null){
+                    if ($ultimaFecha && $fin && $ultimaFecha->format('Y-m-d H:i') > $fin->format('Y-m-d H:i')) {
+                        return $fin->format('Y-m-d H:i'); 
+                    }
                 }
 
-                return $ultimaFecha;
+                return $ultimaFecha->format('Y-m-d H:i');
 
             } catch (Exception $e) {
                 return null;

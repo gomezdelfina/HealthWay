@@ -174,6 +174,35 @@
                 throw new Exception("Problemas al restaurar clave: " . $e);
             }
         }
+
+        public static function getRolByUser($idUser)
+        {
+            if (is_null($idUser)) {
+                throw new Exception("El campo idUser no puede estar vacío");
+            }
+
+            try{
+                ConexionDb::connect();
+
+                $sql = "SELECT T1.*, T2.DescRol
+                        FROM roles_usuarios T1
+                        INNER JOIN roles T2 ON T1.IdRol = T2.IdRol
+                        WHERE T1.IdUsuario = :idUser;
+                ";
+
+                $params = [
+                    ["clave" => ":idUser", "valor" => $idUser]
+                ];
+
+                $result = ConexionDb::consult($sql, $params);   
+                
+                return $result;
+            } catch (Exception $e) {
+                throw new Exception("Problemas al obtener el rol segun el usuario: " . $e);
+            } finally {
+                ConexionDb::disconnect();
+            }
+        }
         
     }
 

@@ -23,7 +23,7 @@
             $rawInput = file_get_contents('php://input');
             $data = json_decode($rawInput, true);
         } else {
-            $data = $_POST;
+            $data = $_GET;
         }
 
         if(empty($data)){
@@ -48,16 +48,15 @@
                 try{
                     $paciente = Pacientes::getPacienteById($idPaciente);
 
-                    $internaciones = internaciones::VerInternacionActivaByPac($idPaciente);
+                    $internacionesHist = internaciones::VerInternacionesByPac($idPaciente);
 
-                    $internacionesHist = $internaciones;
                     foreach ($internacionesHist as $key => $row) {
-                        $revisiones = Revisiones::getRevisionByInter($internacionesHist[$key]['IdInternacion']);
+                        $revisiones = Revisiones::getRevisionByInter($row['IdInternacion']);
                         $internacionesHist[$key]['Revisiones'] = $revisiones;
                     }
 
                     $response['code'] = 200;
-                    $response['msg'] = $internaciones;
+                    $response['msg'] = $internacionesHist;
                 }catch(Exception $e){
                     $response['code'] = 500;
                     $response['msg'] = 'Error interno de aplicacion';
@@ -82,6 +81,7 @@
         header('Content-Type: application/json');
         http_response_code($response['code']);
         echo json_encode($response['msg']);
+        exit;
     }
     
 ?>
@@ -171,7 +171,7 @@
                         <div class="col-md-3">
                             <div class="label-text">Estado</div>
                             <div class="value-text">
-                                <span class="badge"><?php if(isset($internacionActual['EstadoInternacion'])) {echo $internacionActual['EstadoInternacion'];} ?></span>
+                                <?php if(isset($internacionActual['EstadoInternacion'])) {echo $internacionActual['EstadoInternacion'];} ?>
                             </div>
                         </div>
                         <div class="col-md-3">
