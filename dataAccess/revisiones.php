@@ -3,6 +3,8 @@
     require_once($dirBaseFile . '/conexiones/conectorMySQL.php');
     require_once($dirBaseFile . '/dataAccess/internaciones.php');
     require_once($dirBaseFile . '/dataAccess/recordatorios.php');
+    require_once($dirBaseFile . '/dataAccess/camas.php');
+    require_once($dirBaseFile . '/dataAccess/pacientes.php');
 
     class Revisiones
     {
@@ -79,6 +81,29 @@
             }
         }
 
+        public static function getTipoRevById($idTipo)
+        {
+            try{
+                ConexionDb::connect();
+
+                $sql = "SELECT T0.IdTipoRevision, T0.DescTipoRevision
+                        FROM tiporevisiones T0
+                        WHERE T0.IdTipoRevision = :idTipo)";
+                
+                $params = [
+                    ['clave' => ':idTipo', 'valor' => $idTipo]
+                ];
+
+                $result = ConexionDb::consult($sql, $params);
+
+                ConexionDb::disconnect();
+                
+                return $result;
+            } catch (Exception $e) {
+                throw new Exception("Problemas al obtener Tipo de Revision: " . $e);
+            }
+        }
+
         public static function getEstadosRevByUser($idUser)
         {
             try{
@@ -149,29 +174,32 @@
                 $result = ConexionDb::consult($sql,$params);
 
                 ConexionDb::disconnect();
-
                 if(!empty($result) & 
                    ($revision["EstadoRevision"] == 5 || $revision["EstadoRevision"] == 4)){
-                        //Obtener internacion de revision
-                        $rev = self::getRevisionById($result);
+                        $resultInt = internaciones::VerInternacion($revision['IdInternacion']);
 
                         //Cerrar internacion
-                        if(!empty($rev)){
-                            internaciones::FinalizarInternacion($rev['IdInternacion']);
+                        //Cambiar estado cama a En Limpieza
+                        //Cambiar estado paciente a De Alta o Fallecido
+                        if(!empty($resultInt)){
+                            internaciones::FinalizarInternacion($resultInt['IdInternacion']);
+                            Camas::actualizarEstadoCama($resultInt['IdCama'],'En limpieza');
+
+                            $estadoPac = $revision["EstadoRevision"] == 5 ? 'Fallecido' : 'De Alta';
+                            Pacientes::actualizarEstadoPaciente($resultInt['IdPaciente'], $estadoPac);
                         }else{
                             throw new Exception("Problemas al finalizar internacion");
                         }  
                         
                         //Obtener recordatorios de revision
-                        if(!empty($rev)){
-                            $recs = Recordatorio::getRecordatoriosByInt($rev['IdInternacion']);
-
+                        $recs = Recordatorio::getRecordatoriosByInt($revision['IdInternacion']);
+                        try{
                             //Inactivar recordatorios
                             foreach ($recs as $rec){
-                                Recordatorio::inactivarRecordatorio($rec['IdRecordatorio']);
+                                Recordatorio::inactivarRecordatorio($rec['IdRecordatorio'], 0);
                             }
-                        }else{
-                            throw new Exception("Problemas al finalizar internacion");
+                        }catch(Exception $e){
+                            throw new Exception("Problemas al finalizar recordatorios");
                         }  
                 }
                 
@@ -280,25 +308,33 @@
                 if(!empty($result) & 
                    ($revision["EstadoRevision"] == 5 || $revision["EstadoRevision"] == 4)){
                         //Obtener internacion de revision
-                        $rev = self::getRevisionById($result);
+                        $rev = self::getRevisionById($revision['IdRevision']);
 
                         //Cerrar internacion
+                        //Cambiar estado cama a En Limpieza
+                        //Cambiar estado paciente a De Alta o Fallecido
                         if(!empty($rev)){
-                            internaciones::FinalizarInternacion($rev['IdInternacion']);
+                            $resultInt = internaciones::VerInternacion($rev[0]['IdInternacion']);
+
+                            internaciones::FinalizarInternacion($resultInt['IdInternacion']);
+                            Camas::actualizarEstadoCama($resultInt['IdCama'],'En limpieza');
+
+                            $estadoPac = $revision["EstadoRevision"] == 5 ? 'Fallecido' : 'De Alta';
+                            Pacientes::actualizarEstadoPaciente($resultInt['IdPaciente'], $estadoPac);
                         }else{
                             throw new Exception("Problemas al finalizar internacion");
                         }  
                         
                         //Obtener recordatorios de revision
                         if(!empty($rev)){
-                            $recs = Recordatorio::getRecordatoriosByInt($rev['IdInternacion']);
+                            $recs = Recordatorio::getRecordatoriosByInt($rev[0]['IdInternacion']);
 
                             //Inactivar recordatorios
                             foreach ($recs as $rec){
-                                Recordatorio::inactivarRecordatorio($rec['IdRecordatorio']);
+                                Recordatorio::inactivarRecordatorio($rec['IdRecordatorio'], 0);
                             }
                         }else{
-                            throw new Exception("Problemas al finalizar internacion");
+                            throw new Exception("Problemas al finalizar recordatorios");
                         }  
                 }
                 return $result;

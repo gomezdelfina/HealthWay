@@ -181,7 +181,14 @@ function renderizarTablaRecDash(container, recordatoriosData) {
             `;
             
             recordatoriosData.forEach(rec => {
-                let ejec = rec.ProximaEjecucion == null ? '' : rec.ProximaEjecucion;
+                let ejec = '';
+
+                if(rec.Estado == 'Pendiente'){
+                    ejec = rec.ProximaEjecucion == null ? '': 'Proxima ejecucion: ' + rec.ProximaEjecucion;
+                }else if(rec.Estado == 'Atrasado'){
+                    ejec = rec.UltimaEjecucion == null ? '' : 'Ultima ejecucion: ' + rec.UltimaEjecucion;
+                }
+                
 
                 html += `
                     <li class="list-group-item d-flex justify-content-between align-items-center">
