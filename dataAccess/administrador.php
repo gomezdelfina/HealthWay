@@ -137,7 +137,7 @@ class UsuariosDataAccess
             global $conn;
             ConexionDb::connect();
 
-            $sql = "INSERT INTO Usuarios
+            $sql = "INSERT INTO usuarios
                     (IdRol, Usuario, Clave, Habilitado, Nombre, Apellido, Email, Telefono)
                     VALUES (:rol, :user, :clave, 1, :nombre, :apellido, :email, :tel)";
 
@@ -182,7 +182,7 @@ class UsuariosDataAccess
             global $conn;
             ConexionDb::connect();
 
-            $sql = "UPDATE Usuarios SET
+            $sql = "UPDATE usuarios SET
                         IdRol = :rol,
                         Usuario = :user,
                         Habilitado = :hab,
@@ -239,7 +239,7 @@ class UsuariosDataAccess
             global $conn;
             ConexionDb::connect();
 
-            $sql = "UPDATE Usuarios SET Habilitado = 0 WHERE IdUsuario = :id";
+            $sql = "UPDATE usuarios SET Habilitado = 0 WHERE IdUsuario = :id";
             $stmt = $conn->prepare($sql);
             $stmt->execute([":id" => $id]);
 
