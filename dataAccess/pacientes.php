@@ -4,6 +4,7 @@
 
     class Pacientes
     {
+       
         public static function getPacienteById($idPac)
         {
             try{
@@ -37,5 +38,31 @@
                 throw new Exception("Problemas al obtener paciente por id: " . $e);
             }
         }
+
+        public static function obtenerpaciente()
+{
+    try{
+        ConexionDb::connect();
+
+        $sql = "SELECT 
+                    T0.IdPaciente,
+                    CONCAT(T1.Nombre, ' ', T1.Apellido) AS NombreCompleto,
+                    T0.DNI,
+                    T0.Estado
+                FROM pacientes T0
+                INNER JOIN usuarios T1 ON T0.IdUsuario = T1.IdUsuario
+                ORDER BY T1.Apellido ASC;";
+
+        $result = ConexionDb::consult($sql);
+
+        ConexionDb::disconnect();
+        
+        return $result;
+
+    } catch (Exception $e) {
+        throw new Exception("Problemas al obtener la lista básica de pacientes: " . $e->getMessage());
+    }
+}
+        
     }
 ?>

@@ -36,9 +36,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    async function loadPacientes() {
+   
+    
+});
+
+ async function loadPacientes() {
         const selectPaciente = document.getElementById("pacienteId");
-        const url = API_BASE_URL.replace('/solicitudes', '/pacientes') + '/ObtenerPacientes.php?soloActivos=true'; 
+        const url = API_BASE_URL.replace('/solicitudes', '/pacientes') + '/obtenerPacientesDisponibles.php'; 
         
         try {
             const res = await fetch(url);
@@ -276,5 +280,3 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(`Notificación (${type}): ${message}`);
         }
     }
-    
-});
