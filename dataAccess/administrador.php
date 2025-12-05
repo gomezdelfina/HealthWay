@@ -144,13 +144,13 @@ class UsuariosDataAccess
             $stmt = $conn->prepare($sql);
 
             $params = [
-                ":rol"     => $data["IdRol"],
-                ":user"    => $data["username"],
-                ":clave"   => password_hash($data["password"], PASSWORD_DEFAULT),
-                ":nombre"  => $data["name"],
-                ":apellido"=> $data["lastname"],
-                ":email"   => $data["email"],
-                ":tel"     => $data["phone"]
+                ":rol"      => $data["user-role"],
+                ":user"     => $data["user-username"],
+                ":clave"    => password_hash($data["user-password"], PASSWORD_DEFAULT),
+                ":nombre"   => $data["user-name"],
+                ":apellido" => $data["user-lastname"],
+                ":email"    => $data["user-email"],
+                ":tel"      => $data["user-phone"]
             ];
 
             $stmt->execute($params);
@@ -172,6 +172,7 @@ class UsuariosDataAccess
         }
     }
 
+
     // --------------------------------------------------------------------
     //  ACTUALIZAR USUARIO
     // --------------------------------------------------------------------
@@ -191,19 +192,19 @@ class UsuariosDataAccess
                         Telefono = :tel";
 
             $params = [
-                ":rol"     => $data["IdRol"],
-                ":user"    => $data["username"],
-                ":hab"     => $data["habilitado"],
-                ":nombre"  => $data["name"],
-                ":apellido"=> $data["lastname"],
-                ":email"   => $data["email"],
-                ":tel"     => $data["phone"]
+                ":rol"      => $data["user-role"],
+                ":user"     => $data["user-username"],
+                ":hab"      => isset($data["user-habilitado"]) ? 1 : 0,
+                ":nombre"   => $data["user-name"],
+                ":apellido" => $data["user-lastname"],
+                ":email"    => $data["user-email"],
+                ":tel"      => $data["user-phone"]
             ];
 
-            // Si cambia contraseña
-            if (!empty($data["password"])) {
+            // Agregar contraseña si viene en edición
+            if (!empty($data["user-password"])) {
                 $sql .= ", Clave = :clave";
-                $params[":clave"] = password_hash($data["password"], PASSWORD_DEFAULT);
+                $params[":clave"] = password_hash($data["user-password"], PASSWORD_DEFAULT);
             }
 
             $sql .= " WHERE IdUsuario = :id";

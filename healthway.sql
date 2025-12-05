@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-12-2025 a las 00:05:31
+-- Tiempo de generación: 05-12-2025 a las 04:13:21
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -40,20 +40,20 @@ CREATE TABLE `camas` (
 --
 
 INSERT INTO `camas` (`IdCama`, `IdHabitacion`, `NumeroCama`, `EstadoCama`, `Habilitada`) VALUES
-(1, 1, 1, 'Disponible', 1),
-(2, 1, 2, 'Disponible', 1),
-(3, 2, 3, 'Disponible', 1),
-(4, 2, 4, 'Disponible', 1),
-(5, 3, 5, 'Disponible', 1),
-(6, 3, 6, 'Disponible', 1),
-(7, 4, 7, 'Disponible', 1),
-(8, 4, 8, 'Disponible', 1),
-(9, 5, 9, 'Disponible', 1),
-(10, 5, 10, 'Disponible', 1),
+(1, 1, 1, 'Ocupada', 1),
+(2, 1, 2, 'Ocupada', 0),
+(3, 2, 3, 'Ocupada', 0),
+(4, 2, 4, 'Ocupada', 0),
+(5, 3, 5, 'Ocupada', 0),
+(6, 3, 6, 'Ocupada', 0),
+(7, 4, 7, 'Ocupada', 0),
+(8, 4, 8, 'Ocupada', 0),
+(9, 5, 9, 'Ocupada', 0),
+(10, 5, 10, 'Ocupada', 0),
 (11, 6, 11, 'Disponible', 1),
-(12, 6, 12, 'Disponible', 1),
+(12, 6, 12, 'Ocupada', 0),
 (13, 7, 13, 'Disponible', 1),
-(14, 7, 14, 'Ocupada', 0),
+(14, 7, 14, 'Disponible', 1),
 (15, 8, 15, 'Disponible', 1),
 (16, 8, 16, 'Disponible', 1),
 (17, 9, 17, 'Disponible', 1),
@@ -75,7 +75,7 @@ INSERT INTO `camas` (`IdCama`, `IdHabitacion`, `NumeroCama`, `EstadoCama`, `Habi
 (33, 17, 33, 'Disponible', 1),
 (34, 17, 34, 'Disponible', 1),
 (35, 18, 35, 'Disponible', 1),
-(36, 18, 36, 'Ocupada', 0),
+(36, 18, 36, 'Disponible', 1),
 (37, 19, 37, 'Disponible', 1),
 (38, 19, 38, 'Disponible', 1),
 (39, 20, 39, 'Disponible', 1),
@@ -132,7 +132,7 @@ INSERT INTO `camas` (`IdCama`, `IdHabitacion`, `NumeroCama`, `EstadoCama`, `Habi
 (90, 45, 90, 'Disponible', 1),
 (91, 46, 91, 'Disponible', 1),
 (92, 46, 92, 'Disponible', 1),
-(93, 47, 93, 'Ocupada', 0),
+(93, 47, 93, 'Disponible', 1),
 (94, 47, 94, 'Disponible', 1),
 (95, 48, 95, 'Disponible', 1),
 (96, 48, 96, 'Disponible', 1),
@@ -212,7 +212,7 @@ CREATE TABLE `direcciones` (
 
 INSERT INTO `direcciones` (`IdDireccion`, `Direccion`, `Numero`, `Ciudad`, `Provincia`, `Pais`) VALUES
 (1, 'Jose Maria Ezeiza', 623, 'Ezeiza', 'Buenos Aires', 'Argentina'),
-(2, 'Tuyuti', 700, 'Ezeiza', 'Provincia2', 'Buenos Aires'),
+(2, 'Tuyuti', 700, 'Ezeiza', 'Buenos Aires', 'Argentina'),
 (3, 'San Martin', 122, 'Caballito', 'Buenos Aires', 'Argentina'),
 (4, 'French', 532, 'Lomas de Zamora', 'Buenos Aires', 'Argentina'),
 (5, 'Manuel Belgrano', 432, 'CABA', 'Buenos Aires', 'Argentina'),
@@ -220,7 +220,97 @@ INSERT INTO `direcciones` (`IdDireccion`, `Direccion`, `Numero`, `Ciudad`, `Prov
 (7, 'Perito Moreno', 323, 'CABA', 'Buenos Aires', 'Argentina'),
 (8, 'Lamadrid', 342, 'Ezeiza', 'Buenos Aires', 'Argentina'),
 (9, 'San Martin', 432, 'CABA', 'Buenos Aires', 'Argentina'),
-(10, 'Alfonsina Stormi', 850, 'Barrio Uno', 'Buenos Aires', 'Argentina');
+(10, 'Alfonsina Stormi', 850, 'Barrio Uno', 'Buenos Aires', 'Argentina'),
+(11, 'San Martín', 124, 'La Plata', 'Buenos Aires', 'Argentina'),
+(12, 'Belgrano', 877, 'Quilmes', 'Buenos Aires', 'Argentina'),
+(13, 'Mitre', 452, 'Berazategui', 'Buenos Aires', 'Argentina'),
+(14, 'Alem', 301, 'Avellaneda', 'Buenos Aires', 'Argentina'),
+(15, 'Sarmiento', 990, 'Lanús', 'Buenos Aires', 'Argentina'),
+(16, 'Rivadavia', 215, 'Lomas de Zamora', 'Buenos Aires', 'Argentina'),
+(17, 'Urquiza', 620, 'Almirante Brown', 'Buenos Aires', 'Argentina'),
+(18, 'San Juan', 158, 'Florencio Varela', 'Buenos Aires', 'Argentina'),
+(19, 'Alsina', 744, 'Tigre', 'Buenos Aires', 'Argentina'),
+(20, 'Italia', 333, 'San Isidro', 'Buenos Aires', 'Argentina'),
+(21, 'España', 501, 'Vicente López', 'Buenos Aires', 'Argentina'),
+(22, 'Corrientes', 284, 'Tres de Febrero', 'Buenos Aires', 'Argentina'),
+(23, 'Pueyrredón', 912, 'San Fernando', 'Buenos Aires', 'Argentina'),
+(24, 'Saavedra', 478, 'Morón', 'Buenos Aires', 'Argentina'),
+(25, 'Estrada', 199, 'Ituzaingó', 'Buenos Aires', 'Argentina'),
+(26, 'Paso', 360, 'Hurlingham', 'Buenos Aires', 'Argentina'),
+(27, 'Azcuénaga', 841, 'Merlo', 'Buenos Aires', 'Argentina'),
+(28, 'Güemes', 154, 'Moreno', 'Buenos Aires', 'Argentina'),
+(29, 'French', 432, 'Pilar', 'Buenos Aires', 'Argentina'),
+(30, 'Peña', 710, 'Escobar', 'Buenos Aires', 'Argentina'),
+(31, 'Colón', 275, 'José C. Paz', 'Buenos Aires', 'Argentina'),
+(32, 'Ameghino', 688, 'Malvinas Argentinas', 'Buenos Aires', 'Argentina'),
+(33, 'Sáenz Peña', 540, 'San Miguel', 'Buenos Aires', 'Argentina'),
+(34, 'Echeverría', 390, 'Ezeiza', 'Buenos Aires', 'Argentina'),
+(35, 'Azopardo', 950, 'La Matanza', 'Buenos Aires', 'Argentina'),
+(36, 'Córdoba', 113, 'Berisso', 'Buenos Aires', 'Argentina'),
+(37, 'Laprida', 557, 'Ensenada', 'Buenos Aires', 'Argentina'),
+(38, 'Rawson', 812, 'Brandsen', 'Buenos Aires', 'Argentina'),
+(39, 'Arenales', 244, 'Cañuelas', 'Buenos Aires', 'Argentina'),
+(40, 'Castelli', 676, 'General Rodríguez', 'Buenos Aires', 'Argentina'),
+(41, 'Santiago', 355, 'Marcos Paz', 'Buenos Aires', 'Argentina'),
+(42, 'Vieytes', 122, 'Luján', 'Buenos Aires', 'Argentina'),
+(43, 'Agüero', 742, 'General Las Heras', 'Buenos Aires', 'Argentina'),
+(44, 'Luro', 583, 'Zárate', 'Buenos Aires', 'Argentina'),
+(45, 'Anchorena', 999, 'Campana', 'Buenos Aires', 'Argentina'),
+(46, 'Catamarca', 314, 'San Vicente', 'Buenos Aires', 'Argentina'),
+(47, 'Gascón', 487, 'Presidente Perón', 'Buenos Aires', 'Argentina'),
+(48, 'Trejo', 701, 'Exaltación de la Cru', 'Buenos Aires', 'Argentina'),
+(49, 'Pico', 265, 'Chascomús', 'Buenos Aires', 'Argentina'),
+(50, 'Gorriti', 879, 'Magdalena', 'Buenos Aires', 'Argentina'),
+(51, 'Triunvirato', 400, 'Punta Indio', 'Buenos Aires', 'Argentina'),
+(52, 'Condarco', 571, 'Dolores', 'Buenos Aires', 'Argentina'),
+(53, 'Lima', 183, 'Tordillo', 'Buenos Aires', 'Argentina'),
+(54, 'Perú', 928, 'Castelli', 'Buenos Aires', 'Argentina'),
+(55, 'Acuña', 642, 'Lezama', 'Buenos Aires', 'Argentina'),
+(56, 'O´Higgins', 309, 'Monte', 'Buenos Aires', 'Argentina'),
+(57, 'Centenario', 764, 'General Paz', 'Buenos Aires', 'Argentina'),
+(58, 'Boulogne', 558, 'Roque Pérez', 'Buenos Aires', 'Argentina'),
+(59, 'Chacabuco', 247, 'Navarro', 'Buenos Aires', 'Argentina'),
+(60, 'Malvinas', 631, 'Suipacha', 'Buenos Aires', 'Argentina'),
+(61, 'Grand Bourg', 142, 'Mercedes', 'Buenos Aires', 'Argentina'),
+(62, 'Heredia', 935, 'Chivilcoy', 'Buenos Aires', 'Argentina'),
+(63, 'Warnes', 473, 'Bragado', 'Buenos Aires', 'Argentina'),
+(64, 'Ayacucho', 588, 'Junín', 'Buenos Aires', 'Argentina'),
+(65, 'Pasteur', 327, 'Pergamino', 'Buenos Aires', 'Argentina'),
+(66, 'Viamonte', 734, 'Colón', 'Buenos Aires', 'Argentina'),
+(67, 'Francia', 450, 'Salto', 'Buenos Aires', 'Argentina'),
+(68, 'Uruguay', 299, 'Rojas', 'Buenos Aires', 'Argentina'),
+(69, 'Mendoza', 611, 'San Antonio de Areco', 'Buenos Aires', 'Argentina'),
+(70, 'Lope de Vega', 822, 'Baradero', 'Buenos Aires', 'Argentina'),
+(71, 'Cangallo', 515, 'San Pedro', 'Buenos Aires', 'Argentina'),
+(72, 'Moreno', 266, 'Arrecifes', 'Buenos Aires', 'Argentina'),
+(73, 'Bueras', 900, 'Carmen de Areco', 'Buenos Aires', 'Argentina'),
+(74, 'Jujuy', 432, 'Capitán Sarmiento', 'Buenos Aires', 'Argentina'),
+(75, 'Berlin', 782, 'Ramallo', 'Buenos Aires', 'Argentina'),
+(76, 'Pellegrini', 307, 'San Nicolás', 'Buenos Aires', 'Argentina'),
+(77, 'Mitre', 921, 'General Arenales', 'Buenos Aires', 'Argentina'),
+(78, 'Rosales', 198, 'Lincoln', 'Buenos Aires', 'Argentina'),
+(79, 'Honduras', 660, 'General Pinto', 'Buenos Aires', 'Argentina'),
+(80, 'Soler', 550, 'Leandro N. Alem', 'Buenos Aires', 'Argentina'),
+(81, 'Estados Unidos', 311, 'Ameghino', 'Buenos Aires', 'Argentina'),
+(82, 'Paraná', 899, 'Trenque Lauquen', 'Buenos Aires', 'Argentina'),
+(83, 'Ocampo', 477, 'Rivadavia', 'Buenos Aires', 'Argentina'),
+(84, 'Gallardo', 139, 'Pehuajó', 'Buenos Aires', 'Argentina'),
+(85, 'Condell', 744, 'Carlos Casares', 'Buenos Aires', 'Argentina'),
+(86, 'Acha', 523, 'Carlos Tejedor', 'Buenos Aires', 'Argentina'),
+(87, 'Saavedra', 284, 'Hipólito Yrigoyen', 'Buenos Aires', 'Argentina'),
+(88, 'Elordi', 698, 'Daireaux', 'Buenos Aires', 'Argentina'),
+(89, 'Sarmiento', 431, 'Bolívar', 'Buenos Aires', 'Argentina'),
+(90, 'Patricios', 875, 'Tapalqué', 'Buenos Aires', 'Argentina'),
+(91, 'Laprida', 203, 'Azul', 'Buenos Aires', 'Argentina'),
+(92, 'Lavalle', 566, 'Olavarría', 'Buenos Aires', 'Argentina'),
+(93, 'Roca', 944, 'Tandil', 'Buenos Aires', 'Argentina'),
+(94, 'Newton', 388, 'Benito Juárez', 'Buenos Aires', 'Argentina'),
+(95, 'Avellaneda', 118, 'Rauch', 'Buenos Aires', 'Argentina'),
+(96, 'Pellegrini', 512, 'Lobos', 'Buenos Aires', 'Argentina'),
+(97, 'Diagonal', 750, 'Roque Pérez', 'Buenos Aires', 'Argentina'),
+(98, 'Saavedra', 601, 'Saladillo', 'Buenos Aires', 'Argentina'),
+(99, 'Naciones Unidas', 480, '25 de Mayo', 'Buenos Aires', 'Argentina'),
+(100, 'Vieytes', 352, 'General Alvear', 'Buenos Aires', 'Argentina');
 
 -- --------------------------------------------------------
 
@@ -398,7 +488,7 @@ INSERT INTO `internaciones` (`IdInternacion`, `IdSolicitud`, `IdCama`, `IdHabita
 (11, 8, 8, 4, 8, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Neumonía grave', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3131),
 (12, 9, 9, 5, 9, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Evaluación neurológica', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3132),
 (13, 10, 10, 5, 10, '2025-10-30 20:29:59', '2025-11-06 20:29:59', 'Activa', 'Terapia de rehabilitación', 0x68747470733a2f2f6c6f63616c686f73742f6865616c74687761792f6170692f696e7465726e6163696f6e65732f4d6f7374726172496e7465726e6163696f6e657351522e7068703f69643d3133),
-(16, 10, 10, 5, 10, '2025-11-28 19:46:00', '2025-11-29 19:46:00', 'Activa', NULL, 0x89504e470d0a1a0a0000000d49484452000000cd000000cd01030000002172662a00000006504c5445ffffff00000055c2d37e000000097048597300000ec400000ec401952b0e1b000001b9494441545885ed97318e84300c458d28527284dc64b8181291b818dc8423505220bcff3bc0b0b3b3add3e082c9f028acd8ffc71179e2897fa351d55d3a09bbd4582e7c68f247f879355b5cdba59ec328f59cdf79a341d797f42aada6a86333ccba9742c8304c4b17916b4984ed01c7aac26e954156af61964af56b299d10bb178819e6347f37b6133a03dd2b31e8227fc30321c3b5c51ee90841af955a03f923e951aaa563d1f0111057c91f413a2df4832ab15ef852afddf244d08fd052d8b3d44f84d51640cc105502da046d83a2c97da39c5003054f34921169c25244c2a4fe0805827eba9c1c8fbe5bbd3c91a50411513a1ff5724458a37b6929d08f1d3c7aeda1238291e0c8dd249b0b8f1bfbd21dd59a4791ec2bb4b712886f991cf2b2c1ac93f7e1eb89f2ec11c5548d0c391695406a7dc21398032beba565902efd6ce7ee6acdfc3a2ae98a9204ee8c6939ece6b2efa1dd0f0dd6bda6653abe5d25c41d9dbd739d7a90760174cc877413168d83c0a5654f946824e62bb0f8a38f933f3aae30f6673da6b36248d82c11c9d16a8b21a59631a255a8d75de67e28d92d3bf72c66a35e6f3380233a6f5266ab7cdcaf156ee88927bec60fa2628f119ac4993c0000000049454e44ae426082);
+(17, 3, 12, 6, 3, '2025-12-04 20:31:00', '2025-12-06 20:31:00', 'Activa', NULL, 0x89504e470d0a1a0a0000000d49484452000000cd000000cd01030000002172662a00000006504c5445ffffff00000055c2d37e000000097048597300000ec400000ec401952b0e1b000001b8494441545885ed973d8e84300c858d28527284dc64b8185290b818dc2447a0a44078df7306d0ecceb64e838b21c347f1e4ff883cf6d8bfd6a9ea218384435a1c57fee8e88ff078757bdcfab5cd6196369777de68d2ed2549a5d731eadc4d598f5a080ac3b20e115a6b22b8071ca706deaa832c5e539646f56b289d10b317880a8bcccfc47642a7217b25065de5af792028dc7af8486714f4d6a825903fc20b94cecea0e123209e467f94a010f58328315e92b25ede724414476eba583f11add61f091a498f28d947481b044d2e1ffa213e1af8086993d85244c2a215d08efac1d9c471f47dc4cb0d214fc45298a5f32b5e9e889298b8089ad8e0d1d351ae4862a9656b2e1c37d25fedcd11251317f1764037617bab813acd1bc541972d6683dcc3d71171fcf73aa958554321fde68f90aee8eed6d4262eac8c97d64065bed8dc6553a34ca980229b5ab65a0e8775d95bbc1f9a32c4b52585e123bb4a883bbabc25efa98795a0022afba1759304add6e3d60a686423293b40b481f7b9b47b21bbc2a8da9fedbd9dd542bb305922c4edb122b25a460a7329b96bd9138d76cb2e398b7d3de9bd3a7aa2f326656dd576a365f5478f3df6d57e00f106965faa0fe7b80000000049454e44ae426082);
 
 -- --------------------------------------------------------
 
@@ -422,7 +512,13 @@ CREATE TABLE `notificaciones` (
 INSERT INTO `notificaciones` (`id`, `rol_destino`, `evento`, `mensaje`, `fecha`, `leido`) VALUES
 (9, 'medico', 'Internacion Creada', 'Se creó una internación para el paciente ID: 10', '2025-11-28 19:42:04', 1),
 (10, 'medico', 'Internacion Creada', 'Se creó una internación para el paciente ID: 10', '2025-11-28 19:46:30', 1),
-(11, 'Medico Especial', 'Recordatorio de 6', 'Existe una revisión pendiente de tipo 6en paciente ', '2025-12-04 19:26:30', 0);
+(11, 'medico', 'Internacion Creada', 'Se creó una internación para el paciente ID: 3', '2025-12-04 20:31:35', 1),
+(12, 'Medico', 'Recordatorio de 7', 'Existe una revisión pendiente de tipo 7en paciente Valentina Flores', '2025-12-04 21:10:28', 1),
+(13, 'Medico Especial', 'Recordatorio de 7', 'Existe una revisión pendiente de tipo 7en paciente Valentina Flores', '2025-12-04 21:10:28', 0),
+(14, 'Enfermero/a', 'Recordatorio de 7', 'Existe una revisión pendiente de tipo 7en paciente Valentina Flores', '2025-12-04 21:10:28', 0),
+(15, 'Medico', 'Recordatorio de 7', 'Existe una revisión pendiente de tipo 7en paciente Valentina Flores', '2025-12-04 21:10:58', 1),
+(16, 'Medico Especial', 'Recordatorio de 7', 'Existe una revisión pendiente de tipo 7en paciente Valentina Flores', '2025-12-04 21:10:58', 0),
+(17, 'Enfermero/a', 'Recordatorio de 7', 'Existe una revisión pendiente de tipo 7en paciente Valentina Flores', '2025-12-04 21:10:58', 0);
 
 -- --------------------------------------------------------
 
@@ -471,7 +567,7 @@ CREATE TABLE `pacientes` (
   `Genero` enum('Hombre','Mujer','Otro') NOT NULL,
   `DNI` bigint(20) NOT NULL,
   `EstadoCivil` enum('Casado','Soltero') DEFAULT NULL,
-  `Estado` enum('Normal','Trasladado','Internado') NOT NULL DEFAULT 'Normal'
+  `Estado` enum('Normal','Trasladado','Internado','En Espera','Fallecido','De Alta') NOT NULL DEFAULT 'Normal'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -481,7 +577,7 @@ CREATE TABLE `pacientes` (
 INSERT INTO `pacientes` (`IdPaciente`, `IdUsuario`, `IdPlan_OS`, `IdDireccion`, `FechaNac`, `Genero`, `DNI`, `EstadoCivil`, `Estado`) VALUES
 (1, 11, 1, 1, '1990-05-12 00:30:00', 'Mujer', 12345689, 'Casado', 'Normal'),
 (2, 12, 2, 2, '1990-06-13 04:00:00', 'Hombre', 12345690, 'Casado', 'Normal'),
-(3, 13, 3, 3, '1990-04-14 17:00:00', 'Mujer', 12345691, 'Casado', 'Normal'),
+(3, 13, 3, 3, '1990-04-14 17:00:00', 'Mujer', 12345691, 'Casado', 'Internado'),
 (4, 14, 4, 4, '1990-07-15 23:00:00', 'Hombre', 12345692, 'Soltero', 'Normal'),
 (5, 15, 5, 5, '1990-12-14 21:00:00', 'Mujer', 12345691, 'Soltero', 'Normal'),
 (6, 16, 6, 6, '1990-11-11 00:00:00', 'Hombre', 12345688, 'Soltero', 'Normal'),
@@ -649,11 +745,9 @@ CREATE TABLE `recordatorio` (
 --
 
 INSERT INTO `recordatorio` (`IdRecordatorio`, `IdInternacion`, `IdUsuario`, `TipoRevision`, `FechaCreacion`, `Estado`, `FechaInicioRec`, `FechaFinRec`, `Frecuencia`, `FrecuenciaHoras`, `FrecuenciaDias`, `FrecuenciaSem`, `RepetirLunes`, `RepetirMartes`, `RepetirMiercoles`, `RepetirJueves`, `RepetirViernes`, `RepetirSabado`, `RepetirDomingo`, `Observaciones`, `activo`) VALUES
-(1, 4, 3, 4, '2025-11-29 16:42:00', 'Pendiente', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Horas', 8, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'prueba rec2', 1),
-(2, 6, 3, 1, '2025-11-29 19:01:00', 'Pendiente', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Unica Vez', NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'hola mundo22', 0),
-(3, 8, 9, 3, '2025-12-04 16:17:00', 'Pendiente', '2025-12-04 17:42:00', '0000-00-00 00:00:00', 'Diaria', NULL, 1, NULL, 0, 0, 0, 0, 0, 0, 0, NULL, 1),
-(4, 9, 9, 4, '2025-12-04 17:44:00', 'Pendiente', '2025-12-04 17:45:00', '0000-00-00 00:00:00', 'Semanal', NULL, NULL, 1, 0, 0, 0, 1, 1, 1, 1, 'Inyeccion de antibiotico', 1),
-(5, 12, 8, 6, '2025-12-04 18:48:00', 'Atrasado', '2025-12-04 19:25:00', '0000-00-00 00:00:00', 'Unica Vez', NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'Extirpar riñon', 1);
+(1, 4, 3, 4, '2025-11-29 16:42:00', '', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Horas', 8, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'prueba rec2', 0),
+(2, 6, 3, 1, '2025-11-29 17:00:00', '', '2025-11-29 20:00:00', '0000-00-00 00:00:00', 'Unica Vez', NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 'hola mundo22', 1),
+(3, 4, 8, 7, '2025-12-04 21:08:00', 'Atrasado', '2025-12-04 21:10:00', '0000-00-00 00:00:00', 'Unica Vez', NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -717,7 +811,9 @@ INSERT INTO `revisiones` (`IdRevisiones`, `IdInternacion`, `IdUsuario`, `FechaCr
 (36, 7, 3, '2025-11-27 21:09:00', 1, 1, '-', 'Arritmia cardiaca', 'Internacion para monitoreo', 'Se tomaros los signos vitales.\nPresion alta con respecto a la normal.\nSigue en observacion.'),
 (37, 10, 9, '2025-12-03 21:27:00', 4, 2, 'Fiebre', 'Anginas', 'Antibioticos', 'Se crea recordatorio de antibioticos:\ncada 2hs x 7 dias'),
 (38, 10, 9, '2025-12-03 21:27:00', 1, 2, 'Fiebre', 'Anginas', 'Antibioticos', 'Se midio el ritmo cardiaco, se estabilizó'),
-(39, 10, 9, '2025-12-03 21:27:00', 4, 2, 'Fiebre', 'Anginas', 'Antibioticos', 'Se crea recordatorio de antibioticos:\ncada 2hs x 7 dias');
+(39, 10, 9, '2025-12-03 21:27:00', 4, 2, 'Fiebre', 'Anginas', 'Antibioticos', 'Se crea recordatorio de antibioticos:\ncada 2hs x 7 dias'),
+(40, 4, 8, '2025-12-04 20:50:00', 6, 2, 'Insuficiencia Cardiaca', 'Arritmia cardiaca', 'Intervencion Quirurgica', 'Operacion Finalizada con Exito'),
+(41, 4, 8, '2025-12-04 20:55:00', 7, 4, 'Ninguno', 'Post Arritmia Cardiaca', 'Reposo', 'Dada de Alta.');
 
 -- --------------------------------------------------------
 
@@ -932,7 +1028,7 @@ CREATE TABLE `solicitudesinternacion` (
 INSERT INTO `solicitudesinternacion` (`IdSolicitud`, `IdPaciente`, `TipoSolicitud`, `EstadoSolicitud`, `FechaCreacion`, `MotivoSolicitud`, `observacion_cierre`) VALUES
 (1, 1, 'Urgencia', 'Abierta', '2025-10-30 23:29:59', 'Dolor abdominal intenso', NULL),
 (2, 2, 'Programada', 'Abierta', '2025-10-30 23:29:59', 'Cirugía ortopédica', NULL),
-(3, 3, 'Urgencia', 'Abierta', '2025-10-30 23:29:59', 'Descompensación cardíaca', NULL),
+(3, 3, 'Urgencia', 'Cerrada', '2025-10-30 23:29:59', 'Descompensación cardíaca', NULL),
 (4, 4, 'Programada', 'Abierta', '2025-10-30 23:29:59', 'Tratamiento postoperatorio', NULL),
 (5, 5, 'Reprogramada', 'Abierta', '2025-10-30 23:29:59', 'Chequeo general', NULL),
 (6, 6, 'Urgencia', 'Abierta', '2025-10-30 23:29:59', 'Traumatismo craneal', NULL),
@@ -989,7 +1085,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`IdUsuario`, `Usuario`, `Clave`, `Habilitado`, `Nombre`, `Apellido`, `Email`, `Telefono`, `token_recuperacion`, `token_expiracion`) VALUES
-(1, 'agarcia', '3cd6e84a34793dabc32d3748bc890aa88cd1e018d3d86170c0565248f9ab0d49', 1, 'Ana', 'García', 'ana.garcia@mail.com.ar', 5491145678901, NULL, NULL),
+(1, 'agarcia', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 1, 'Ana', 'García', 'luciogomez03@gmail.com', 5491145678901, '2bf3c6832dbeff6c50bfc58641ddd0ff', '2025-12-04 20:47:59'),
 (2, 'cmartinez', '04a61557a469ef923d66fa3b7617212283cd35e59b4bc33ed00975e4d1832e9a', 1, 'Carlos', 'Martínez', 'c.martinez@empresa.com', 5493515550001, NULL, NULL),
 (3, 'vsanchez', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 1, 'Valeria', 'Sánchez', 'gomezdelfina@gmail.com', 5493414445566, '63ffd031debcc54664dc97b79fee7c0b', '2025-12-03 22:03:48'),
 (4, 'jdiaz', '629cb398b51eb025476cb4e3176659d8e2e52a8b8cd25b13ee5d55669313d422', 1, 'Jorge', 'Díaz', 'jorge.diaz@mail.com', 5492616667788, NULL, NULL),
@@ -1172,7 +1268,7 @@ ALTER TABLE `camas`
 -- AUTO_INCREMENT de la tabla `direcciones`
 --
 ALTER TABLE `direcciones`
-  MODIFY `IdDireccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `IdDireccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
 -- AUTO_INCREMENT de la tabla `estadorevisiones`
@@ -1190,13 +1286,13 @@ ALTER TABLE `habitaciones`
 -- AUTO_INCREMENT de la tabla `internaciones`
 --
 ALTER TABLE `internaciones`
-  MODIFY `IdInternacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `IdInternacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `notificaciones`
 --
 ALTER TABLE `notificaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `obrassociales`
@@ -1208,7 +1304,7 @@ ALTER TABLE `obrassociales`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `IdPaciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `IdPaciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `permisos`
@@ -1238,13 +1334,13 @@ ALTER TABLE `planes_obrassociales`
 -- AUTO_INCREMENT de la tabla `recordatorio`
 --
 ALTER TABLE `recordatorio`
-  MODIFY `IdRecordatorio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `IdRecordatorio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `revisiones`
 --
 ALTER TABLE `revisiones`
-  MODIFY `IdRevisiones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `IdRevisiones` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
