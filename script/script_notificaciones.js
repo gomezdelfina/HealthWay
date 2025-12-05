@@ -85,9 +85,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Actualiza contador de notificaciones
     setInterval(actualizarContador, 10000);
 
-    // -- Ejecutar cada 60 segundos
+    // -- Ejecutar cada 30 segundos
     // Verifica recordatorios
-    setInterval(revisarEjecucionRecordatorio, 60000); 
+    setInterval(revisarEjecucionRecordatorio, 30000); 
 
     // Ejecutar al cargar la página
     actualizarContador();
@@ -109,10 +109,28 @@ function actualizarContador() {
     });
 }
 
-function revisarEjecucionRecordatorio() {
-    fetch('/HealthWay/api/recordatorios/createRecordatoriosNotif.php')
-        .then(response => response.json())
-        .catch(error => console.error('Error en cron:', error));
+async function revisarEjecucionRecordatorio() {
+    const baseUrl = window.location.origin;
+    try{
+        let response = await fetch(baseUrl + '/HealthWay/api/recordatorios/createRecordatoriosNotif.php', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            errorText = await response.text();
+            throw new Error(`Error HTTP: ${response.status} - ${errorText}`);
+        }else{      
+            let result = await response.json(); 
+
+            return result;
+        }
+    }catch (error){
+        console.error('Error en cron:', error);
+    }
 }
+
     
     

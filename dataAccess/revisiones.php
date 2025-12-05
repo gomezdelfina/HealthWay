@@ -153,7 +153,7 @@
                 if(!empty($result) & 
                    ($revision["EstadoRevision"] == 5 || $revision["EstadoRevision"] == 4)){
                         //Obtener internacion de revision
-                        $rev = self::getRevisionById($revision['IdRevision']);
+                        $rev = self::getRevisionById($result);
 
                         //Cerrar internacion
                         if(!empty($rev)){
@@ -192,7 +192,7 @@
 
                 $sql = 'SELECT T0.IdRevisiones, T0.IdUsuario, CAST(T0.FechaCreacion AS DATE) AS FechaCreacion,
                         CAST(T0.FechaCreacion AS TIME) AS HoraCreacion, T0.TipoRevision, T0.EstadoRevision, 
-                        T0.Sintomas, T0.Diagnostico, T0.Tratamiento, T2.IdPaciente, T0.Observaciones as Notas
+                        T0.Sintomas, T0.Diagnostico, T0.Tratamiento, T2.IdPaciente, T0.Observaciones as Notas, T0.IdInternacion
                         FROM revisiones T0 
                         INNER JOIN internaciones T1 ON T1.IdInternacion = T0.IdInternacion
                         INNER JOIN pacientes T2 ON T1.IdPaciente = T2.IdPaciente
@@ -280,7 +280,7 @@
                 if(!empty($result) & 
                    ($revision["EstadoRevision"] == 5 || $revision["EstadoRevision"] == 4)){
                         //Obtener internacion de revision
-                        $rev = self::getRevisionById($revision['IdRevision']);
+                        $rev = self::getRevisionById($result);
 
                         //Cerrar internacion
                         if(!empty($rev)){

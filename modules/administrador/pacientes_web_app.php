@@ -89,46 +89,53 @@
 
                         <div class="row g-3">
 
+                            <div class="col-md-6 d-none">
+                                <label class="form-label">Paciente</label>
+                                <select id="paciente" name="paciente" class="form-select">
+                                    <option value="">Seleccione un Paciente</option>
+                                </select>
+                            </div>
+
                             <!-- Nombre -->
                             <div class="col-md-6">
                                 <label class="form-label">Nombre</label>
-                                <input id="nombre" type="text" class="form-control" required>
+                                <input id="nombre" type="text" name="nombre" class="form-control" required>
                             </div>
 
                             <!-- Apellido -->
                             <div class="col-md-6">
                                 <label class="form-label">Apellido</label>
-                                <input id="apellido" type="text" class="form-control" required>
+                                <input id="apellido" type="text" name="apellido" class="form-control" required>
                             </div>
 
                             <!-- DNI -->
                             <div class="col-md-6">
                                 <label class="form-label">DNI</label>
-                                <input id="dni" type="number" class="form-control" required>
+                                <input id="dni" type="number" name="dni" class="form-control" required>
                             </div>
 
                             <!-- Email -->
                             <div class="col-md-6">
                                 <label class="form-label">Email</label>
-                                <input id="email" type="email" class="form-control" required>
+                                <input id="email" type="email" name="email" class="form-control" required>
                             </div>
 
                             <!-- Teléfono -->
                             <div class="col-md-6">
                                 <label class="form-label">Teléfono</label>
-                                <input id="telefono" type="number" class="form-control" required>
+                                <input id="telefono" type="number" name="telefono" class="form-control" required>
                             </div>
 
                             <!-- FechaNacimiento -->
                             <div class="col-md-6">
                                 <label class="form-label">Fecha de nacimiento</label>
-                                <input id="fechaNac" type="date" class="form-control" required>
+                                <input id="fechaNac" type="date" name="fechaNac" class="form-control" required>
                             </div>
 
                             <!-- Género -->
                             <div class="col-md-6">
                                 <label class="form-label">Género</label>
-                                <select id="genero" class="form-select" required>
+                                <select id="genero" name="genero" class="form-select" required>
                                     <option value="Masculino">Masculino</option>
                                     <option value="Femenino">Femenino</option>
                                     <option value="Otro">Otro</option>
@@ -138,7 +145,7 @@
                             <!-- Estado civil -->
                             <div class="col-md-6">
                                 <label class="form-label">Estado Civil</label>
-                                <select id="estadoCivil" class="form-select" required>
+                                <select id="estadoCivil" name="estado" class="form-select" required>
                                     <option>Soltero/a</option>
                                     <option>Casado/a</option>
                                     <option>Divorciado/a</option>
@@ -149,19 +156,18 @@
                             <!-- Obra Social -->
                             <div class="col-md-6">
                                 <label class="form-label">Obra Social</label>
-                                <select id="nombreOS" class="form-select" required></select>
+                                <select id="nombreOS" name="nombreOS" class="form-select" required></select>
                             </div>
 
                             <!-- Habilitado (solo en editar) -->
                             <div class="col-md-6 d-none" id="habilitadoGroup">
                                 <label class="form-label">Estado</label>
-                                <select id="habilitado" class="form-select">
+                                <select id="habilitado" name="habilitado" class="form-select">
                                     <option value="1">Habilitado</option>
                                     <option value="0">Inhabilitado</option>
                                 </select>
                             </div>
                         </div>
-
                     </form>
                 </div>
 

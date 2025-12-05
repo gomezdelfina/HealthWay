@@ -346,6 +346,7 @@ function activarDatosModal(type){
             radio.removeAttribute('disabled');
         });
 
+        document.getElementById("fechaFinActivo").removeAttribute('disabled');
         document.getElementById("recordatorioActivo").removeAttribute('disabled');
     }else if (type == 'ver'){
         document.getElementById("recObs").setAttribute('disabled','');
@@ -367,6 +368,7 @@ function activarDatosModal(type){
             radio.setAttribute('disabled','');
         });
 
+        document.getElementById("fechaFinActivo").setAttribute('disabled','');
         document.getElementById("recordatorioActivo").setAttribute('disabled','');
     }else if (type == 'editar'){
         document.getElementById("recPac").setAttribute('disabled','');
@@ -388,6 +390,7 @@ function activarDatosModal(type){
             radio.setAttribute('disabled','');
         });
 
+        document.getElementById("fechaFinActivo").setAttribute('disabled','');
         document.getElementById("recordatorioActivo").removeAttribute('disabled');
     }
 }
@@ -419,9 +422,10 @@ async function validarCamposRecordatorio(event) {
 
     if(event.submitter.id == 'btnActRecordatorio'){
         IdRecordatorio = document.getElementById("idRecordatorio").value;
-
+        activo = document.getElementById("recordatorioActivo").checked ? 1 : 0;
         let rec = {
-                    'IdRecordatorio': IdRecordatorio
+                    'IdRecordatorio': IdRecordatorio,
+                    'activo': activo
                 };
 
         inactivarRecordatorio(rec);
@@ -729,7 +733,7 @@ async function renderizarTablaRec() {
                                 <button id="btnVerRec" class="btn btn-sm btn-outline-dark me-2 btn-ver-rec" data-bs-toggle="modal" data-bs-target="#modalRecordatorio" data-id="${rec.IdRecordatorio}">
                                     <i class="bi bi-eye-fill me-2"></i>Ver
                                 </button>`;
-                if(datosTipos.some(item => item.DescTipoRevision === rec.TipoRevision)){
+                if(datosTipos.some(item => item.IdTipoRevision === rec.TipoRevision)){
                     html += `
                                 <button id="btnEditarRec" class="btn btn-sm btn-outline-dark me-2 btn-editar-rec" data-bs-toggle="modal" data-bs-target="#modalRecordatorio" data-id="${rec.IdRecordatorio}">
                                     <i class="bi bi-pen me-2"></i>Editar
@@ -891,13 +895,13 @@ async function inactivarRecordatorio(rec) {
     try{
         $result = await editActivoRecordatorio(rec);
 
-        showOkMsg(true, 'Se inhabilitó recordatorio correctamente');
+        showOkMsg(true, 'Se actualizó recordatorio correctamente');
 
         cerrarModal(document.getElementById('modalRecordatorio'));
         renderizarTablaRec();
     }catch(error){
-        console.log("Problemas al inhabilitar el recordatorio: " + error.message);
-        showOkMsg(false, 'Problemas al inhabilitar el recordatorio');
+        console.log("Problemas al actualizar el recordatorio: " + error.message);
+        showOkMsg(false, 'Problemas al actualizar el recordatorio');
     }
 }
 

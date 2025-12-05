@@ -169,6 +169,7 @@ async function confirmarEliminar(id, nombre) {
 //---------------------------------------------------------
 // FORM SUBMIT
 //---------------------------------------------------------
+/**
 async function handleFormSubmit(e) {
     e.preventDefault();
 
@@ -200,7 +201,7 @@ async function handleFormSubmit(e) {
         pacienteModal.hide();
         cargarPacientes();
     }
-}
+} **/
 
 //---------------------------------------------------------
 // MODAL
@@ -240,4 +241,55 @@ function openModal(tipo, paciente = null) {
 function closeModal() {
     pacienteModal.hide();
     form.reset();
+}
+
+function ObtenerPacientes() {
+
+    const selectPaciente = document.getElementById("paciente");
+    const nombreInput = document.getElementById("nombre");
+    const apellidoInput = document.getElementById("apellido");
+    const telefonoInput = document.getElementById("telefono");
+    const emailInput = document.getElementById("email");
+
+    function buscar() {
+
+        const localidad = selectLocalidad.value;
+
+        if (localidad === "") {
+
+            habInput.value = "";
+            refInput.value = "";
+            return;
+
+        }
+
+        fetch("buscarLocalidad.php?localidad=" + encodeURIComponent(localidad))
+
+            .then(response => response.json())
+            .then(data => {
+
+                if (data.existe) {
+
+                    habInput.value = data.cant_habitantes;
+                    refInput.value = data.referente;
+
+                } else {
+
+                    habInput.value = "";
+                    refInput.value = "";
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.log(error);
+
+            })
+
+    }
+
+    selectPaciente.addEventListener("change", buscar);
+
 }

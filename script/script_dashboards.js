@@ -86,7 +86,7 @@ async function updateRecordatorioEstado(idrec){
 
     let rec = {
         'IdRecordatorio' : idrec,
-        'Estado' : 'Pendiente'
+        'Estado' : 'Hecho'
     };
 
     try {
@@ -117,6 +117,11 @@ function loadPMedicoDash(){
     verInternacionesActivas();
     verRecordatoriosPend();
     verRecordatoriosAtras();
+
+    // -- Ejecutar cada 60 segundos
+    // Verifica recordatorios
+    setInterval(verRecordatoriosAtras, 60000); 
+    setInterval(verRecordatoriosPend, 60000); 
 }
 
 // -- Pers. Medico
@@ -176,22 +181,31 @@ function renderizarTablaRecDash(container, recordatoriosData) {
             `;
             
             recordatoriosData.forEach(rec => {
+                let ejec = rec.ProximaEjecucion == null ? '' : rec.ProximaEjecucion;
+
                 html += `
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
-                            ${rec.DescTipoRevision}
+                            Revision: ${rec.DescTipoRevision}
                         </div>
                         <div>
-                            ${rec.Nombre + ' ' + rec.Apellido}
+                            Paciente: ${rec.Nombre + ' ' + rec.Apellido}
                         </div>
                         <div>
-                            ${rec.Observaciones}
-                        </div>
+                            ${ejec}
+                        </div>`;
+                        
+                
+                if(rec.Estado == 'Atrasado'){
+                    html += `
                         <div>
                             <button class="btn btn-success btn-sm btn-rec-hecho" data-id="${rec.IdRecordatorio}">
                                 <i class="bi bi-check2-circle me-2"></i>Marcar realizada
                             </button>
-                        </div>
+                        </div>`;
+                }
+                 
+                html += `
                     </li>
                 `;
             });
@@ -229,9 +243,9 @@ async function marcarRecordatorioHecho(id){
 // --
 
 // -- Paciente
-document.addEventListener("DOMContentLoaded", () => {
+function loadPacienteDash(){
     cargarDatosPaciente();
-});
+}
 
 // Carga los datos del paciente mediante el id de usuario
 function cargarDatosPaciente() {
