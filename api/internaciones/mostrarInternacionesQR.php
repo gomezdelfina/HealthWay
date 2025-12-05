@@ -3,6 +3,7 @@
     require_once($dirBaseFile . '/dataAccess/internaciones.php');
     require_once($dirBaseFile . '/dataAccess/revisiones.php');
     require_once($dirBaseFile . '/dataAccess/pacientes.php');
+    require_once($dirBaseFile . '/dataAccess/permisos.php');
 
     $response = [];
     $errors = [];
@@ -20,7 +21,7 @@
             $rawInput = file_get_contents('php://input');
             $data = json_decode($rawInput, true);
         } else {
-            $data = $_POST;
+            $data = $_GET;
         }
 
         if(empty($data)){
@@ -78,6 +79,7 @@
         header('Content-Type: application/json');
         http_response_code($response['code']);
         echo json_encode($response['msg']);
+        exit;
     }
     
 ?>
@@ -165,7 +167,7 @@
                 <div class="col-md-3">
                     <div class="label-text">Estado</div>
                     <div class="value-text">
-                        <span class="badge"><?php if(isset($internacionActual['EstadoInternacion'])) {echo $internacionActual['EstadoInternacion'];} ?></span>
+                        <span><?php if(isset($internacionActual['EstadoInternacion'])) {echo $internacionActual['EstadoInternacion'];} ?></span>
                     </div>
                 </div>
                 <div class="col-md-3">
