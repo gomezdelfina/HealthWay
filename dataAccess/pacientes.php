@@ -37,5 +37,36 @@
                 throw new Exception("Problemas al obtener paciente por id: " . $e);
             }
         }
+
+        
+        public static function actualizarEstadoPaciente($idPaciente, $estado) 
+        {
+            try{
+                if (is_null($idPaciente)) {
+                    throw new Exception("El campo idPaciente no puede estar vacío");
+                }else if (is_null($estado)) {
+                    throw new Exception("El campo estado no puede estar vacío");
+                }
+
+                ConexionDb::connect();
+
+                $sql = "UPDATE pacientes
+                    SET Estado = :estado
+                    WHERE IdPaciente = :paciente;";
+
+                $params = [
+                    ["clave" => ":paciente", "valor" => $idPaciente],
+                    ["clave" => ":estado", "valor" => $estado]
+                ];
+
+                $result = ConexionDb::consult($sql, $params);
+
+                ConexionDb::disconnect();
+                
+                return $result;
+            }catch(Exception $e){
+                throw new Exception("Problemas al editar estado de paciente: " . $e);
+            }
+        }
     }
 ?>

@@ -26,6 +26,18 @@
             $conn = null;
         }
 
+        public static function getCreatedId(){
+            global $conn;
+
+            try{
+                $nuevoId = $conn->lastInsertId();
+
+                return $nuevoId;
+            }catch (Exception $e) {
+                throw new Exception("Error al obtener ID: " . $e);
+            }
+        }
+
         public static function consult($query, $params = NULL)
         {
             global $conn;
