@@ -9,11 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const estadoForm = document.getElementById('estadoForm');
     const saveEstadoBtn = document.getElementById('saveEstadoBtn');
     
-    // ----------------------------------------------------
-    // INICIALIZACIÓN
-    // ----------------------------------------------------
-    
-    // Carga inicial de datos
+   
     loadPacientes(); // Cargar la lista de pacientes para el modal de creación
     loadMedicos();   // Cargar la lista de médicos para el modal de creación
     loadSolicitudes(); // Carga la tabla principal de solicitudes
@@ -41,10 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    // ----------------------------------------------------
-    // LÓGICA DE CARGA DE DROPDOWNS
-    // ----------------------------------------------------
-
     async function loadPacientes() {
         const selectPaciente = document.getElementById("pacienteId");
         // Nota: Asumo una API endpoint para obtener pacientes
@@ -71,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function loadMedicos() {
         const selectMedico = document.getElementById("medicoId");
-        // Nota: Asumo una API endpoint para obtener médicos
+        // Nota: Asumo una API endpoint para obtener medicos
         const url = API_BASE_URL.replace('/solicitudes', '/administrador') + '/ObtenerMedicos.php'; 
         
         try {
@@ -96,10 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // ----------------------------------------------------
-    // LÓGICA DE CREACIÓN DE SOLICITUD
-    // ----------------------------------------------------
-
+    
     async function crearSolicitud() {
         const datos = new FormData(solicitudForm);
 
@@ -152,14 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // ----------------------------------------------------
-    // LÓGICA DE CARGA Y RENDERIZADO DE LA TABLA
-    // ----------------------------------------------------
 
-    /**
-     * Carga y renderiza la lista de solicitudes.
-     * @param {string} busqueda - Término de búsqueda opcional.
-     */
     window.loadSolicitudes = async function(busqueda = '') {
         solicitudesTableBody.innerHTML = '<tr><td colspan="7" class="text-center"><span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Cargando solicitudes...</td></tr>';
         
@@ -188,19 +170,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    /**
-     * Renderiza una fila en la tabla de solicitudes.
-     * @param {object} solicitud - Objeto con los datos de la solicitud.
-     */
+  
     function renderSolicitudRow(solicitud) {
         const row = document.createElement('tr');
         
-        // Función auxiliar para formatear la fecha/hora
-        const formatDateTime = (dt) => {
-            if (!dt) return 'N/A';
-            const date = new Date(dt);
-            return date.toLocaleDateString('es-AR') + ' ' + date.toLocaleTimeString('es-AR').substring(0, 5);
-        };
+       
+        // const formatDateTime = (dt) => {
+        //     if (!dt) return 'N/A';
+        //     const date = new Date(dt);
+        //     return date.toLocaleDateString('es-AR') + ' ' + date.toLocaleTimeString('es-AR').substring(0, 5);
+        // };
 
         // Determinar clase de estilo para el estado
         let badgeClass = 'bg-secondary';
@@ -239,15 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         solicitudesTableBody.appendChild(row);
     }
     
-    // ----------------------------------------------------
-    // LÓGICA DE GESTIÓN DE ESTADO
-    // ----------------------------------------------------
-    
-    /**
-     * Abre el modal para gestionar el estado de una solicitud.
-     * @param {number} id - ID de la solicitud.
-     * @param {string} estadoActual - Estado actual de la solicitud.
-     */
+   
     window.openEstadoModal = function(id, estadoActual) {
         document.getElementById('solicitudId').value = id;
         document.getElementById('nuevoEstado').value = estadoActual;
@@ -298,14 +269,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    /**
-     * Función genérica para mostrar notificaciones (asumiendo SweetAlert2 o Toast).
-     * Nota: Esta función es necesaria porque no está definida en el snippet del script.
-     * @param {string} message 
-     * @param {string} type 
-     */
     function showNotification(message, type = 'success') {
-        // Se asume que SweetAlert2 está cargado
+       
         if (typeof Swal !== 'undefined') {
             Swal.fire({
                 icon: type,
