@@ -34,7 +34,6 @@
             }
         }
 
-
         /* ============================================================
             2) OBTENER PACIENTES (con búsqueda)
         ============================================================ */
@@ -57,9 +56,9 @@
                         u.Telefono,
                         os.NombreOS,
                         u.Habilitado
-                    FROM Pacientes p
-                    INNER JOIN Usuarios u ON p.IdUsuario = u.IdUsuario
-                    LEFT JOIN ObrasSociales os ON p.IdPlan_OS = os.IdOS;
+                    FROM pacientes p
+                    INNER JOIN usuarios u ON p.IdUsuario = u.IdUsuario
+                    LEFT JOIN obrassociales os ON p.IdPlan_OS = os.IdOS;
                 ";
 
                 if ($search !== "") {
@@ -96,8 +95,8 @@
 
         /* ============================================================
             3) CREAR PACIENTE + USUARIO
-        ============================================================ */
-        public static function crearPaciente($data) 
+        ============================================================*/ 
+        public static function crearPaciente($nombre, $apellido, $telefono, $dni, $fechaNac, $os, $genero, $estado, $email) 
         {
             try {
                 global $conn;
@@ -105,7 +104,7 @@
                 $conn->beginTransaction();
 
                 // Obtener IdOS
-                $stmt = $conn->prepare("SELECT IdOS FROM ObrasSociales WHERE NombreOS = :os");
+                $stmt = $conn->prepare("SELECT IdOS FROM obrassociales WHERE NombreOS = :os");
                 $stmt->execute([":os" => $data["nombreOS"]]);
 
                 $os = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -116,7 +115,7 @@
 
                 // Crear usuario
                 $sqlUser = "
-                    INSERT INTO Usuarios 
+                    INSERT INTO usuarios 
                     (IdRol, Usuario, Clave, Habilitado, Nombre, Apellido, Email, Telefono)
                     VALUES (3, :user, :clave, 1, :nom, :ape, :email, :tel)
                 ";
@@ -135,7 +134,7 @@
 
                 // Crear paciente
                 $sqlPac = "
-                    INSERT INTO Pacientes 
+                    INSERT INTO pacientes 
                     (IdUsuario, IdOS, DNI, FechaNac, Genero, EstadoCivil)
                     VALUES (:idU, :os, :dni, :fec, :gen, :est)
                 ";
@@ -180,7 +179,7 @@
                 $conn->beginTransaction();
 
                 // Obtener IdOS
-                $stmt = $conn->prepare("SELECT IdOS FROM ObrasSociales WHERE NombreOS = :os");
+                $stmt = $conn->prepare("SELECT IdOS FROM obrassociales WHERE NombreOS = :os");
                 $stmt->execute([":os" => $data["nombreOS"]]);
                 $os = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -191,7 +190,7 @@
 
 
                 // Obtener IdUsuario del paciente
-                $stmt = $conn->prepare("SELECT IdUsuario FROM Pacientes WHERE IdPaciente = :id");
+                $stmt = $conn->prepare("SELECT IdUsuario FROM pacientes WHERE IdPaciente = :id");
                 $stmt->execute([":id" => $id]);
 
                 $pac = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -202,7 +201,7 @@
 
                 // Actualizar usuario
                 $sqlUsr = "
-                    UPDATE Usuarios SET 
+                    UPDATE usuarios SET 
                         Habilitado = :hab,
                         Nombre = :nom,
                         Apellido = :ape,
@@ -223,7 +222,7 @@
 
                 // Actualizar paciente
                 $sqlPac = "
-                    UPDATE Pacientes SET 
+                    UPDATE pacientes SET 
                         IdOS = :os,
                         DNI = :dni,
                         FechaNac = :fec,
@@ -282,11 +281,11 @@
                 $idUsuario = $row["IdUsuario"];
 
                 // Eliminar Paciente
-                $stmt = $conn->prepare("DELETE FROM Pacientes WHERE IdPaciente = :id");
+                $stmt = $conn->prepare("DELETE FROM pacientes WHERE IdPaciente = :id");
                 $stmt->execute([":id" => $id]);
 
                 // Eliminar Usuario
-                $stmt = $conn->prepare("DELETE FROM Usuarios WHERE IdUsuario = :id");
+                $stmt = $conn->prepare("DELETE FROM usuarios WHERE IdUsuario = :id");
                 $stmt->execute([":id" => $idUsuario]);
 
                 $conn->commit();

@@ -1,4 +1,5 @@
 <?php
+
     require_once(__DIR__ . '/../../includes/globals.php');
     require_once($dirBaseFile . '/dataAccess/internaciones.php');
     require_once($dirBaseFile . '/dataAccess/revisiones.php');
@@ -8,6 +9,7 @@
     $response = [];
     $errors = [];
     $idPaciente = '';
+    $internacionesHist = [];
 
     if (!isset($_SESSION['usuario'])) {
         $response['code'] = 401;
@@ -48,7 +50,7 @@
 
                     $internaciones = internaciones::VerInternacionActivaByPac($idPaciente);
 
-                    $internacionesHist = $internaciones["data"];
+                    $internacionesHist = $internaciones;
                     foreach ($internacionesHist as $key => $row) {
                         $revisiones = Revisiones::getRevisionByInter($internacionesHist[$key]['IdInternacion']);
                         $internacionesHist[$key]['Revisiones'] = $revisiones;

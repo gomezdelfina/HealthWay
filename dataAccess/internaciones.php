@@ -84,7 +84,7 @@
 
 
                 /* 2️⃣ Generar QR */
-                $url = $dirBaseFile . "/api/MostrarInternacionesQR.php?id=".$idInternacion;
+                $url = $dirBaseFile . "/api/mostrarInternacionesQR.php?id=".$idInternacion;
 
                 ob_start();
                 QRcode::png($url, null, QR_ECLEVEL_L, 5);
